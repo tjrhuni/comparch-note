@@ -1,0 +1,14 @@
+{
+  "name": "컴퓨터구조 시험 노트",
+  "short_name": "컴구 노트",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6f8",
+  "theme_color": "#2b5f8e",
+  "lang": "ko",
+  "icons": [
+    {"src": "icon-180.png", "sizes": "180x180", "type": "image/png"},
+    {"src": "icon-600.png", "sizes": "600x600", "type": "image/png", "purpose": "any"}
+  ]
+}
