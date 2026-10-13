@@ -253,11 +253,16 @@ svg.ink-layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-even
 .ink-lasso{fill:none;stroke:var(--ink-sel);stroke-width:1.5;stroke-dasharray:4 4}
 html.inking .lesson{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 html.inking .lesson textarea{-webkit-user-select:text;user-select:text}
+html.inking textarea.ans-in[readonly]{border-style:dashed}
 .ink-toggle[aria-pressed="true"]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
 .ink-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:50;
   background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:8px 10px;
   display:flex;flex-direction:column;gap:6px;max-width:calc(100vw - 24px)}
-.ink-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;justify-content:center}
+.ink-row{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.ink-row::-webkit-scrollbar{display:none}
+.ink-row.ink-more{flex-wrap:wrap;justify-content:center}
+.ink-row:has(.ink-msg:empty){display:none}
+.ink-bar button,.ink-selbar button,.ink-file{flex:0 0 auto}
 .ink-bar button,.ink-selbar button,.ink-file{font:inherit;font-size:14px;min-height:40px;min-width:40px;padding:0 12px;border-radius:10px;border:1px solid var(--line);
   background:var(--bg);color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .ink-bar button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
@@ -10087,6 +10092,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   var BLOCK = "p,li,h2,h3,h4,pre,table,figure,.formula,.fmt,dl,.example,.key,.trap,.exam,.easy,.check,.card,textarea,.summary,.legend,.rq,.model";
   var SCROLLER = ".tbl,figure.diagram,pre.asm,.formula";
   var NOINK = "button,summary,a,textarea,input,label,select,.ink-bar,.ink-selbar";
+  var TAPPABLE = "button,summary,a,label,select,input"; // 펜으로 탭하면 원래대로 눌리고, 끌면 획이 된다
+  var OFFZONE = ".ink-bar,.ink-selbar,.top,nav.toc,.scrim"; // 필기를 받지 않는 곳
   var COLORS = { pen: ["ink", "blue", "red", "green", "orange", "purple"], hl: ["yellow", "lime", "pink", "sky"] };
   var SIZES = { pen: [1.8, 3, 5], hl: [14, 20, 28] };
   var ERASE_R = 10;
@@ -10349,9 +10356,12 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   function onDown(e) { downInner(e); log("pointerdown", e); }
   function downInner(e) {
     if (state.on && e.pointerType === "pen") { stopInertia(); pan = null; try { window.scrollTo(window.scrollX, window.scrollY); } catch (x) {} } // 남은 브라우저 관성도 끊기 시도
-    if (drag || !cur || !canDraw(e) || !cur.contains(e.target)) return;
-    if (e.target.closest && e.target.closest(NOINK)) return;
+    if (drag || !cur || !canDraw(e) || !(e.forced || inkZone(e.target))) return;
     if (!loaded) { e.preventDefault(); msg("필기를 불러오는 중입니다. 잠시 뒤 다시 쓰세요."); return; }
+    if (!e.forced && e.target.closest(TAPPABLE)) { // 일단 기다렸다가 움직이면 획으로 바꾼다
+      drag = { mode: "pending", pid: e.pointerId, sec: cur, x: e.clientX, y: e.clientY, type: e.pointerType, pressure: e.pressure };
+      return;
+    }
     e.preventDefault();
     try { cur.setPointerCapture(e.pointerId); } catch (x) {}
     computePlaced();
@@ -10374,6 +10384,12 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   }
   function onMove(e) {
     if (!drag || e.pointerId !== drag.pid) return;
+    if (drag.mode === "pending") {
+      if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
+      var p = drag; drag = null; swallowClick();
+      downInner({ pointerId: p.pid, pointerType: p.type, pressure: p.pressure, clientX: p.x, clientY: p.y, target: document.body, preventDefault: function () {}, forced: true });
+      if (!drag) return;
+    }
     e.preventDefault();
     var sr = drag.sec.getBoundingClientRect(), evs = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
     if (!evs.length) evs = [e];
@@ -10419,7 +10435,12 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       if (cur === d.sec) draw();
     } else if (d.mode === "move") { if (d.moved) touch(d.id); if (cur === d.sec) draw(); }
   }
-  function onUp(e) { if (e && e.pointerType === "pen") log(e.type, e); if (!drag || (e && e.pointerId !== drag.pid)) return; var d = drag; drag = null; finish(d); }
+  function onUp(e) { if (e && e.pointerType === "pen") log(e.type, e); if (!drag || (e && e.pointerId !== drag.pid)) return; var d = drag; drag = null; if (d.mode !== "pending") finish(d); }
+  function inkZone(el) { return !!(el && el.closest && el.closest("main,.shell") && !el.closest(OFFZONE)); } // 화면 양옆 여백(.shell 안쪽 여백)까지 포함
+  function swallowClick() { // 버튼 위에서 시작한 획 뒤에 따라오는 클릭 한 번을 무시
+    function eat(ev) { ev.preventDefault(); ev.stopPropagation(); document.removeEventListener("click", eat, true); }
+    document.addEventListener("click", eat, true); setTimeout(function () { document.removeEventListener("click", eat, true); }, 600);
+  }
   function segDist2(px, py, a, b) {
     var vx = b[0] - a[0], vy = b[1] - a[1], wx = px - a[0], wy = py - a[1], L = vx * vx + vy * vy, t = L ? Math.max(0, Math.min(1, (wx * vx + wy * vy) / L)) : 0;
     var dx = a[0] + t * vx - px, dy = a[1] + t * vy - py; return dx * dx + dy * dy;
@@ -10473,16 +10494,17 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   function onTouchStart(e) { touchStartInner(e); log("touchstart", e); }
   function touchStartInner(e) {
     if (!state.on) return;
-    if (hasStylus(e)) { stopInertia(); pan = null; }
-    if (!cur || !cur.contains(e.target) || inNoInk(e)) { if (!hasStylus(e)) startPan(e); return; }
-    if (hasStylus(e) || state.finger || (drag && drag.pen)) { e.preventDefault(); return; } // 펜으로 쓰는 중 닿은 손바닥도 막음
+    var stylus = hasStylus(e), zone = inkZone(e.target), tap = e.target.closest && e.target.closest(TAPPABLE);
+    if (stylus) { stopInertia(); pan = null; if (zone && !tap) e.preventDefault(); return; } // 버튼·답 보기는 탭이 되게 두고 나머지는 펜 전용
+    if (zone && (state.finger || (drag && drag.pen))) { if (!tap || (drag && drag.pen)) e.preventDefault(); return; } // 손가락 쓰기 모드, 펜 쓰는 중 닿은 손바닥
     startPan(e);
   }
+  function editingEl(el) { return el && el.closest && el.closest("textarea:not([readonly]),input:not([type=checkbox]):not([type=file])"); }
   function onTouchMove(e) {
     if (!state.on) return;
-    var inText = e.target.closest && e.target.closest("textarea,input");
-    if (cur && cur.contains(e.target) && (drag || ((hasStylus(e) || state.finger) && !inText))) { e.preventDefault(); return; }
-    if (pan && !inText) { if (e.cancelable) e.preventDefault(); movePan(e); }
+    var editing = editingEl(e.target);
+    if (inkZone(e.target) && (drag || ((hasStylus(e) || state.finger) && !editing))) { e.preventDefault(); return; }
+    if (pan && !editing) { if (e.cancelable) e.preventDefault(); movePan(e); }
   }
   function onTouchEnd(e) {
     log(e.type, e);
@@ -10497,12 +10519,12 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   var pan = null, inertia = 0;
   function centroid(list) { var x = 0, y = 0; for (var i = 0; i < list.length; i++) { x += list[i].clientX; y += list[i].clientY; } return [x / list.length, y / list.length]; }
   function fingers(e) { return Array.prototype.filter.call(e.touches, function (t) { return t.touchType !== "stylus"; }); }
-  function inMain(el) { return el && el.closest && !el.closest("nav.toc,.ink-log,textarea,input,select,.scrim"); } // 도구 막대·머리띠에서 시작한 스크롤도 직접 처리(브라우저 관성이 남지 않게)
+  function inMain(el) { return el && el.closest && !el.closest("nav.toc,.ink-log,textarea:not([readonly]),input:not([type=checkbox]),select,.scrim"); } // 도구 막대·머리띠에서 시작한 스크롤도 직접 처리(브라우저 관성이 남지 않게)
   function startPan(e) {
     stopInertia();
     var f = fingers(e);
     if (!f.length || !inMain(e.target) || state.finger) { pan = null; return; }
-    var c = centroid(f), sc = e.target.closest ? e.target.closest(SCROLLER) : null;
+    var c = centroid(f), sc = e.target.closest ? e.target.closest(SCROLLER + ",.ink-row") : null;
     if (sc && sc.scrollWidth <= sc.clientWidth + 1) sc = null;
     pan = { x: c[0], y: c[1], sc: sc, axis: pan && pan.axis || null, samples: [[performance.now(), 0, 0]], moved: pan ? pan.moved : false };
   }
@@ -10682,6 +10704,11 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   function setOn(v) {
     if (!v && drag) { var d = drag; drag = null; finish(d); }
     state.on = v; document.documentElement.classList.toggle("inking", v);
+    // 필기 중에는 답 칸에도 펜으로 손글씨를 쓴다(키보드 입력은 필기를 끄면 됨)
+    Array.prototype.forEach.call(document.querySelectorAll("textarea.ans-in"), function (t) {
+      if (v) { if (!t.readOnly) { t.readOnly = true; t.dataset.inkRo = "1"; if (document.activeElement === t) t.blur(); } }
+      else if (t.dataset.inkRo) { t.readOnly = false; delete t.dataset.inkRo; }
+    });
     bar.hidden = !v; tbtn.setAttribute("aria-pressed", v ? "true" : "false"); tbtn.textContent = v ? "필기 끝" : "필기";
     if (!v) { clearSel(); render(); flushAll(); stopInertia(); pan = null; }
     else {
@@ -10730,7 +10757,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       if (!state.on || !e.key || (e.target.closest && e.target.closest("input,textarea,[contenteditable]"))) return;
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); e.shiftKey ? doRedo() : doUndo(); }
     });
-    document.addEventListener("focusin", function (e) { if (state.on && e.target.closest && e.target.closest("textarea,input:not([type=checkbox]):not([type=file])")) bar.classList.add("ink-away"); });
+    document.addEventListener("focusin", function (e) { if (state.on && e.target.closest && e.target.closest("textarea:not([readonly]),input:not([type=checkbox]):not([type=file])")) bar.classList.add("ink-away"); });
     document.addEventListener("focusout", function () { bar.classList.remove("ink-away"); });
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") flushAll(); });
     window.addEventListener("pagehide", flushAll);
