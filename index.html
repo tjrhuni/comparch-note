@@ -266,6 +266,7 @@ button.ink-sw,button.ink-sz{padding:0;width:40px}
 .ink-sw i{width:22px;height:22px;border-radius:50%;display:block;border:1px solid var(--line)}
 .ink-sz i{display:block;border-radius:50%;background:var(--fg)}
 .ink-hint,.ink-msg{font-size:13px;color:var(--fg2)}
+.ink-log{width:100%;max-height:40vh;overflow:auto;font-family:var(--mono);font-size:11px;line-height:1.5;background:var(--code-bg);border-radius:8px;padding:8px;margin:0;white-space:pre}
 .ink-chk{font-size:14px;display:inline-flex;align-items:center;gap:6px;padding:0 6px}
 .ink-file input{display:none}
 .ink-selbar{position:fixed;z-index:51;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100vw - 16px);background:var(--surface);border:1px solid var(--line);
@@ -10345,7 +10346,9 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   function canDraw(e) { return state.on && (e.pointerType === "pen" || e.pointerType === "mouse" || (e.pointerType === "touch" && state.finger)); }
   function local(e, sr, isPen) { var p = isPen ? e.pressure : 0.5; return [e.clientX - sr.left, e.clientY - sr.top, p > 0 ? p : 0.5]; }
 
-  function onDown(e) {
+  function onDown(e) { downInner(e); log("pointerdown", e); }
+  function downInner(e) {
+    if (state.on && e.pointerType === "pen") { stopInertia(); pan = null; try { window.scrollTo(window.scrollX, window.scrollY); } catch (x) {} } // 남은 브라우저 관성도 끊기 시도
     if (drag || !cur || !canDraw(e) || !cur.contains(e.target)) return;
     if (e.target.closest && e.target.closest(NOINK)) return;
     if (!loaded) { e.preventDefault(); msg("필기를 불러오는 중입니다. 잠시 뒤 다시 쓰세요."); return; }
@@ -10416,7 +10419,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       if (cur === d.sec) draw();
     } else if (d.mode === "move") { if (d.moved) touch(d.id); if (cur === d.sec) draw(); }
   }
-  function onUp(e) { if (!drag || (e && e.pointerId !== drag.pid)) return; var d = drag; drag = null; finish(d); }
+  function onUp(e) { if (e && e.pointerType === "pen") log(e.type, e); if (!drag || (e && e.pointerId !== drag.pid)) return; var d = drag; drag = null; finish(d); }
   function segDist2(px, py, a, b) {
     var vx = b[0] - a[0], vy = b[1] - a[1], wx = px - a[0], wy = py - a[1], L = vx * vx + vy * vy, t = L ? Math.max(0, Math.min(1, (wx * vx + wy * vy) / L)) : 0;
     var dx = a[0] + t * vx - px, dy = a[1] + t * vy - py; return dx * dx + dy * dy;
@@ -10467,13 +10470,77 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   // 펜슬(또는 손가락 쓰기 모드)이 닿으면 스크롤·Scribble을 막고, 손가락은 평소처럼 스크롤
   function hasStylus(e) { return Array.prototype.some.call(e.changedTouches || [], function (t) { return t.touchType === "stylus"; }); }
   function inNoInk(e) { return e.target.closest && e.target.closest(NOINK); }
-  function onTouchStart(e) {
-    if (!state.on || !cur || !cur.contains(e.target) || inNoInk(e)) return;
-    if (hasStylus(e) || state.finger || (drag && drag.pen)) e.preventDefault(); // 펜으로 쓰는 중 닿은 손바닥도 막음
+  function onTouchStart(e) { touchStartInner(e); log("touchstart", e); }
+  function touchStartInner(e) {
+    if (!state.on) return;
+    if (hasStylus(e)) { stopInertia(); pan = null; }
+    if (!cur || !cur.contains(e.target) || inNoInk(e)) { if (!hasStylus(e)) startPan(e); return; }
+    if (hasStylus(e) || state.finger || (drag && drag.pen)) { e.preventDefault(); return; } // 펜으로 쓰는 중 닿은 손바닥도 막음
+    startPan(e);
   }
   function onTouchMove(e) {
-    if (!state.on || !cur || !cur.contains(e.target)) return;
-    if (drag || ((hasStylus(e) || state.finger) && !(e.target.closest && e.target.closest("textarea,input")))) e.preventDefault();
+    if (!state.on) return;
+    var inText = e.target.closest && e.target.closest("textarea,input");
+    if (cur && cur.contains(e.target) && (drag || ((hasStylus(e) || state.finger) && !inText))) { e.preventDefault(); return; }
+    if (pan && !inText) { if (e.cancelable) e.preventDefault(); movePan(e); }
+  }
+  function onTouchEnd(e) {
+    log(e.type, e);
+    if (!pan) return;
+    if (e.touches.length) { startPan(e); return; } // 손가락 하나가 남으면 그 손가락으로 계속
+    endPan();
+  }
+
+  /* ---------- 필기 모드의 손가락 스크롤 ----------
+     브라우저의 관성 스크롤이 남아 있으면 펜 터치가 '스크롤 멈춤'으로 쓰여 획이 시작되지 않는다.
+     그래서 필기 모드에서는 손가락 스크롤을 직접 처리하고, 펜이 닿는 순간 관성을 바로 멈춘다. */
+  var pan = null, inertia = 0;
+  function centroid(list) { var x = 0, y = 0; for (var i = 0; i < list.length; i++) { x += list[i].clientX; y += list[i].clientY; } return [x / list.length, y / list.length]; }
+  function fingers(e) { return Array.prototype.filter.call(e.touches, function (t) { return t.touchType !== "stylus"; }); }
+  function inMain(el) { return el && el.closest && !el.closest("nav.toc,.ink-log,textarea,input,select,.scrim"); } // 도구 막대·머리띠에서 시작한 스크롤도 직접 처리(브라우저 관성이 남지 않게)
+  function startPan(e) {
+    stopInertia();
+    var f = fingers(e);
+    if (!f.length || !inMain(e.target) || state.finger) { pan = null; return; }
+    var c = centroid(f), sc = e.target.closest ? e.target.closest(SCROLLER) : null;
+    if (sc && sc.scrollWidth <= sc.clientWidth + 1) sc = null;
+    pan = { x: c[0], y: c[1], sc: sc, axis: pan && pan.axis || null, samples: [[performance.now(), 0, 0]], moved: pan ? pan.moved : false };
+  }
+  function movePan(e) {
+    var f = fingers(e); if (!f.length) return;
+    var c = centroid(f), dx = c[0] - pan.x, dy = c[1] - pan.y;
+    pan.x = c[0]; pan.y = c[1];
+    if (!pan.axis) { if (Math.abs(dx) + Math.abs(dy) < 2) return; pan.axis = pan.sc && Math.abs(dx) > Math.abs(dy) ? "x" : "y"; }
+    pan.moved = true;
+    if (pan.axis === "x") pan.sc.scrollLeft -= dx; else window.scrollBy(0, -dy);
+    var now = performance.now(); pan.samples.push([now, dx, dy]);
+    while (pan.samples.length > 2 && now - pan.samples[0][0] > 100) pan.samples.shift();
+  }
+  function endPan() {
+    var p = pan; pan = null; if (!p || !p.moved) return;
+    var s = p.samples, t = s.length > 1 ? s[s.length - 1][0] - s[0][0] : 0;
+    if (t <= 0 || performance.now() - s[s.length - 1][0] > 80) return; // 멈췄다 뗀 경우 관성 없음
+    var vx = 0, vy = 0; for (var i = 1; i < s.length; i++) { vx += s[i][1]; vy += s[i][2]; }
+    var v = (p.axis === "x" ? vx : vy) / t, last = performance.now(), sc = p.sc, axis = p.axis;
+    function step(now) {
+      var dt = Math.max(0, Math.min(32, now - last)); last = now;
+      v *= Math.pow(0.996, dt);
+      if (Math.abs(v) < 0.03) { inertia = 0; return; }
+      if (axis === "x") sc.scrollLeft -= v * dt; else window.scrollBy(0, -v * dt);
+      inertia = requestAnimationFrame(step);
+    }
+    inertia = requestAnimationFrame(step);
+  }
+  function stopInertia() { if (inertia) { cancelAnimationFrame(inertia); inertia = 0; } }
+
+  /* ---------- 입력 기록(문제 진단용) ---------- */
+  var logBuf = [];
+  function log(type, e) {
+    var t = e && e.changedTouches && e.changedTouches[0];
+    var kind = e ? (e.pointerType || (t ? (t.touchType === "stylus" ? "stylus" : "finger") : "")) : "";
+    var vv = window.visualViewport;
+    logBuf.push([Math.round(performance.now()), type, kind, e && e.cancelable ? "c" : "-", e && e.defaultPrevented ? "p" : "-", Math.round(window.scrollY), vv ? vv.scale.toFixed(2) : "1", inertia ? "관성" : "", drag ? drag.mode : ""].join(" "));
+    if (logBuf.length > 60) logBuf.shift();
   }
 
   /* ---------- 도구 막대 ---------- */
@@ -10497,7 +10564,9 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       '<button type="button" data-act="backup">백업 저장</button>' +
       '<label class="ink-file">백업 불러오기<input type="file" accept="application/json,.json" data-act="restore"></label>' +
       '<button type="button" data-act="clear">이 단원 필기 지우기</button>' +
+      '<button type="button" data-act="log">입력 기록 보기</button>' +
       '<span class="ink-store"></span>' +
+      '<pre class="ink-log" hidden></pre>' +
       '</div>' +
       '<div class="ink-row"><span class="ink-msg" role="status" aria-live="polite"></span></div>';
     document.body.appendChild(bar);
@@ -10515,6 +10584,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       else if (b.dataset.act === "redo") doRedo();
       else if (b.dataset.act === "more") { var m = bar.querySelector(".ink-more"); m.hidden = !m.hidden; paintStore(); }
       else if (b.dataset.act === "backup") backup();
+      else if (b.dataset.act === "log") { var pre = bar.querySelector(".ink-log"); pre.hidden = !pre.hidden; pre.textContent = "시각 종류 입력 취소가능 막음 스크롤 확대 관성 동작" + String.fromCharCode(10) + logBuf.slice(-30).join(String.fromCharCode(10)); }
       else if (b.dataset.act === "clear") {
         if (!cur || !loaded) return;
         clearTimeout(clearTimer);
@@ -10613,7 +10683,12 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (!v && drag) { var d = drag; drag = null; finish(d); }
     state.on = v; document.documentElement.classList.toggle("inking", v);
     bar.hidden = !v; tbtn.setAttribute("aria-pressed", v ? "true" : "false"); tbtn.textContent = v ? "필기 끝" : "필기";
-    if (!v) { clearSel(); render(); flushAll(); } else { paintBar(); requestPersist(); }
+    if (!v) { clearSel(); render(); flushAll(); stopInertia(); pan = null; }
+    else {
+      paintBar(); requestPersist();
+      var vv = window.visualViewport;
+      if (vv && vv.scale > 1.05) msg("화면이 확대된 상태입니다. 필기를 끄고 두 손가락으로 원래 크기로 줄인 뒤 쓰세요. 글자 크기는 가+ / 가−로 바꿉니다.");
+    }
   }
   var ro = null;
   function attach(sec) {
@@ -10642,6 +10717,9 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     document.addEventListener("pointerup", onUp); document.addEventListener("pointercancel", onUp);
     document.addEventListener("touchstart", onTouchStart, { passive: false });
     document.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("touchend", onTouchEnd); document.addEventListener("touchcancel", onTouchEnd);
+    document.addEventListener("gesturestart", function (e) { if (state.on) e.preventDefault(); }, { passive: false }); // 필기 중 확대 막기(Safari)
+    document.addEventListener("gesturechange", function (e) { if (state.on) e.preventDefault(); }, { passive: false });
     document.addEventListener("lesson:shown", function (e) { var s = document.getElementById(e.detail); if (s) attach(s); });
     document.addEventListener("scroll", function (e) { // 가로 스크롤 상자 안 필기가 내용을 따라가게
       if (cur && e.target && e.target.nodeType === 1 && cur.contains(e.target) && e.target.matches && e.target.matches(SCROLLER) && (pages[cur.id] || []).length) render();
