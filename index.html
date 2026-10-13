@@ -10239,24 +10239,28 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     var f = frame(b, s, sr); if (!f) return null;
     return s.p.map(function (q) { return [f.ox + q[0] * f.sx, f.oy + q[1], q[2]]; });
   }
+  // 획을 붙일 후보는 화면에 실제로 보이는 블록만.
+  // 접힌 답(details) 안 문단은 보이지 않는데도 브라우저가 위치를 돌려주므로, 그대로 쓰면 획이 숨은 문단에 붙어 사라진다.
+  function visible(x) { if (hiddenBlock(x)) return false; var r = x.getBoundingClientRect(); return r.height > 0 || r.width > 0; }
+  function visLeaf(x) { return visible(x) && !Array.prototype.some.call(x.querySelectorAll(BLOCK), visible); }
+  function nearestVisible(clientY, list) {
+    var best = null, bd = 1e9;
+    list.forEach(function (x) {
+      if (!visLeaf(x)) return;
+      var r = x.getBoundingClientRect();
+      var d = clientY < r.top ? r.top - clientY : clientY > r.bottom ? clientY - r.bottom : 0;
+      if (d <= bd) { bd = d; best = x; }
+    });
+    return best;
+  }
   function anchorFor(clientX, clientY, sec, list) {
     var el = document.elementFromPoint(clientX, clientY), b = el && el.closest ? el.closest(BLOCK) : null;
-    if (b && !sec.contains(b)) b = null;
-    if (b && !isLeaf(b)) { // 상자 안 여백이면 바로 위의 잎 블록으로
-      var inner = Array.prototype.slice.call(b.querySelectorAll(BLOCK)).filter(isLeaf), pick = null, pd = 1e9;
-      inner.forEach(function (x) { var r = x.getBoundingClientRect(); if (!r.height) return; var d = clientY < r.top ? r.top - clientY : clientY > r.bottom ? clientY - r.bottom : 0; if (d <= pd) { pd = d; pick = x; } });
+    if (b && (!sec.contains(b) || !visible(b))) b = null;
+    if (b && !visLeaf(b)) { // 상자 안 여백이면 그 상자 안의 가장 가까운 보이는 블록으로
+      var pick = nearestVisible(clientY, Array.prototype.slice.call(b.querySelectorAll(BLOCK)));
       if (pick) b = pick;
     }
-    if (!b) {
-      var best = null, bd = 1e9;
-      list.forEach(function (x) {
-        if (!isLeaf(x)) return;
-        var r = x.getBoundingClientRect(); if (!r.height) return;
-        var d = clientY < r.top ? r.top - clientY : clientY > r.bottom ? clientY - r.bottom : 0;
-        if (d <= bd) { bd = d; best = x; }
-      });
-      b = best;
-    }
+    if (!b) b = nearestVisible(clientY, list);
     return b;
   }
   function blockRel(b, sr) { var r = b.getBoundingClientRect(), sc = scrollerOf(b); return { ox: r.left - sr.left, oy: r.top - sr.top, w: r.width, sl: sc ? sc.scrollLeft : 0 }; }
@@ -10436,6 +10440,10 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (d.mode === "draw") {
       if (d.pts.length === 1) d.pts.push([d.pts[0][0] + 0.5, d.pts[0][1] + 0.5, d.pts[0][2]]);
       if (!d.sec.contains(d.block)) return; // 그 사이 문단이 사라진 경우
+      if (!visible(d.block) && cur === d.sec) { // 안전장치: 붙일 문단이 보이지 않으면 가장 가까운 보이는 문단으로 다시 붙인다
+        var sr0 = d.sec.getBoundingClientRect(), list0 = Array.prototype.slice.call(d.sec.querySelectorAll(BLOCK)), nb = nearestVisible(sr0.top + d.pts[0][1], list0);
+        if (nb) { d.block = nb; d.anc = blockRel(nb, sr0); d.k = list0.indexOf(nb); d.sig = sigOf(nb); }
+      }
       snapshot(d.id);
       var a = toAnchor(d.anc, d.k, d.pts, d.sig);
       var s = { k: a.k, g: a.g, aw: a.aw, sl: a.sl, t: d.stroke.t, c: d.stroke.c, s: d.stroke.s, pr: d.stroke.pr, m: d.stroke.m, z: d.stroke.z, p: a.p };
