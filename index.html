@@ -219,6 +219,16 @@ ol.tight,ul.tight{padding-left:1.4em}
   <h2>컴퓨터구조, 처음부터 끝까지</h2>
   <p class="goal">시험 범위: Ch.1 ~ Ch.3 전체 + Ch.4 단일 사이클(p.1–29). Closed Book, 한글 시험, T/F + 약술·주관식(빈칸·계산·코드) 10문제 안팎. 중간고사 비중 40% <span class="ref">[Ch0 p.5]</span></p>
 
+  <div class="tbl"><table>
+    <thead><tr><th colspan="2">중간고사 공지</th></tr></thead>
+    <tbody>
+      <tr><td class="t">시간</td><td>10월 21일(수) 오전 10:30 ~ 오후 12:00 (90분)</td></tr>
+      <tr><td class="t">장소</td><td>IT5호관(융복합관) B101호</td></tr>
+      <tr><td class="t">형식</td><td>Closed Book 필기시험, 단답형 위주, 한글 시험</td></tr>
+      <tr><td class="t">범위</td><td>Chapter 1 ~ Chapter 4 Single-Cycle Implementation</td></tr>
+    </tbody>
+  </table></div>
+
   <h3>이 노트로 공부하는 법</h3>
   <ol>
     <li>단원을 순서대로 읽습니다. 뒤 단원은 앞 단원의 용어를 씁니다.</li>
@@ -435,7 +445,7 @@ ol.tight,ul.tight{padding-left:1.4em}
       <text class="t" x="620" y="252">구조</text>
       <text class="lbl" x="620" y="272">ISA + 조직</text>
     </svg>
-    <figcaption>슬라이드 p.9 그림을 글로 옮겨 다시 그린 것. 각 괄호가 덮는 정확한 범위는 슬라이드 그림으로 확인할 것 <span class="sup">슬라이드 확인 필요</span></figcaption>
+    <figcaption>슬라이드 p.9 그림을 다시 그린 것. 조직(Machine Organization) 괄호는 프로세서·입출력 시스템, 논리 설계, 회로 설계, 물리 설계(레이아웃)를 덮고, 컴퓨터 구조(Computer Architecture) 괄호는 ISA부터 그 아래 전부를 덮는다. ISA 위에는 응용, OS, 컴파일러, 펌웨어가 있다. <span class="ref">[Ch1 p.9]</span></figcaption>
   </figure>
 
   <h3>추상화(Abstraction)</h3>
@@ -799,8 +809,8 @@ ol.tight,ul.tight{padding-left:1.4em}
   <p>예: 10세대 Intel Core 프로세서(Ice Lake) 웨이퍼는 12인치(300 mm), 10 nm 공정, 칩 크기 11.4 × 10.7 mm<sup>2</sup>이고, 수율이 100%라면 칩 506개가 나온다. <span class="ref">[Ch1 p.22]</span></p>
   <div class="formula">다이당 비용 = 웨이퍼당 비용 / (웨이퍼당 다이 수 × 수율)</div>
   <div class="formula">웨이퍼당 다이 수 ≈ 웨이퍼 면적 / 다이 면적</div>
-  <div class="formula">수율 = 1 / (1 + 면적당 결함 수 × 다이 면적 / 2)<sup>2</sup></div>
-  <p><span class="ref">[Ch1 p.22]</span> 수율 식의 지수는 추출본에서 N으로 보이고, 교재(Patterson–Hennessy)는 2다. 시험에는 슬라이드 표기를 따를 것. <span class="sup">슬라이드 확인 필요</span></p>
+  <div class="formula">수율 = 1 / (1 + 면적당 결함 수 × 다이 면적 / 2)<sup>N</sup></div>
+  <p><span class="ref">[Ch1 p.22]</span> 슬라이드는 지수를 N으로 쓴다. 교재(Patterson–Hennessy) 예제는 N = 2를 쓴다. 문제에 N이 주어지지 않으면 N = 2로 두고 계산한다.</p>
   <p>이 식들은 면적과 결함률에 대해 <b>비선형</b> 관계다. 다이 면적이 커지면 웨이퍼당 다이 수가 줄고 동시에 수율도 떨어지므로, 비용이 면적에 비례하는 것보다 빠르게 오른다. <span class="ref">[Ch1 p.22]</span></p>
 
   <div class="tbl"><table>
@@ -815,7 +825,7 @@ ol.tight,ul.tight{padding-left:1.4em}
 
   <div class="example">
     <p class="label">예제</p>
-    <p>웨이퍼 한 장이 5,000달러, 다이 면적 1 cm<sup>2</sup>일 때 웨이퍼당 다이가 500개 나온다. 면적당 결함 수는 0.2개/cm<sup>2</sup>이다. (1) 수율과 다이당 비용은? (2) 설계를 바꿔 다이 면적이 2 cm<sup>2</sup>가 되면(다이 250개)? 수율 식의 지수는 교재대로 2를 쓴다. <span class="sup">PDF 외 보충</span></p>
+    <p>웨이퍼 한 장이 5,000달러, 다이 면적 1 cm<sup>2</sup>일 때 웨이퍼당 다이가 500개 나온다. 면적당 결함 수는 0.2개/cm<sup>2</sup>이다. (1) 수율과 다이당 비용은? (2) 설계를 바꿔 다이 면적이 2 cm<sup>2</sup>가 되면(다이 250개)? 수율 식의 지수는 N = 2라고 둔다(교재 예제의 값). <span class="sup">PDF 외 보충</span></p>
     <details><summary>풀이 보기</summary><div class="ans">
       <p>(1) 수율 = 1 / (1 + 0.2 × 1 / 2)<sup>2</sup> = 1 / 1.1<sup>2</sup> = 1 / 1.21 ≈ 0.826</p>
       <p>다이당 비용 = 5000 / (500 × 0.826) = 5000 / 413.2 ≈ <b>12.10달러</b></p>
@@ -854,7 +864,7 @@ ol.tight,ul.tight{padding-left:1.4em}
       <li><p>다이당 비용 = (  ) / (  × 수율)</p><details><summary>답 보기</summary><div class="ans"><p>웨이퍼당 비용 / (웨이퍼당 다이 수 × 수율).</p></div></details></li>
       <li><p>칩 비용 요소 중 제조 공정이 결정하는 것과 구조·회로 설계가 결정하는 것을 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>제조 공정 → 결함률(면적당 결함 수), 구조·회로 설계 → 다이 면적. <span class="ref">[Ch1 p.22]</span></p></div></details></li>
       <li><p>O/X: 다이 면적이 2배가 되면 다이당 비용도 정확히 2배가 된다.</p><details><summary>답 보기</summary><div class="ans"><p>X. 다이 수가 줄고 수율도 떨어지므로 2배보다 더 오른다(비선형).</p></div></details></li>
-      <li><p>면적당 결함 0.4개/cm<sup>2</sup>, 다이 면적 1 cm<sup>2</sup>일 때 수율은? (지수 2)</p><details><summary>답 보기</summary><div class="ans"><p>1 / (1 + 0.4 × 1 / 2)<sup>2</sup> = 1 / 1.2<sup>2</sup> = 1 / 1.44 ≈ 0.69.</p></div></details></li>
+      <li><p>면적당 결함 0.4개/cm<sup>2</sup>, 다이 면적 1 cm<sup>2</sup>일 때 수율은? (N = 2라고 둔다)</p><details><summary>답 보기</summary><div class="ans"><p>1 / (1 + 0.4 × 1 / 2)<sup>2</sup> = 1 / 1.2<sup>2</sup> = 1 / 1.44 ≈ 0.69.</p></div></details></li>
     </ol>
   </div>
 </section>
@@ -1001,6 +1011,16 @@ ol.tight,ul.tight{padding-left:1.4em}
   <h3>성능 요약</h3>
   <p>모든 것을 고려하면 프로그램당 초로 잰 실행 시간은 다음과 같다. 단위가 차례로 지워지는 것을 보면 외우기 쉽다. <span class="ref">[Ch1 p.29]</span></p>
   <div class="formula">CPU 시간 = 초 / 프로그램 = (명령어 / 프로그램) × (클럭 사이클 / 명령어) × (초 / 클럭 사이클)</div>
+  <p>공식의 각 요소와 측정 단위는 다음과 같다. <span class="ref">[Ch1 p.29]</span></p>
+  <div class="tbl"><table>
+    <thead><tr><th>성능의 구성 요소(Components of performance)</th><th>측정 단위(Units of measure)</th></tr></thead>
+    <tbody>
+      <tr><td>프로그램의 CPU 실행 시간(CPU execution time for a program)</td><td>프로그램에 걸린 초(Seconds for the program)</td></tr>
+      <tr><td>명령어 수(Instruction count)</td><td>프로그램에서 실행된 명령어 수(Instructions executed for the program)</td></tr>
+      <tr><td>CPI(Clock cycles per instruction)</td><td>명령어당 평균 클럭 사이클 수(Average number of clock cycles per instruction)</td></tr>
+      <tr><td>클럭 주기(Clock cycle time)</td><td>클럭 사이클당 초(Seconds per clock cycle)</td></tr>
+    </tbody>
+  </table></div>
   <p>프로그램 성능에 각 요소가 주는 영향은 다음과 같다(○ = 영향을 줌). <span class="ref">[Ch1 p.29]</span></p>
   <div class="tbl"><table>
     <thead><tr><th>요소</th><th>명령어 수</th><th>CPI</th><th>클럭 속도</th><th>이유</th></tr></thead>
@@ -1009,10 +1029,10 @@ ol.tight,ul.tight{padding-left:1.4em}
       <tr><td>프로그래밍 언어(Programming Language)</td><td>○</td><td>○</td><td></td><td>문장이 명령어로 바뀌는 방식</td></tr>
       <tr><td>컴파일러(Compiler)</td><td>○</td><td>○</td><td></td><td>어떤 명령어를 몇 개 고르는지</td></tr>
       <tr><td>ISA</td><td>○</td><td>○</td><td>○</td><td>명령어 종류·사이클·구현 모두에 영향</td></tr>
-      <tr><td>기술(Technology)</td><td></td><td></td><td>○</td><td>공정이 회로 속도를 정함 <span class="sup">슬라이드 확인 필요</span></td></tr>
+      <tr><td>기술(Technology)</td><td></td><td></td><td>○</td><td>공정이 회로 속도를 정함</td></tr>
     </tbody>
   </table></div>
-  <p>교재 표에는 알고리즘~ISA 4행만 있고 기술(Technology) 행은 슬라이드에 추가되어 있어, 그 행의 ○ 위치는 슬라이드 그림으로 확인해야 한다. <span class="tb">교재 기준</span> "CPI는 CPU 하드웨어가 정한다"는 말과 표에서 알고리즘·언어·컴파일러가 CPI에 영향을 주는 것이 어긋나 보일 수 있다. 명령어 하나하나의 사이클은 하드웨어가 정하지만, 그 명령어들을 어떤 비율로 섞어 쓸지는 소프트웨어가 정하기 때문에 평균 CPI가 바뀐다.</p>
+  <p>기술(Technology) 행은 교재 표에는 없고 슬라이드에 추가된 행이다. 슬라이드에서 이 행은 클럭 속도 칸에만 표시가 있다. <span class="ref">[Ch1 p.29]</span> "CPI는 CPU 하드웨어가 정한다"는 말과 표에서 알고리즘·언어·컴파일러가 CPI에 영향을 주는 것이 어긋나 보일 수 있다. 명령어 하나하나의 사이클은 하드웨어가 정하지만, 그 명령어들을 어떤 비율로 섞어 쓸지는 소프트웨어가 정하기 때문에 평균 CPI가 바뀐다.</p>
 
   <div class="example">
     <p class="label">교재 예제 1 <span class="tb">교재 기준</span> <span class="ref">[Ch1 p.27 → 교재 pp.34–35]</span></p>
@@ -1550,6 +1570,31 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
     <dt>스필(spill, spilling registers)</dt><dd>레지스터가 모자라서 덜 자주 쓰는 변수를 메모리에 내려 두는 것.</dd>
   </dl>
 
+  <h3>바이트·하프워드 load와 store <span class="sup">PDF 외 보충</span></h3>
+  <p>슬라이드 인코딩 표(Ch2 · 13)에는 lw·sw 말고도 <code>lb</code>, <code>lh</code>, <code>lbu</code>, <code>lhu</code>, <code>sb</code>, <code>sh</code>가 나온다. <span class="ref">[Ch2 p.50]</span> word(4바이트) 대신 바이트(1바이트)나 하프워드(halfword, 2바이트)를 옮기는 명령어다. 쓰는 법은 lw·sw와 같다(<code>lb rd, 오프셋(rs1)</code>, <code>sb rs2, 오프셋(rs1)</code>).</p>
+  <dl class="terms">
+    <dt>lb, lh (load byte, load halfword)</dt><dd>1바이트·2바이트를 읽어 32비트 레지스터에 넣을 때 <b>부호 확장(sign extension)</b>한다. 읽은 값의 맨 위 비트를 남은 위쪽 비트에 모두 복사한다는 뜻이다(자세한 것은 Ch2 · 4).</dd>
+    <dt>lbu, lhu (load byte unsigned, load halfword unsigned)</dt><dd>같은 크기를 읽되 위쪽 비트를 모두 0으로 채운다(<b>0 확장</b>).</dd>
+    <dt>sb, sh (store byte, store halfword)</dt><dd>레지스터의 <b>하위 1바이트·하위 2바이트만</b> 메모리에 쓴다. 나머지 메모리 바이트는 그대로다.</dd>
+  </dl>
+  <p>리틀 엔디언에서는 word의 <b>주소 +0 바이트가 최하위 바이트</b>다. 그래서 word가 있는 주소에 lb를 하면 그 word의 최하위 바이트를 읽고, sb는 레지스터의 최하위 바이트를 그 주소에 쓴다.</p>
+
+  <div class="example">
+    <p class="label">예제</p>
+    <p>word <code>0x1234ABF0</code>이 주소 200부터 저장되어 있고 <code>x5</code> = 200이다. 다음 각 명령어 뒤 <code>x6</code>의 값을 16진수 8자리로 쓰시오. (1) <code>lb x6, 0(x5)</code> (2) <code>lbu x6, 0(x5)</code> (3) <code>lh x6, 0(x5)</code> (4) <code>lb x6, 3(x5)</code> (5) <code>x7</code> = 0x11223344일 때 <code>sb x7, 1(x5)</code> 뒤 주소 200의 word는?</p>
+    <details><summary>풀이 보기</summary><div class="ans">
+      <div class="tbl"><table>
+        <thead><tr><th>주소</th><th>200</th><th>201</th><th>202</th><th>203</th></tr></thead>
+        <tbody><tr><td>바이트(리틀 엔디언)</td><td>F0</td><td>AB</td><td>34</td><td>12</td></tr></tbody>
+      </table></div>
+      <p>(1) 주소 200의 바이트 0xF0 = 1111 0000, 맨 위 비트가 1 → 부호 확장 → <b>0xFFFFFFF0</b> (−16)</p>
+      <p>(2) 같은 바이트를 0 확장 → <b>0x000000F0</b> (240)</p>
+      <p>(3) 주소 200~201의 하프워드 = 0xABF0(201이 위 바이트), 맨 위 비트 1 → <b>0xFFFFABF0</b></p>
+      <p>(4) 주소 203의 바이트 0x12, 맨 위 비트 0 → <b>0x00000012</b> (lb여도 위쪽이 0)</p>
+      <p>(5) x7의 최하위 바이트 0x44만 주소 201에 쓴다. 바이트는 F0, 44, 34, 12 → word = <b>0x123444F0</b></p>
+    </div></details>
+  </div>
+
   <div class="trap"><p class="label">함정</p>
     <p>A[8]을 읽을 때 <code>lw x9, 8(x22)</code>라고 쓰면 틀린다. 주소는 바이트 단위이므로 인덱스 × 4 = <b>32</b>를 써야 한다. <span class="ref">[Ch2 p.12, 14]</span></p>
     <p>"RISC-V는 빅 엔디언이다" (X). <b>리틀 엔디언</b>이다. 리틀 엔디언은 <b>최하위</b> 바이트가 <b>가장 낮은 주소</b>. <span class="ref">[Ch2 p.13]</span></p>
@@ -1574,6 +1619,8 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
       <li><p>O/X: RISC-V에서 word는 4의 배수 주소에서 시작해야 한다.</p><details><summary>답 보기</summary><div class="ans"><p>X. RISC-V는 정렬 제한이 없다. <span class="ref">[Ch2 p.13]</span></p></div></details></li>
       <li><p>레지스터와 메모리 사이에 데이터를 옮기는 명령어를 무엇이라 하는가? 예 두 개도 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>데이터 전송 명령어. lw(load word), sw(store word). <span class="ref">[Ch2 p.11, 14]</span></p></div></details></li>
       <li><p>컴파일러가 자주 쓰지 않는 변수를 메모리로 내보내는 것을 무엇이라 하는가?</p><details><summary>답 보기</summary><div class="ans"><p>spill(스필). <span class="ref">[Ch2 p.15]</span></p></div></details></li>
+      <li><p>주소 0~3에 바이트 <code>02</code>, <code>01</code>, <code>FF</code>, <code>80</code>이 차례로 들어 있고 <code>x5</code> = 0이다. <code>lb x6, 2(x5)</code>와 <code>lbu x7, 2(x5)</code> 뒤 x6, x7의 값을 16진수 8자리로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>주소 2의 바이트는 0xFF(맨 위 비트 1). lb는 부호 확장 → x6 = <b>0xFFFFFFFF</b>(−1). lbu는 0 확장 → x7 = <b>0x000000FF</b>(255). <span class="sup">PDF 외 보충</span></p></div></details></li>
+      <li><p><code>x8</code> = 0xCAFEBEEF일 때 <code>sh x8, 0(x5)</code>는 메모리 몇 바이트를 바꾸고, 주소 x5+0과 x5+1에 각각 어떤 바이트를 쓰는가? (리틀 엔디언)</p><details><summary>답 보기</summary><div class="ans"><p>2바이트. 하위 하프워드 0xBEEF만 저장하고, 최하위 바이트가 낮은 주소로 가므로 x5+0 = <b>EF</b>, x5+1 = <b>BE</b>. 위 2바이트(CA, FE)는 저장하지 않는다. <span class="sup">PDF 외 보충</span></p></div></details></li>
     </ol>
   </div>
 </section>
@@ -1734,7 +1781,7 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
   <p><span class="ref">[Ch2 p.21]</span></p>
 
   <h3>필드 정의</h3>
-  <p>필드 비트 폭은 슬라이드 그림에만 있어 교재 기준으로 정리한다. <span class="tb">교재 기준</span></p>
+  <p>필드 비트 폭과 뜻은 슬라이드 형식 그림에 있다. <span class="ref">[Ch2 p.22–24]</span></p>
   <dl class="terms">
     <dt>opcode (7비트)</dt><dd>명령어의 기본 동작과 형식을 나타낸다.</dd>
     <dt>rd (5비트)</dt><dd>목적지(destination) 레지스터 번호. 결과를 쓸 곳.</dd>
@@ -1755,14 +1802,14 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
     <span class="f" style="--w:5"><b>rd</b><i>11–7</i></span>
     <span class="f" style="--w:7"><b>opcode</b><i>6–0</i></span>
   </div>
-  <p>비트 수: 7 + 5 + 5 + 3 + 5 + 7 = 32. <span class="ref">[Ch2 p.22]</span> <span class="tb">교재 기준</span></p>
+  <p>비트 수: 7 + 5 + 5 + 3 + 5 + 7 = 32. <span class="ref">[Ch2 p.22–24]</span></p>
 
   <div class="example">
     <p class="label">예제 (단계별 인코딩)</p>
     <p><code>add x9, x20, x21</code>을 32비트 기계어로 바꾸시오. <span class="ref">[Ch2 p.22]</span></p>
     <details><summary>풀이 보기</summary><div class="ans">
       <p>① 형식: add는 즉시값이 없는 산술 → R형.</p>
-      <p>② 필드 값(10진): funct7 = 0, rs2 = 21, rs1 = 20, funct3 = 0, rd = 9, opcode = 51 (0110011). 어셈블리의 순서는 <code>add rd, rs1, rs2</code>이므로 rd = x9, rs1 = x20, rs2 = x21. <span class="tb">교재 기준</span></p>
+      <p>② 필드 값(10진): funct7 = 0, rs2 = 21, rs1 = 20, funct3 = 0, rd = 9, opcode = 51 (0110011). 어셈블리의 순서는 <code>add rd, rs1, rs2</code>이므로 rd = x9, rs1 = x20, rs2 = x21. 슬라이드는 이 단계를 십진수 칸 <code>0 | 21 | 20 | 0 | 9 | 51</code>로 보여 준다. <span class="ref">[Ch2 p.22]</span></p>
       <p>③ 각 필드를 정해진 비트 수의 2진수로: 21 = 10101, 20 = 10100, 9 = 01001.</p>
       <div class="fmt" aria-label="add x9, x20, x21 인코딩">
         <span class="f" style="--w:7"><b>0000000</b><i>funct7</i></span>
@@ -1777,8 +1824,8 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
     </div></details>
   </div>
 
-  <div class="trap"><p class="label">함정 (슬라이드 오타)</p>
-    <p>슬라이드 p.21 텍스트는 이 2진수를 <code>add x0, x20, x21</code>이라고 적었다. 그런데 rd 칸(11–7번 비트)이 <code>01001</code> = 9이므로 실제로는 <b><code>add x9, x20, x21</code></b>이고, p.22의 예제와도 일치한다. p.21의 "x0"은 오타로 보인다. <span class="ref">[Ch2 p.21–22]</span></p>
+  <div class="trap"><p class="label">함정 (슬라이드 원문 표기 오류)</p>
+    <p>슬라이드 p.21 텍스트는 이 2진수를 <code>add x0, x20, x21</code>이라고 적었다. 그런데 rd 칸(11–7번 비트)이 <code>01001</code> = 9이므로 실제로는 <b><code>add x9, x20, x21</code></b>이고, p.22의 예제와도 일치한다. p.21의 "x0"은 슬라이드 원문 표기 오류다(2진수는 x9). <span class="ref">[Ch2 p.21–22]</span></p>
   </div>
 
   <h3>I형</h3>
@@ -1789,11 +1836,11 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
     <span class="f" style="--w:5"><b>rd</b><i>11–7</i></span>
     <span class="f" style="--w:7"><b>opcode</b><i>6–0</i></span>
   </div>
-  <p>R형의 funct7과 rs2 자리(7 + 5 = 12비트)를 12비트 즉시값 하나로 쓴다. load에서는 rs1이 베이스 레지스터, 즉시값이 오프셋, rd가 읽은 값을 받을 레지스터다. <span class="ref">[Ch2 p.23]</span> <span class="tb">교재 기준</span></p>
+  <p>R형의 funct7과 rs2 자리(7 + 5 = 12비트)를 12비트 즉시값 하나로 쓴다. load에서는 rs1이 베이스 레지스터, 즉시값이 오프셋, rd가 읽은 값을 받을 레지스터다. <span class="ref">[Ch2 p.23]</span></p>
 
   <div class="example">
     <p class="label">예제 (I형 인코딩)</p>
-    <p>(1) <code>lw x9, 32(x22)</code> (2) <code>addi x22, x22, 1</code>을 인코딩하시오. lw: opcode 0000011, funct3 010. addi: opcode 0010011, funct3 000. <span class="tb">교재 기준</span></p>
+    <p>(1) <code>lw x9, 32(x22)</code> (2) <code>addi x22, x22, 1</code>을 인코딩하시오. lw: opcode 0000011, funct3 010. addi: opcode 0010011, funct3 000. <span class="ref">[Ch2 p.23]</span></p>
     <details><summary>풀이 보기</summary><div class="ans">
       <p>(1) imm = 32 = 0000 0010 0000, rs1 = 22 = 10110, rd = 9 = 01001.</p>
       <div class="fmt" aria-label="lw x9, 32(x22) 인코딩">
@@ -1829,7 +1876,7 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
     <span class="f" style="--w:5"><b>imm[4:0]</b><i>11–7</i></span>
     <span class="f" style="--w:7"><b>opcode</b><i>6–0</i></span>
   </div>
-  <p>store는 결과를 레지스터에 쓰지 않으므로 rd가 필요 없다. 대신 레지스터를 두 개 읽는다: rs1 = 베이스 주소, rs2 = 저장할 값. <span class="tb">교재 기준</span></p>
+  <p>store는 결과를 레지스터에 쓰지 않으므로 rd가 필요 없다. 대신 레지스터를 두 개 읽는다: rs1 = 베이스 주소, rs2 = 저장할 값. <span class="ref">[Ch2 p.24]</span></p>
   <p>S형은 <b>12비트 즉시값을 두 필드로 나눈다</b>(위 7비트 imm[11:5], 아래 5비트 imm[4:0]). 이유: <span class="ref">[Ch2 p.24]</span></p>
   <ul>
     <li><b>rs1과 rs2 필드를 모든 형식에서 같은 자리</b>에 두기 위해서다.</li>
@@ -1839,7 +1886,7 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
 
   <div class="example">
     <p class="label">예제 (S형 인코딩)</p>
-    <p><code>sw x9, 48(x22)</code>를 인코딩하시오. sw: opcode 0100011, funct3 010. <span class="tb">교재 기준</span></p>
+    <p><code>sw x9, 48(x22)</code>를 인코딩하시오. sw: opcode 0100011, funct3 010. <span class="ref">[Ch2 p.24]</span></p>
     <details><summary>풀이 보기</summary><div class="ans">
       <p>① 48을 12비트로: 0000 0011 0000.</p>
       <p>② 나누기: imm[11:5] = 위 7비트 <code>0000001</code>, imm[4:0] = 아래 5비트 <code>10000</code>. 검산: 0000001 × 32 + 10000(16) = 32 + 16 = 48.</p>
@@ -1866,7 +1913,7 @@ sw  x9, 48(x22)      // A[12] = x9      (12 × 4 = 48)</pre>
       <tr><td>sw</td><td>S</td><td>0100011</td><td>010</td><td>없음</td></tr>
     </tbody>
   </table></div>
-  <p>opcode 값표 <span class="tb">교재 기준</span>. 시험에서는 보통 표를 주고 칸을 채우게 하므로, 값 자체보다 필드 순서와 비트 폭을 확실히 외운다.</p>
+  <p>opcode 값표 <span class="ref">[Ch2 p.22–24, p.50]</span>. 전체 인코딩 표는 Ch2 · 13에 있다. 시험에서는 보통 표를 주고 칸을 채우게 하므로, 값 자체보다 필드 순서와 비트 폭을 확실히 외운다.</p>
 
   <div class="example">
     <p class="label">예제 (교재 pp.91–92)</p>
@@ -1900,8 +1947,8 @@ sw   x9, 240(x10)    // A[30] = x9</pre>
   <div class="check">
     <p class="label">스스로 확인</p>
     <ol>
-      <li><p>R형의 필드를 31번 비트 쪽부터 순서대로 쓰고 각 비트 수를 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>funct7(7), rs2(5), rs1(5), funct3(3), rd(5), opcode(7). <span class="tb">교재 기준</span></p></div></details></li>
-      <li><p><code>0000000 10101 10100 000 01001 0110011</code>을 어셈블리로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p><code>add x9, x20, x21</code>. rs2 = 21, rs1 = 20, rd = 9, R형 add. 슬라이드 p.21의 "x0"은 오타. <span class="ref">[Ch2 p.21–22]</span></p></div></details></li>
+      <li><p>R형의 필드를 31번 비트 쪽부터 순서대로 쓰고 각 비트 수를 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>funct7(7), rs2(5), rs1(5), funct3(3), rd(5), opcode(7). <span class="ref">[Ch2 p.22]</span></p></div></details></li>
+      <li><p><code>0000000 10101 10100 000 01001 0110011</code>을 어셈블리로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p><code>add x9, x20, x21</code>. rs2 = 21, rs1 = 20, rd = 9, R형 add. 슬라이드 p.21의 "x0"은 원문 표기 오류(2진수는 x9). <span class="ref">[Ch2 p.21–22]</span></p></div></details></li>
       <li><p>설계 원칙 3을 영어와 한국어로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>Good design demands good compromises, 좋은 설계에는 좋은 타협이 필요하다. <span class="ref">[Ch2 p.23]</span></p></div></details></li>
       <li><p>S형이 12비트 즉시값을 두 필드로 나누는 이유를 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>rs1·rs2 필드(그리고 opcode·funct3)를 모든 형식에서 같은 위치에 두기 위해. <span class="ref">[Ch2 p.24]</span></p></div></details></li>
       <li><p>lw와 sw는 각각 어떤 형식인가?</p><details><summary>답 보기</summary><div class="ans"><p>lw = I형, sw = S형. <span class="ref">[Ch2 p.21]</span></p></div></details></li>
@@ -2767,10 +2814,10 @@ addi x19, x19, 1280    // x19 = 0x003D0000 + 0x500 = 0x003D0500</pre>
     <span class="f" style="--w:1"><b>imm[11]</b><i>7</i></span>
     <span class="f" style="--w:7"><b>opcode</b><i>6–0</i></span>
   </div>
-  <p>rs1, rs2, funct3, opcode는 R·I·S 형식과 같은 자리에 있다. 즉시값 비트가 흩어진 것은 이 고정 위치를 지키기 위해서다. <span class="tb">교재 기준</span></p>
+  <p>rs1, rs2, funct3, opcode는 R·I·S 형식과 같은 자리에 있다. 즉시값 비트가 흩어진 것은 이 고정 위치를 지키기 위해서다. <span class="ref">[Ch2 p.47, Ch4 p.21]</span> Ch4 p.21 그림은 같은 배치를 <code>immed[12,10:5] | rs2 | rs1 | funct3 | immed[4:1,11] | opcode</code>로 적는다.</p>
 
   <h3>bne 인코딩 예</h3>
-  <p>슬라이드 예: bne의 opcode = <code>1100011</code>, funct3 = <code>001</code>, 오프셋 2000 = <code>0111 1101 0000</code>. <span class="ref">[Ch2 p.47]</span> 슬라이드 그림 속 명령어는 텍스트로 확인되지 않아 교재의 예 <code>bne x10, x11, 2000</code>으로 풀었다. <span class="tb">교재 기준</span> <b>(슬라이드 확인 필요)</b></p>
+  <p>슬라이드 예: <code>bne x10, x11, 2000</code> (x10 ≠ x11이면 2000으로 간다). bne의 opcode = <code>1100011</code>, funct3 = <code>001</code>, 오프셋 2000 = <code>0111 1101 0000</code>. <span class="ref">[Ch2 p.47]</span> 슬라이드 아래 칸 표의 opcode 칸에는 <code>1100111</code>이 적혀 있는데, 같은 슬라이드 위 문장은 "opcode: 1100011 for bne"다. <code>1100011</code>이 맞고 칸 표의 <code>1100111</code>은 오타다(<code>1100111</code>은 jalr의 opcode).</p>
   <ol>
     <li>2000 = 1024 + 512 + 256 + 128 + 64 + 16 → 13비트 imm[12:0] = <code>0 0111 1101 0000</code></li>
     <li>imm[12] = 0, imm[11] = 0, imm[10:5] = <code>111110</code>, imm[4:1] = <code>1000</code> (imm[0] = 0은 저장 안 함)</li>
@@ -2798,7 +2845,7 @@ addi x19, x19, 1280    // x19 = 0x003D0000 + 0x500 = 0x003D0500</pre>
     <span class="f" style="--w:5"><b>rd</b><i>11–7</i></span>
     <span class="f" style="--w:7"><b>opcode</b><i>6–0</i></span>
   </div>
-  <p>슬라이드 예: imm[20:1] = <code>0 0000 0000 0111 1101 0000</code> (2000을 21비트로 쓴 것). 교재 예 <code>jal x0, 2000</code>으로 맞추면 imm[20] = 0, imm[10:1] = <code>1111101000</code>, imm[11] = 0, imm[19:12] = <code>00000000</code>, rd = <code>00000</code> → 0x7D00006F. <span class="tb">교재 기준</span> <b>(슬라이드 확인 필요)</b> 실제 오프셋은 21비트 부호 있는 수(0번 비트는 0)라 ±2<sup>20</sup>바이트 = ±1 MiB 범위다.</p>
+  <p>슬라이드 예: <code>jal x0, 2000</code>. imm[20:1] = <code>0 0000 0000 0111 1101 0000</code> (2000을 21비트로 쓴 것)을 나눠 imm[20] = 0, imm[10:1] = <code>1111101000</code>, imm[11] = 0, imm[19:12] = <code>00000000</code>, rd = <code>00000</code>, opcode = <code>1101111</code>. <span class="ref">[Ch2 p.47]</span> 이어 붙이면 0x7D00006F. 실제 오프셋은 21비트 부호 있는 수(0번 비트는 0)라 ±2<sup>20</sup>바이트 = ±1 MiB 범위다.</p>
 
   <h3>PC 상대 주소 지정</h3>
   <p>주소 자체를 20비트 칸에 넣어야 한다면, 어떤 프로그램도 2<sup>20</sup>바이트(1 MiB)보다 클 수 없다. 오늘날 현실적이지 않다. 대안은 분기 오프셋에 항상 어떤 레지스터를 더하도록 정하는 것이다. <span class="ref">[Ch2 p.48]</span></p>
@@ -2840,7 +2887,7 @@ jalr x1, 0x678(x5)       // PC = 0x12345678, x1 = 다음 명령어 주소</pre>
   </div>
 
   <div class="trap"><p class="label">함정</p>
-    <p>① SB 범위 −4096~4094는 <b>바이트</b>, p.48의 ±2<sup>10</sup>은 <b>word</b>다. 단위를 확인하고 답할 것. ② 범위의 위쪽 끝은 4096이 아니고 4094다(짝수만, 부호 있는 13비트의 최댓값 4095에서 홀수 제외). ③ lui는 하위 12비트를 0으로 채운다. 기존 값이 남지 않는다. ④ PC 상대에서 기준은 분기 명령어 자신의 주소이고, 오프셋은 명령어 개수가 아닌 바이트 수다.</p>
+    <p>① SB 범위 −4096~4094는 <b>바이트</b>, p.48의 ±2<sup>10</sup>은 <b>word</b>다. 단위를 확인하고 답할 것. ② 범위의 위쪽 끝은 4096이 아니고 4094다(짝수만, 부호 있는 13비트의 최댓값 4095에서 홀수 제외). ③ lui는 하위 12비트를 0으로 채운다. 기존 값이 남지 않는다. ④ PC 상대에서 기준은 분기 명령어 자신의 주소이고, 오프셋은 명령어 개수가 아닌 바이트 수다. ⑤ 슬라이드 p.47의 bne 칸 표에 적힌 opcode <code>1100111</code>은 오타다. 정답은 <code>1100011</code>(조건 분기 공통)이고, <code>1100111</code>은 jalr이다. <span class="ref">[Ch2 p.47, 50]</span></p>
   </div>
 
   <div class="exam"><p class="label">시험 포인트</p><ul>
@@ -2927,7 +2974,55 @@ jalr x1, 0x678(x5)       // PC = 0x12345678, x1 = 다음 명령어 주소</pre>
       <tr><td><code>1101111</code></td><td>UJ</td><td>jal</td></tr>
     </tbody>
   </table></div>
-  <p>R형·분기·jal의 opcode는 슬라이드에 나온다 <span class="ref">[Ch2 p.47, 50]</span>. 나머지는 해독 연습용 참고다. <span class="tb">교재 기준</span></p>
+  <p>위 opcode는 모두 슬라이드 인코딩 표에 있다. <span class="ref">[Ch2 p.50]</span> 명령어별 funct3·funct7까지 담은 전체 표는 아래에 있다.</p>
+
+  <h3>슬라이드 인코딩 표</h3>
+  <p>슬라이드 p.50 오른쪽에 있는 표를 그대로 옮긴 것이다. 26-1 시험지에 준 encoding 표가 이런 형태일 가능성이 높으니, 이 표를 보고 형식·opcode·funct3·funct7을 빠르게 찾는 연습을 해 둔다. n.a.는 그 형식에 해당 칸이 없다는 뜻이다. <span class="ref">[Ch2 p.50]</span></p>
+  <div class="tbl"><table>
+    <thead><tr><th>형식(Format)</th><th>명령어(Instruction)</th><th>opcode</th><th>funct3</th><th>funct7</th></tr></thead>
+    <tbody>
+      <tr><td>R</td><td><code>add</code></td><td><code>0110011</code></td><td><code>000</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>sub</code></td><td><code>0110011</code></td><td><code>000</code></td><td><code>0100000</code></td></tr>
+      <tr><td>R</td><td><code>sll</code></td><td><code>0110011</code></td><td><code>001</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>xor</code></td><td><code>0110011</code></td><td><code>100</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>srl</code></td><td><code>0110011</code></td><td><code>101</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>sra</code></td><td><code>0110011</code></td><td><code>101</code></td><td><code>0100000</code></td></tr>
+      <tr><td>R</td><td><code>or</code></td><td><code>0110011</code></td><td><code>110</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>and</code></td><td><code>0110011</code></td><td><code>111</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>lr.d</code></td><td><code>0110011</code></td><td><code>011</code></td><td><code>0001000</code></td></tr>
+      <tr><td>R</td><td><code>sc.d</code></td><td><code>0110011</code></td><td><code>011</code></td><td><code>0001100</code></td></tr>
+      <tr><td>I</td><td><code>lb</code></td><td><code>0000011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lh</code></td><td><code>0000011</code></td><td><code>001</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lw</code></td><td><code>0000011</code></td><td><code>010</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lbu</code></td><td><code>0000011</code></td><td><code>100</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lhu</code></td><td><code>0000011</code></td><td><code>101</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>addi</code></td><td><code>0010011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>slli</code></td><td><code>0010011</code></td><td><code>001</code></td><td><code>0000000</code></td></tr>
+      <tr><td>I</td><td><code>xori</code></td><td><code>0010011</code></td><td><code>100</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>srli</code></td><td><code>0010011</code></td><td><code>101</code></td><td><code>0000000</code></td></tr>
+      <tr><td>I</td><td><code>srai</code></td><td><code>0010011</code></td><td><code>101</code></td><td><code>0100000</code></td></tr>
+      <tr><td>I</td><td><code>ori</code></td><td><code>0010011</code></td><td><code>110</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>andi</code></td><td><code>0010011</code></td><td><code>111</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>jalr</code></td><td><code>1100111</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>S</td><td><code>sb</code></td><td><code>0100011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>S</td><td><code>sh</code></td><td><code>0100011</code></td><td><code>001</code></td><td>n.a.</td></tr>
+      <tr><td>S</td><td><code>sw</code></td><td><code>0100011</code></td><td><code>010</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>beq</code></td><td><code>1100011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bne</code></td><td><code>1100011</code></td><td><code>001</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>blt</code></td><td><code>1100011</code></td><td><code>100</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bge</code></td><td><code>1100011</code></td><td><code>101</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bltu</code></td><td><code>1100011</code></td><td><code>110</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bgeu</code></td><td><code>1100011</code></td><td><code>111</code></td><td>n.a.</td></tr>
+      <tr><td>U</td><td><code>lui</code></td><td><code>0110111</code></td><td>n.a.</td><td>n.a.</td></tr>
+      <tr><td>UJ</td><td><code>jal</code></td><td><code>1101111</code></td><td>n.a.</td><td>n.a.</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>R형 <code>lr.d</code>, <code>sc.d</code>는 표에 있지만 원자적(atomic) 메모리 접근용 명령어라 이 강의 범위 밖이다. 표에서 opcode가 R형과 같다는 것만 보고 넘어가면 된다. <span class="sup">PDF 외 보충</span></li>
+    <li><code>lb</code>, <code>lh</code>, <code>lbu</code>, <code>lhu</code>, <code>sb</code>, <code>sh</code>의 동작은 Ch2 · 3 끝에 정리했다.</li>
+    <li>읽는 순서: opcode로 형식 범위를 좁히고 → funct3로 명령어를 고르고 → 그래도 둘 이상 남으면(add/sub, srl/sra, srli/srai) funct7을 본다.</li>
+    <li><code>slli</code>·<code>srli</code>·<code>srai</code>의 funct7 칸은 실제로는 I형 즉시값의 위 7비트 자리다(Ch2 · 6).</li>
+  </ul>
 
   <div class="example">
     <p class="label">예제</p>
@@ -2949,6 +3044,7 @@ jalr x1, 0x678(x5)       // PC = 0x12345678, x1 = 다음 명령어 주소</pre>
     <li>"한 연산이 여러 방식을 쓸 수 있다"의 예(add/addi).</li>
     <li>0x00578833 → <code>add x16, x15, x5</code>를 단계별로 풀기.</li>
     <li>해독 4단계 순서(2진 변환 → opcode로 형식 결정 → 필드 분리 → 어셈블리).</li>
+    <li>슬라이드 p.50 인코딩 표(시험지에 주는 표와 같은 형태일 가능성이 높음)에서 opcode → funct3 → funct7 순으로 명령어 찾기.</li>
   </ul></div>
 
   <div class="check">
@@ -2975,7 +3071,7 @@ jalr x1, 0x678(x5)       // PC = 0x12345678, x1 = 다음 명령어 주소</pre>
     <p class="limit"><b>비유가 안 맞는 지점</b> 번역과 달리 컴파일러는 의미를 유지하는 범위에서 코드를 최적화해 바꿀 수 있고, 링커가 "쪽수를 다시 매기는" 일은 실제 메모리 주소를 고쳐 넣는 일이다.</p>
   </div>
 
-  <p>슬라이드는 C 코드가 컴퓨터에서 실행되는 프로그램이 되기까지 <b>네 단계</b>가 있다고 하고, 내용은 그림으로만 보여 준다. 아래 설명은 교재 기준이다. <span class="ref">[Ch2 p.51]</span> <span class="tb">교재 기준</span></p>
+  <p>슬라이드는 C 코드가 컴퓨터에서 실행되는 프로그램이 되기까지 <b>네 단계</b>가 있다고 하고, 흐름을 그림으로 보여 준다. C 프로그램 → 컴파일러 → 어셈블리 언어 프로그램 → 어셈블러 → 목적 파일(기계어 모듈) → 링커(라이브러리 루틴 목적 파일도 함께 받음) → 실행 파일(기계어 프로그램) → 로더 → 메모리. <span class="ref">[Ch2 p.51]</span> 각 단계가 하는 일의 세부 설명은 교재 기준이다. <span class="tb">교재 기준</span></p>
 
   <div class="tbl"><table>
     <thead><tr><th>단계</th><th>입력</th><th>하는 일</th><th>출력</th></tr></thead>
@@ -3862,16 +3958,16 @@ S = 1000 0000 0000 0000 0000 0000 0000 0000   (&lt; 0)  → 오버플로</pre>
   <h3>예약된 지수와 범위</h3>
   <p>지수 칸 00000000과 11111111(단정도 0과 255)은 <b>예약</b>되어 있다. 특이한 상황을 나타내는 특수 기호에 쓴다. 예: <b>NaN</b>(Not a Number, 수가 아님)은 0/0 같은 잘못된 연산의 결과. <span class="ref">[Ch3 p.30]</span></p>
   <div class="tbl"><table>
-    <thead><tr><th>지수 칸</th><th>Fraction</th><th>뜻</th></tr></thead>
+    <thead><tr><th>단정도 지수 칸</th><th>단정도 Fraction</th><th>배정도 지수 칸</th><th>배정도 Fraction</th><th>뜻(Object represented)</th></tr></thead>
     <tbody>
-      <tr><td>0</td><td>0</td><td>0 (±0)</td></tr>
-      <tr><td>0</td><td>0 아님</td><td>비정규화 수(denormalized number)</td></tr>
-      <tr><td>1 ~ 254</td><td>아무 값</td><td>정규화된 부동소수점 수</td></tr>
-      <tr><td>255</td><td>0</td><td>±무한대(∞)</td></tr>
-      <tr><td>255</td><td>0 아님</td><td>NaN</td></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>0</td><td>0 아님(Nonzero)</td><td>0</td><td>0 아님</td><td>± 비정규화 수(denormalized number)</td></tr>
+      <tr><td>1 ~ 254</td><td>아무 값(Anything)</td><td>1 ~ 2046</td><td>아무 값</td><td>± 부동소수점 수(floating-point number)</td></tr>
+      <tr><td>255</td><td>0</td><td>2047</td><td>0</td><td>± 무한대(infinity)</td></tr>
+      <tr><td>255</td><td>0 아님</td><td>2047</td><td>0 아님</td><td>NaN(Not a Number)</td></tr>
     </tbody>
   </table></div>
-  <p>이 표는 슬라이드에 그림으로만 있는 내용이라 교재로 정리했다. <span class="tb">교재 기준</span></p>
+  <p><span class="ref">[Ch3 p.30]</span></p>
   <p>단정도 정규화 범위: <span class="ref">[Ch3 p.30]</span></p>
   <ul>
     <li>가장 작은 크기: 지수 칸 00000001(실제 지수 1 − 127 = −126), F = 000…0(유효숫자 1.0) → <b>±1.0 × 2<sup>−126</sup> ≈ ±1.2 × 10<sup>−38</sup></b>.</li>
@@ -4504,10 +4600,11 @@ f2c:
   </ul>
   <p>분기 데이터패스는 두 가지 일을 한다. <span class="ref">[Ch4 p.15]</span></p>
   <ol>
-    <li><b>목표 주소 계산</b>: ImmGen + (1비트 시프트) + 가산기. ALU와 별도인 가산기를 쓴다.</li>
+    <li><b>목표 주소 계산</b>: ImmGen + 가산기. ImmGen이 부호 확장과 함께 분기용 1비트 왼쪽 시프트까지 해서(슬라이드 p.15) 분기 가산기로 보낸다. ALU와 별도인 가산기를 쓴다.</li>
     <li><b>레지스터 비교</b>: ALU가 두 레지스터를 <b>빼고</b> Zero 출력을 본다. 같으면 차가 0이므로 Zero = 1.</li>
   </ol>
-  <p>슬라이드 p.15 그림의 "Sign-bit wire replicated"는 부호 비트 선을 복제해 위쪽 비트를 채우는 것, 즉 부호 확장이다. "Shifted left by 1 bit"는 시프트 장치가 따로 계산하는 게 아니라 선을 한 칸 옆으로 옮겨 연결하는 것으로 구현할 수 있다는 뜻이다. <span class="ref">[Ch4 p.15]</span></p>
+  <p>슬라이드 p.15 그림의 "Sign-bit wire replicated"는 부호 비트 선을 복제해 위쪽 비트를 채우는 것, 즉 부호 확장이다. "Shifted left by 1 bit"는 시프트 장치가 따로 계산하는 게 아니라 선을 한 칸 옆으로 옮겨 연결하는 것으로 구현할 수 있다는 뜻이다. 슬라이드에서는 두 주석이 모두 ImmGen을 가리킨다. 즉 시프트 상자가 따로 없고, ImmGen 출력이 분기 가산기(Add, Sum)로 바로 간다. <span class="ref">[Ch4 p.15]</span></p>
+  <p>교재의 일부 그림에는 ImmGen과 분기 가산기 사이에 "Shift left 1" 상자가 따로 그려져 있다. 하는 일은 같으니 시험 그림에 그 상자가 있으면 "왼쪽 1비트 시프트"로 답하면 된다. <span class="sup">PDF 외 보충</span></p>
 
   <div class="key"><p class="label">핵심</p><p>인출 = 명령어 메모리 + PC + 가산기(+4). R형 = 레지스터 파일(읽기 2, 쓰기 1, RegWrite) + ALU(32비트 입력 2, 4비트 제어, Zero). load/store = 베이스 + 12비트 부호 확장 오프셋(ImmGen) → 데이터 메모리. 분기 = 목표 PC + (오프셋 &lt;&lt; 1)를 별도 가산기로, ALU 뺄셈의 Zero로 같음 검사. 짝수 주소만 가능.</p></div>
 
@@ -4577,155 +4674,167 @@ f2c:
       <tr><td><b>PCSrc</b></td><td>PC 입력 앞</td><td>PC + 4</td><td>분기 목표 주소</td></tr>
     </tbody>
   </table></div>
-  <p><span class="ref">[Ch4 p.16–17, p.24]</span> <span class="tb">교재 기준</span></p>
+  <p><span class="ref">[Ch4 p.16–17, p.24]</span> 슬라이드 p.24 그림의 MUX 안 숫자는 PCSrc 위 0·아래 1, ALUSrc 위 0·아래 1, MemtoReg 위 1·아래 0이다. MemtoReg만 1이 위에 있으니 위치가 아니라 숫자로 읽는다.</p>
 
   <h3>전체 단일 사이클 데이터패스</h3>
-  <p>R형, load/store, 분기를 모두 실행하는 단일 사이클 데이터패스다. 메모리가 명령어용과 데이터용 두 개다. <span class="ref">[Ch4 p.17]</span> 아래 그림은 슬라이드 p.17에 p.24의 제어 신호를 더한 형태다.</p>
+  <p>R형, load/store, 분기를 모두 실행하는 단일 사이클 데이터패스다. 메모리가 명령어용과 데이터용 두 개다. <span class="ref">[Ch4 p.17]</span> 아래 그림은 슬라이드 p.17에 p.24의 제어 신호를 더하고, p.26–28처럼 제어 유닛과 AND 게이트를 넣은 형태다. p.17·p.24 그림에는 AND 게이트 없이 PCSrc 선만 있다. <span class="ref">[Ch4 p.24, p.26–28]</span></p>
   <figure class="diagram">
-    <svg viewBox="0 0 1200 720" role="img" aria-label="단일 사이클 데이터패스 전체: PC, 명령어 메모리, 제어 유닛, 레지스터 파일, ImmGen, ALUSrc MUX, ALU, ALU 제어, 데이터 메모리, MemtoReg MUX, PC+4 가산기, 분기 가산기, 1비트 시프트, AND, PCSrc MUX">
+    <svg viewBox="0 0 1200 790" role="img" aria-label="단일 사이클 데이터패스 전체: PC, 명령어 메모리, PC+4 가산기, 제어 유닛(출력 Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite), 레지스터 파일, ImmGen, ALUSrc MUX, ALU, ALU 제어, 데이터 메모리, MemtoReg MUX, 분기 가산기, AND, PCSrc MUX">
       <defs><marker id="c4-4-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
 
       <!-- PC와 명령어 메모리 -->
-      <rect class="bx" x="40" y="340" width="60" height="80"/>
-      <text class="t" x="70" y="385" text-anchor="middle">PC</text>
-      <path class="ln" fill="none" d="M100,380 H140" marker-end="url(#c4-4-arrow)"/>
-      <rect class="bx" x="140" y="320" width="150" height="140"/>
-      <text class="t" x="215" y="352" text-anchor="middle">명령어 메모리</text>
-      <text class="lbl" x="146" y="384">읽기 주소</text>
-      <text class="lbl" x="284" y="414" text-anchor="end">명령어</text>
+      <rect class="bx" x="40" y="400" width="60" height="80"/>
+      <text class="t" x="70" y="445" text-anchor="middle">PC</text>
+      <path class="ln" fill="none" d="M100,440 H140" marker-end="url(#c4-4-arrow)"/>
+      <rect class="bx" x="140" y="380" width="150" height="140"/>
+      <text class="t" x="215" y="412" text-anchor="middle">명령어 메모리</text>
+      <text class="lbl" x="146" y="444">읽기 주소</text>
+      <text class="lbl" x="284" y="484" text-anchor="end">명령어</text>
 
       <!-- PC + 4 가산기 -->
-      <path class="ln" fill="none" d="M120,380 V40 H740 V150 H760" marker-end="url(#c4-4-arrow)"/>
-      <path class="ln" fill="none" d="M120,80 H160" marker-end="url(#c4-4-arrow)"/>
-      <path class="ln" fill="none" d="M140,120 H160" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M120,440 V80 H180" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M140,120 H180" marker-end="url(#c4-4-arrow)"/>
       <text class="lbl" x="134" y="124" text-anchor="end">4</text>
-      <rect class="bx" x="160" y="60" width="60" height="80"/>
-      <text class="t" x="190" y="105" text-anchor="middle">+</text>
-      <text class="lbl" x="190" y="158" text-anchor="middle">가산기</text>
-      <path class="ln" fill="none" d="M220,100 H1000" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="232" y="92">PC + 4</text>
+      <rect class="bx" x="180" y="60" width="60" height="80"/>
+      <text class="t" x="210" y="105" text-anchor="middle">Add</text>
+      <path class="ln" fill="none" d="M240,100 H1060" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="252" y="92">PC + 4</text>
+
+      <!-- PC → 분기 가산기 -->
+      <path class="ln" fill="none" d="M120,150 H850 V175 H870" marker-end="url(#c4-4-arrow)"/>
 
       <!-- 명령어 비트 버스 -->
-      <path class="ln" fill="none" d="M290,420 H320"/>
-      <path class="ln" fill="none" d="M320,200 V630"/>
-      <path class="ln" fill="none" d="M320,200 H385" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="326" y="194">[6:0]</text>
-      <path class="ln" fill="none" d="M320,305 H400" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="326" y="299">[19:15]</text>
-      <path class="ln" fill="none" d="M320,345 H400" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="326" y="339">[24:20]</text>
-      <path class="ln" fill="none" d="M320,405 H400" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="326" y="399">[11:7]</text>
-      <path class="ln" fill="none" d="M320,575 H425" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="378" y="569">[31:0]</text>
-      <path class="ln" fill="none" d="M320,630 H670" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="386" y="624">[30], [14:12]</text>
+      <path class="ln" fill="none" d="M290,480 H320"/>
+      <path class="ln" fill="none" d="M320,260 V700"/>
+      <path class="ln" fill="none" d="M320,260 H390" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="326" y="254">[6:0]</text>
+      <path class="ln" fill="none" d="M320,430 H420" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="326" y="424">[19:15]</text>
+      <path class="ln" fill="none" d="M320,470 H420" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="326" y="464">[24:20]</text>
+      <path class="ln" fill="none" d="M320,520 H420" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="326" y="514">[11:7]</text>
+      <path class="ln" fill="none" d="M320,650 H445" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="330" y="644">[31:0]</text>
+      <path class="ln" fill="none" d="M320,700 H685" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="562" y="694">[30], [14:12]</text>
 
-      <!-- 제어 유닛 -->
-      <ellipse class="hl" cx="460" cy="200" rx="75" ry="32"/>
-      <text class="t" x="460" y="205" text-anchor="middle">제어 유닛</text>
+      <!-- 제어 유닛과 출력 7개(슬라이드 p.26 순서) -->
+      <ellipse class="hl" cx="450" cy="260" rx="60" ry="95"/>
+      <text class="t" x="450" y="265" text-anchor="middle">제어 유닛</text>
+      <path class="ac" fill="none" d="M497,200 H575"/>
+      <text class="lbl" x="514" y="196">Branch</text>
+      <path class="ac" fill="none" d="M504,220 H575"/>
+      <text class="lbl" x="514" y="216">MemRead</text>
+      <path class="ac" fill="none" d="M509,240 H575"/>
+      <text class="lbl" x="514" y="236">MemtoReg</text>
+      <path class="ac" fill="none" d="M510,260 H575"/>
+      <text class="lbl" x="514" y="256">ALUOp</text>
+      <path class="ac" fill="none" d="M509,280 H575"/>
+      <text class="lbl" x="514" y="276">MemWrite</text>
+      <path class="ac" fill="none" d="M504,300 H575"/>
+      <text class="lbl" x="514" y="296">ALUSrc</text>
+      <path class="ac" fill="none" d="M497,320 H575"/>
+      <text class="lbl" x="514" y="316">RegWrite</text>
 
       <!-- 레지스터 파일 -->
-      <rect class="bx" x="400" y="280" width="160" height="220"/>
-      <text class="lbl" x="406" y="309">읽기 레지스터 1</text>
-      <text class="lbl" x="406" y="349">읽기 레지스터 2</text>
-      <text class="lbl" x="406" y="409">쓰기 레지스터</text>
-      <text class="lbl" x="406" y="469">쓰기 데이터</text>
-      <text class="lbl" x="554" y="329" text-anchor="end">읽기 데이터 1</text>
-      <text class="lbl" x="554" y="429" text-anchor="end">읽기 데이터 2</text>
-      <text class="t" x="480" y="492" text-anchor="middle">레지스터 파일</text>
-      <path class="ac" fill="none" d="M480,258 V280" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="488" y="272">RegWrite</text>
-      <path class="ln" fill="none" d="M560,325 H690" marker-end="url(#c4-4-arrow)"/>
-      <path class="ln" fill="none" d="M560,425 H620" marker-end="url(#c4-4-arrow)"/>
+      <rect class="bx" x="420" y="400" width="160" height="200"/>
+      <text class="lbl" x="426" y="434">읽기 레지스터 1</text>
+      <text class="lbl" x="426" y="474">읽기 레지스터 2</text>
+      <text class="lbl" x="426" y="524">쓰기 레지스터</text>
+      <text class="lbl" x="426" y="574">쓰기 데이터</text>
+      <text class="lbl" x="574" y="454" text-anchor="end">읽기 데이터 1</text>
+      <text class="lbl" x="574" y="544" text-anchor="end">읽기 데이터 2</text>
+      <text class="t" x="500" y="594" text-anchor="middle">레지스터 파일</text>
+      <path class="ac" fill="none" d="M500,375 V400" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="512" y="390">RegWrite</text>
+      <path class="ln" fill="none" d="M580,450 H700" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M580,540 H640" marker-end="url(#c4-4-arrow)"/>
 
-      <!-- ImmGen과 시프트 -->
-      <ellipse class="bx" cx="480" cy="575" rx="55" ry="26"/>
-      <text class="t" x="480" y="580" text-anchor="middle">ImmGen</text>
-      <path class="ln" fill="none" d="M535,575 H580 V210 H640" marker-end="url(#c4-4-arrow)"/>
-      <path class="ln" fill="none" d="M580,455 H620" marker-end="url(#c4-4-arrow)"/>
-      <rect class="bx" x="640" y="190" width="60" height="40"/>
-      <text class="t" x="670" y="215" text-anchor="middle">&lt;&lt; 1</text>
-      <path class="ln" fill="none" d="M700,210 H760" marker-end="url(#c4-4-arrow)"/>
+      <!-- ImmGen: 부호 확장 + 분기용 1비트 시프트(p.15) -->
+      <ellipse class="bx" cx="500" cy="650" rx="55" ry="28"/>
+      <text class="t" x="500" y="655" text-anchor="middle">ImmGen</text>
+      <path class="ln" fill="none" d="M555,650 H610 V225 H870" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M610,580 H640" marker-end="url(#c4-4-arrow)"/>
 
-      <!-- ALUSrc MUX -->
-      <rect class="mx" x="620" y="400" width="24" height="80" rx="12"/>
-      <text class="lbl" x="632" y="429" text-anchor="middle">0</text>
-      <text class="lbl" x="632" y="459" text-anchor="middle">1</text>
-      <path class="ac" fill="none" d="M632,380 V400" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="632" y="373" text-anchor="middle">ALUSrc</text>
-      <path class="ln" fill="none" d="M644,440 H690" marker-end="url(#c4-4-arrow)"/>
+      <!-- ALUSrc MUX: 위 0 = 읽기 데이터 2, 아래 1 = ImmGen -->
+      <rect class="mx" x="640" y="520" width="24" height="80" rx="12"/>
+      <text class="lbl" x="652" y="544" text-anchor="middle">0</text>
+      <text class="lbl" x="652" y="584" text-anchor="middle">1</text>
+      <path class="ac" fill="none" d="M652,495 V520" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="652" y="488" text-anchor="middle">ALUSrc</text>
+      <path class="ln" fill="none" d="M664,560 H700" marker-end="url(#c4-4-arrow)"/>
 
       <!-- 저장할 데이터(읽기 데이터 2) → 데이터 메모리 -->
-      <path class="ln" fill="none" d="M600,425 V505 H850 V470 H860" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M595,540 V615 H880" marker-end="url(#c4-4-arrow)"/>
 
       <!-- ALU -->
-      <polygon class="bx" points="690,290 770,330 770,430 690,470 690,400 705,380 690,360"/>
-      <text class="t" x="724" y="378" text-anchor="middle">ALU</text>
-      <text class="lbl" x="764" y="349" text-anchor="end">Zero</text>
-      <text class="lbl" x="764" y="409" text-anchor="end">결과</text>
-      <path class="ln" fill="none" d="M770,405 H860" marker-end="url(#c4-4-arrow)"/>
-      <path class="ln" fill="none" d="M770,345 H800 V280 H940" marker-end="url(#c4-4-arrow)"/>
+      <polygon class="bx" points="700,430 780,470 780,570 700,610 700,540 715,520 700,500"/>
+      <text class="t" x="742" y="525" text-anchor="middle">ALU</text>
+      <text class="lbl" x="774" y="494" text-anchor="end">Zero</text>
+      <text class="lbl" x="774" y="554" text-anchor="end">결과</text>
+      <path class="ln" fill="none" d="M780,550 H880" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M780,490 H800 V290 H960" marker-end="url(#c4-4-arrow)"/>
 
       <!-- ALU 제어 -->
-      <ellipse class="bx" cx="730" cy="630" rx="60" ry="24"/>
-      <text class="t" x="730" y="635" text-anchor="middle">ALU 제어</text>
-      <path class="ln" fill="none" d="M730,606 V452" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="736" y="590">4비트</text>
-      <path class="ac" fill="none" d="M840,630 H790" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="846" y="634">ALUOp</text>
+      <ellipse class="bx" cx="740" cy="700" rx="55" ry="22"/>
+      <text class="t" x="740" y="705" text-anchor="middle">ALU 제어</text>
+      <path class="ln" fill="none" d="M740,678 V592" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="746" y="662">4비트</text>
+      <path class="ac" fill="none" d="M850,700 H795" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="856" y="704">ALUOp</text>
 
       <!-- 분기 가산기, AND, PCSrc MUX -->
-      <rect class="bx" x="760" y="130" width="60" height="100"/>
-      <text class="t" x="790" y="185" text-anchor="middle">+</text>
-      <text class="lbl" x="790" y="248" text-anchor="middle">분기 가산기</text>
-      <path class="ln" fill="none" d="M820,180 H1000" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="832" y="172">분기 목표 주소</text>
-      <path class="bx" d="M940,250 H960 A20,20 0 0 1 960,290 H940 Z"/>
-      <text class="lbl" x="955" y="274" text-anchor="middle">AND</text>
-      <path class="ac" fill="none" d="M890,260 H940" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="884" y="264" text-anchor="end">Branch</text>
-      <path class="ac" fill="none" d="M980,270 H1012 V200" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="1018" y="240">PCSrc</text>
-      <rect class="mx" x="1000" y="80" width="24" height="120" rx="12"/>
-      <text class="lbl" x="1012" y="104" text-anchor="middle">0</text>
-      <text class="lbl" x="1012" y="184" text-anchor="middle">1</text>
-      <path class="ln" fill="none" d="M1024,140 H1170 V700 H20 V380 H40" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="1040" y="132">다음 PC</text>
+      <rect class="bx" x="870" y="150" width="80" height="100"/>
+      <text class="t" x="896" y="205" text-anchor="middle">Add</text>
+      <text class="lbl" x="944" y="204" text-anchor="end">Sum</text>
+      <text class="lbl" x="910" y="142" text-anchor="middle">분기 가산기</text>
+      <path class="ln" fill="none" d="M950,200 H1020 V160 H1060" marker-end="url(#c4-4-arrow)"/>
+      <path class="bx" d="M960,260 H980 A20,20 0 0 1 980,300 H960 Z"/>
+      <text class="lbl" x="976" y="284" text-anchor="middle">AND</text>
+      <path class="ac" fill="none" d="M918,270 H960" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="912" y="274" text-anchor="end">Branch</text>
+      <path class="ac" fill="none" d="M1000,280 H1072 V190" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="1080" y="240">PCSrc</text>
+      <rect class="mx" x="1060" y="70" width="24" height="120" rx="12"/>
+      <text class="lbl" x="1072" y="104" text-anchor="middle">0</text>
+      <text class="lbl" x="1072" y="164" text-anchor="middle">1</text>
+      <path class="ln" fill="none" d="M1084,130 H1170 V770 H20 V440 H40" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="1100" y="122">다음 PC</text>
 
       <!-- 데이터 메모리 -->
-      <rect class="bx" x="860" y="330" width="150" height="160"/>
-      <text class="t" x="935" y="362" text-anchor="middle">데이터 메모리</text>
-      <text class="lbl" x="866" y="409">주소</text>
-      <text class="lbl" x="866" y="474">쓰기 데이터</text>
-      <text class="lbl" x="1004" y="449" text-anchor="end">읽기 데이터</text>
-      <path class="ac" fill="none" d="M900,510 V490" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="900" y="526" text-anchor="middle">MemWrite</text>
-      <path class="ac" fill="none" d="M970,510 V490" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="970" y="526" text-anchor="middle">MemRead</text>
+      <rect class="bx" x="880" y="460" width="150" height="170"/>
+      <text class="t" x="955" y="492" text-anchor="middle">데이터 메모리</text>
+      <text class="lbl" x="886" y="554">주소</text>
+      <text class="lbl" x="886" y="619">쓰기 데이터</text>
+      <text class="lbl" x="1024" y="524" text-anchor="end">읽기 데이터</text>
+      <path class="ac" fill="none" d="M955,440 V460" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="955" y="432" text-anchor="middle">MemWrite</text>
+      <path class="ac" fill="none" d="M955,665 V630" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="955" y="681" text-anchor="middle">MemRead</text>
 
-      <!-- MemtoReg MUX와 쓰기 되돌림 -->
-      <path class="ln" fill="none" d="M820,405 V315 H1035 V410 H1060" marker-end="url(#c4-4-arrow)"/>
-      <path class="ln" fill="none" d="M1010,445 H1060" marker-end="url(#c4-4-arrow)"/>
-      <rect class="mx" x="1060" y="390" width="24" height="80" rx="12"/>
-      <text class="lbl" x="1072" y="414" text-anchor="middle">0</text>
-      <text class="lbl" x="1072" y="449" text-anchor="middle">1</text>
-      <path class="ac" fill="none" d="M1072,370 V390" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="1072" y="362" text-anchor="middle">MemtoReg</text>
-      <path class="ln" fill="none" d="M1084,430 H1120 V670 H370 V465 H400" marker-end="url(#c4-4-arrow)"/>
-      <text class="lbl" x="880" y="662">레지스터에 쓸 값</text>
+      <!-- MemtoReg MUX: 위 1 = 메모리 읽기 데이터, 아래 0 = ALU 결과 -->
+      <path class="ln" fill="none" d="M1030,520 H1080" marker-end="url(#c4-4-arrow)"/>
+      <path class="ln" fill="none" d="M840,550 V645 H1060 V565 H1080" marker-end="url(#c4-4-arrow)"/>
+      <rect class="mx" x="1080" y="490" width="24" height="100" rx="12"/>
+      <text class="lbl" x="1092" y="524" text-anchor="middle">1</text>
+      <text class="lbl" x="1092" y="569" text-anchor="middle">0</text>
+      <path class="ac" fill="none" d="M1092,468 V490" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="1092" y="460" text-anchor="middle">MemtoReg</text>
+      <path class="ln" fill="none" d="M1104,540 H1140 V740 H395 V570 H420" marker-end="url(#c4-4-arrow)"/>
+      <text class="lbl" x="900" y="732">레지스터에 쓸 값</text>
     </svg>
-    <figcaption>단일 사이클 데이터패스. 강조 선은 제어 유닛이 내보내는 신호로, 선을 다 그리면 겹쳐서 이름만 표시했다(RegWrite, ALUSrc, ALUOp, MemWrite, MemRead, MemtoReg, Branch). 선이 엇갈리기만 하는 곳은 연결이 아니고, T자로 갈라지는 곳만 연결이다. [ ] 안은 명령어의 비트 위치.</figcaption>
+    <figcaption>단일 사이클 데이터패스(슬라이드 p.17·p.24 구성에 p.26–28의 제어 유닛과 AND 게이트를 더함). 제어 유닛 오른쪽의 강조 선 7개는 슬라이드 p.26–28과 같은 순서(Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite)이고, 선을 끝까지 그리면 겹쳐서 같은 이름의 짧은 강조 선으로 들어가는 곳을 표시했다. 분기용 1비트 시프트는 ImmGen이 함께 하므로 시프트 상자가 따로 없다(p.15). MUX 안 숫자는 슬라이드와 같다: PCSrc 위 0·아래 1, ALUSrc 위 0·아래 1, MemtoReg 위 1·아래 0. 선이 엇갈리기만 하는 곳은 연결이 아니고, T자로 갈라지는 곳만 연결이다. [ ] 안은 명령어의 비트 위치.</figcaption>
   </figure>
 
   <h3>그림 읽는 법</h3>
   <ol>
     <li><b>인출</b>: PC → 명령어 메모리 → 32비트 명령어. 동시에 위쪽 가산기가 PC + 4를 만든다.</li>
-    <li><b>명령어 비트 나누기</b>: [6:0](opcode)은 제어 유닛으로, [19:15](rs1)·[24:20](rs2)는 읽기 레지스터 1·2로, [11:7](rd)은 쓰기 레지스터로, 명령어 전체는 ImmGen으로, [30]과 [14:12](funct7의 한 비트와 funct3)는 ALU 제어로 간다.</li>
+    <li><b>명령어 비트 나누기</b>: [6:0](opcode)은 제어 유닛으로(출력은 위에서부터 Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite), [19:15](rs1)·[24:20](rs2)는 읽기 레지스터 1·2로, [11:7](rd)은 쓰기 레지스터로, 명령어 전체는 ImmGen으로, [30]과 [14:12](funct7의 한 비트와 funct3)는 ALU 제어로 간다.</li>
     <li><b>ALU</b>: 첫 입력은 항상 읽기 데이터 1(rs1), 둘째 입력은 ALUSrc MUX가 고른다.</li>
     <li><b>데이터 메모리</b>: 주소 = ALU 결과, 쓰기 데이터 = 읽기 데이터 2(rs2, sw가 저장할 값).</li>
     <li><b>되돌림(write back)</b>: MemtoReg MUX가 ALU 결과나 메모리 값을 골라 레지스터 파일의 쓰기 데이터로 보낸다.</li>
-    <li><b>다음 PC</b>: 분기 가산기가 PC + (즉시값 &lt;&lt; 1)을 계산하고, Branch AND Zero가 PCSrc가 되어 PC + 4와 분기 목표 중 하나를 고른다.</li>
+    <li><b>다음 PC</b>: 분기 가산기가 PC + ImmGen 출력(ImmGen이 이미 1비트 시프트한 오프셋), 즉 PC + (즉시값 &lt;&lt; 1)을 계산하고, Branch AND Zero가 PCSrc가 되어 PC + 4와 분기 목표 중 하나를 고른다.</li>
   </ol>
   <p>ALU 제어에 funct7 전체가 아니라 [30] 한 비트만 가는 것은 이 부분집합에서 funct7 값 중 0000000(add)과 0100000(sub)을 가르는 비트가 30번뿐이기 때문이다. <span class="tb">교재 기준</span> <span class="sup">PDF 외 보충</span></p>
 
@@ -4776,7 +4885,7 @@ f2c:
   </div>
 
   <h3>ALU 제어 입력 4비트</h3>
-  <p>RISC-V ALU는 4비트 제어 입력의 네 가지 조합을 쓴다. <span class="ref">[Ch4 p.18]</span> <span class="tb">교재 기준</span></p>
+  <p>RISC-V ALU는 4비트 제어 입력의 네 가지 조합을 쓴다. <span class="ref">[Ch4 p.18]</span></p>
   <div class="tbl"><table>
     <thead><tr><th>ALU 제어 입력</th><th>연산</th></tr></thead>
     <tbody>
@@ -4836,7 +4945,7 @@ f2c:
       <tr><td>1</td><td>X</td><td>0000000</td><td>110</td><td><code>0001</code></td><td>or</td></tr>
     </tbody>
   </table></div>
-  <p><span class="ref">[Ch4 p.20]</span> <span class="tb">교재 기준</span></p>
+  <p><span class="ref">[Ch4 p.20]</span></p>
   <p>ALUOp에도 X가 들어가는 이유: ALUOp = 11은 절대 나오지 않는다. 그래서 01을 알아보는 데는 ALUOp0 = 1만 보면 되고, 10을 알아보는 데는 ALUOp1 = 1만 보면 된다. 이렇게 표를 만든 뒤 최적화해서 논리 게이트로 바꾼다. <span class="ref">[Ch4 p.20]</span></p>
   <p>같은 내용을 명령어별로 정리하면 다음과 같다(감사 요약 "핵심 표 7"과 같다).</p>
   <div class="tbl"><table>
@@ -4920,7 +5029,7 @@ f2c:
   </ul>
   <p><span class="ref">[Ch4 p.21]</span></p>
   <p>rs1·rs2·rd 위치가 그 필드를 가진 모든 형식에서 같으므로, 데이터패스는 해독이 끝나기 전에 [19:15]와 [24:20]을 레지스터 파일에 바로 연결해 읽기를 시작할 수 있다. (Ch2의 설계 원칙이 여기서 하드웨어를 단순하게 만든다.)</p>
-  <p>슬라이드 p.21 그림의 형식 예는 R형(add, sub), I형(addi, lw), S형(sw), SB형(beq)이다. 각 opcode 값은 다음과 같다. <span class="tb">교재 기준</span> <span class="sup">PDF 외 보충</span></p>
+  <p>슬라이드 p.21 그림의 형식 예는 R형(add, sub), I형(addi, lw), S형(sw), SB형(beq)이다. <span class="ref">[Ch4 p.21]</span> 각 opcode 값은 다음과 같다(R형 <code>0110011</code>은 슬라이드 p.18 표에도 있다). <span class="tb">교재 기준</span> <span class="sup">PDF 외 보충</span></p>
   <div class="tbl"><table>
     <thead><tr><th>형식</th><th>명령어</th><th>opcode</th></tr></thead>
     <tbody>
@@ -4963,7 +5072,7 @@ f2c:
       <tr><td><b>Branch</b></td><td>분기 명령어 아님</td><td>분기 명령어(beq). Zero와 AND해서 PCSrc를 만듦</td></tr>
     </tbody>
   </table></div>
-  <p>여기에 2비트 <b>ALUOp</b>(00 덧셈, 01 뺄셈, 10 funct로 결정)가 더해진다. <span class="tb">교재 기준</span> 주 제어 유닛이 직접 내보내는 것은 ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch, ALUOp의 7개이고, PCSrc는 그 바깥의 AND 게이트가 만든다. 교재는 1비트 신호 6개(RegWrite, ALUSrc, PCSrc, MemRead, MemWrite, MemtoReg) + ALUOp로 세기도 하니, 문제에서 무엇을 세는지 확인할 것.</p>
+  <p>여기에 2비트 <b>ALUOp</b>(00 덧셈, 01 뺄셈, 10 funct로 결정)가 더해진다. <span class="tb">교재 기준</span> 주 제어 유닛이 직접 내보내는 것은 Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite의 7개이고(슬라이드 p.25–28 그림의 위에서부터 순서), PCSrc는 그 바깥의 AND 게이트가 만든다(p.26–28 그림). <span class="ref">[Ch4 p.25–28]</span> 교재는 1비트 신호 6개(RegWrite, ALUSrc, PCSrc, MemRead, MemWrite, MemtoReg) + ALUOp로 세기도 하니, 문제에서 무엇을 세는지 확인할 것.</p>
 
   <h3>명령어별 제어 신호 값</h3>
   <div class="tbl"><table>
@@ -4975,7 +5084,7 @@ f2c:
       <tr><td>beq</td><td>0</td><td>X</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
     </tbody>
   </table></div>
-  <p><span class="ref">[Ch4 p.24–28]</span> <span class="tb">교재 기준</span></p>
+  <p><span class="ref">[Ch4 p.25]</span> 같은 값이 p.26–28 동작 그림에도 쓰인다. <span class="ref">[Ch4 p.26–28]</span></p>
   <p>외우는 요령: 각 열을 "이 명령어에 그 기능이 필요한가"로 읽는다.</p>
   <ul>
     <li>ALUSrc = 1: 즉시값으로 주소를 계산하는 lw, sw.</li>
@@ -5076,7 +5185,7 @@ f2c:
   </ol>
   <p>슬라이드 p.28 그림은 목표를 "PC+offset"으로 적었다. 여기서 offset은 1비트 시프트까지 마친 바이트 단위 값으로 읽으면 된다. <span class="ref">[Ch4 p.28]</span></p>
   <p>신호: ALUSrc = 0, MemtoReg = X, RegWrite = 0, MemRead = 0, MemWrite = 0, Branch = 1, ALUOp = 01 → PCSrc = Zero.</p>
-  <p>안 쓰이는 부품: 데이터 메모리, 레지스터 쓰기(RegWrite = 0). ImmGen 출력은 ALU로는 안 가고 시프트 후 분기 가산기로 간다.</p>
+  <p>안 쓰이는 부품: 데이터 메모리, 레지스터 쓰기(RegWrite = 0). ImmGen 출력은 ALU로는 안 가고(ALUSrc = 0), ImmGen이 부호 확장과 함께 분기용 1비트 왼쪽 시프트까지 해서(슬라이드 p.15) 분기 가산기로 보낸다.</p>
 
   <h3>store: sw x1, offset(x2)</h3>
   <p><span class="sup">PDF 외 보충</span> 슬라이드에는 그림이 없지만 신호 표에 있으므로 같은 방식으로 따라가 본다.</p>
@@ -5787,6 +5896,34 @@ L2:</pre>
         <p>x11 = 14, 그 뒤 End로 무조건 분기.</p>
         <p>x1 = <b>0x00400008</b>, x10 = <b>14</b> (0x0000000E), x11 = <b>14</b>.</p>
       </div></details></li>
+
+      <li><p><span class="past">예상</span> RISC-V(리틀 엔디언) 메모리의 주소 0x1000, 0x1001, 0x1002, 0x1003에 바이트 <code>8C</code>, <code>7F</code>, <code>00</code>, <code>A5</code>가 차례로 들어 있고 <code>x5</code> = 0x1000이다. 다음을 실행한 뒤 x6, x7, x8, x9의 값을 16진수 8자리로 쓰시오. (lb는 1바이트를 읽어 부호 확장, lbu는 0 확장)</p>
+        <pre class="asm">lb   x6, 0(x5)
+lbu  x7, 0(x5)
+lb   x8, 1(x5)
+lw   x9, 0(x5)</pre>
+        <details><summary>풀이 보기</summary><div class="ans">
+        <p>x6: 주소 0x1000의 바이트 0x8C = 1000 1100, 맨 위 비트 1 → 부호 확장 → <b>0xFFFFFF8C</b> (−116).</p>
+        <p>x7: 같은 바이트를 0 확장 → <b>0x0000008C</b> (140).</p>
+        <p>x8: 주소 0x1001의 바이트 0x7F = 0111 1111, 맨 위 비트 0 → <b>0x0000007F</b> (lb여도 위쪽이 0).</p>
+        <p>x9: 리틀 엔디언이므로 높은 주소(0x1003)부터 이어 붙인다: A5 00 7F 8C → <b>0xA5007F8C</b>.</p>
+        <p>lb와 lbu는 바이트의 맨 위 비트가 1일 때만 결과가 다르다. <span class="ref">[Ch2 p.13, 50]</span></p>
+      </div></details></li>
+
+      <li><p><span class="past">예상</span> 주소 0x2000의 word는 처음에 0x11223344이고 <code>x5</code> = 0x2000이다. 다음을 실행한 뒤 x7, x8, x9의 값을 16진수 8자리로 쓰시오. (sb는 레지스터의 하위 1바이트만 저장)</p>
+        <pre class="asm">addi x6, x0, -85
+sb   x6, 2(x5)
+lw   x7, 0(x5)
+lbu  x8, 2(x5)
+lb   x9, 2(x5)</pre>
+        <details><summary>풀이 보기</summary><div class="ans">
+        <p>처음 바이트(리틀 엔디언): 0x2000 = 44, 0x2001 = 33, 0x2002 = 22, 0x2003 = 11.</p>
+        <p><code>addi x6, x0, -85</code>: −85 = 0x100000000 − 0x55 = 0xFFFFFFAB. 하위 1바이트는 0xAB.</p>
+        <p><code>sb x6, 2(x5)</code>: 주소 0x2002에 0xAB만 쓴다 → 바이트 44, 33, AB, 11. 다른 3바이트는 그대로다.</p>
+        <p>x7 = 높은 주소부터 11 AB 33 44 → <b>0x11AB3344</b>.</p>
+        <p>x8 = lbu로 0xAB를 0 확장 → <b>0x000000AB</b> (171).</p>
+        <p>x9 = lb로 0xAB(맨 위 비트 1)를 부호 확장 → <b>0xFFFFFFAB</b> (−85, x6과 같은 값으로 돌아온다). <span class="ref">[Ch2 p.13, 50]</span></p>
+      </div></details></li>
     </ol>
   </div>
 </section>
@@ -5808,37 +5945,47 @@ L2:</pre>
   </div>
 
   <h3>시험지에 주어질 encoding 표</h3>
-  <p>교재(Patterson–Hennessy RISC-V 2판)의 표를 이 단원 문제에 쓴다. 시험지에서도 이런 표를 준다고 하니, 값을 외우기보다 표를 빠르게 읽고 칸 순서를 틀리지 않는 데 집중한다. <span class="tb">교재 기준</span></p>
+  <p>슬라이드 p.50의 표를 그대로 옮겼다. 26-1 시험지에 준 encoding 표가 이런 형태일 가능성이 높다. 값을 외우기보다 표를 빠르게 읽고 칸 순서를 틀리지 않는 데 집중한다. n.a.는 해당 칸이 없다는 뜻이다. <span class="ref">[Ch2 p.50]</span></p>
   <div class="tbl"><table>
-    <thead><tr><th>명령어</th><th>형식</th><th>opcode</th><th>funct3</th><th>funct7</th></tr></thead>
+    <thead><tr><th>형식(Format)</th><th>명령어(Instruction)</th><th>opcode</th><th>funct3</th><th>funct7</th></tr></thead>
     <tbody>
-      <tr><td>add</td><td>R</td><td>0110011</td><td>000</td><td>0000000</td></tr>
-      <tr><td>sub</td><td>R</td><td>0110011</td><td>000</td><td>0100000</td></tr>
-      <tr><td>sll</td><td>R</td><td>0110011</td><td>001</td><td>0000000</td></tr>
-      <tr><td>xor</td><td>R</td><td>0110011</td><td>100</td><td>0000000</td></tr>
-      <tr><td>srl</td><td>R</td><td>0110011</td><td>101</td><td>0000000</td></tr>
-      <tr><td>sra</td><td>R</td><td>0110011</td><td>101</td><td>0100000</td></tr>
-      <tr><td>or</td><td>R</td><td>0110011</td><td>110</td><td>0000000</td></tr>
-      <tr><td>and</td><td>R</td><td>0110011</td><td>111</td><td>0000000</td></tr>
-      <tr><td>lw</td><td>I</td><td>0000011</td><td>010</td><td>없음</td></tr>
-      <tr><td>addi</td><td>I</td><td>0010011</td><td>000</td><td>없음</td></tr>
-      <tr><td>slli</td><td>I</td><td>0010011</td><td>001</td><td>0000000</td></tr>
-      <tr><td>xori</td><td>I</td><td>0010011</td><td>100</td><td>없음</td></tr>
-      <tr><td>srli</td><td>I</td><td>0010011</td><td>101</td><td>0000000</td></tr>
-      <tr><td>srai</td><td>I</td><td>0010011</td><td>101</td><td>0100000</td></tr>
-      <tr><td>ori</td><td>I</td><td>0010011</td><td>110</td><td>없음</td></tr>
-      <tr><td>andi</td><td>I</td><td>0010011</td><td>111</td><td>없음</td></tr>
-      <tr><td>jalr</td><td>I</td><td>1100111</td><td>000</td><td>없음</td></tr>
-      <tr><td>sw</td><td>S</td><td>0100011</td><td>010</td><td>없음</td></tr>
-      <tr><td>beq</td><td>SB</td><td>1100011</td><td>000</td><td>없음</td></tr>
-      <tr><td>bne</td><td>SB</td><td>1100011</td><td>001</td><td>없음</td></tr>
-      <tr><td>blt</td><td>SB</td><td>1100011</td><td>100</td><td>없음</td></tr>
-      <tr><td>bge</td><td>SB</td><td>1100011</td><td>101</td><td>없음</td></tr>
-      <tr><td>lui</td><td>U</td><td>0110111</td><td>없음</td><td>없음</td></tr>
-      <tr><td>jal</td><td>UJ</td><td>1101111</td><td>없음</td><td>없음</td></tr>
+      <tr><td>R</td><td><code>add</code></td><td><code>0110011</code></td><td><code>000</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>sub</code></td><td><code>0110011</code></td><td><code>000</code></td><td><code>0100000</code></td></tr>
+      <tr><td>R</td><td><code>sll</code></td><td><code>0110011</code></td><td><code>001</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>xor</code></td><td><code>0110011</code></td><td><code>100</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>srl</code></td><td><code>0110011</code></td><td><code>101</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>sra</code></td><td><code>0110011</code></td><td><code>101</code></td><td><code>0100000</code></td></tr>
+      <tr><td>R</td><td><code>or</code></td><td><code>0110011</code></td><td><code>110</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>and</code></td><td><code>0110011</code></td><td><code>111</code></td><td><code>0000000</code></td></tr>
+      <tr><td>R</td><td><code>lr.d</code></td><td><code>0110011</code></td><td><code>011</code></td><td><code>0001000</code></td></tr>
+      <tr><td>R</td><td><code>sc.d</code></td><td><code>0110011</code></td><td><code>011</code></td><td><code>0001100</code></td></tr>
+      <tr><td>I</td><td><code>lb</code></td><td><code>0000011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lh</code></td><td><code>0000011</code></td><td><code>001</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lw</code></td><td><code>0000011</code></td><td><code>010</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lbu</code></td><td><code>0000011</code></td><td><code>100</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>lhu</code></td><td><code>0000011</code></td><td><code>101</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>addi</code></td><td><code>0010011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>slli</code></td><td><code>0010011</code></td><td><code>001</code></td><td><code>0000000</code></td></tr>
+      <tr><td>I</td><td><code>xori</code></td><td><code>0010011</code></td><td><code>100</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>srli</code></td><td><code>0010011</code></td><td><code>101</code></td><td><code>0000000</code></td></tr>
+      <tr><td>I</td><td><code>srai</code></td><td><code>0010011</code></td><td><code>101</code></td><td><code>0100000</code></td></tr>
+      <tr><td>I</td><td><code>ori</code></td><td><code>0010011</code></td><td><code>110</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>andi</code></td><td><code>0010011</code></td><td><code>111</code></td><td>n.a.</td></tr>
+      <tr><td>I</td><td><code>jalr</code></td><td><code>1100111</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>S</td><td><code>sb</code></td><td><code>0100011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>S</td><td><code>sh</code></td><td><code>0100011</code></td><td><code>001</code></td><td>n.a.</td></tr>
+      <tr><td>S</td><td><code>sw</code></td><td><code>0100011</code></td><td><code>010</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>beq</code></td><td><code>1100011</code></td><td><code>000</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bne</code></td><td><code>1100011</code></td><td><code>001</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>blt</code></td><td><code>1100011</code></td><td><code>100</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bge</code></td><td><code>1100011</code></td><td><code>101</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bltu</code></td><td><code>1100011</code></td><td><code>110</code></td><td>n.a.</td></tr>
+      <tr><td>SB</td><td><code>bgeu</code></td><td><code>1100011</code></td><td><code>111</code></td><td>n.a.</td></tr>
+      <tr><td>U</td><td><code>lui</code></td><td><code>0110111</code></td><td>n.a.</td><td>n.a.</td></tr>
+      <tr><td>UJ</td><td><code>jal</code></td><td><code>1101111</code></td><td>n.a.</td><td>n.a.</td></tr>
     </tbody>
   </table></div>
-  <p>slli·srli·srai의 funct7 칸은 실제로는 I형 12비트 즉시값의 위 7비트(imm[11:5]) 자리다. 시프트 양은 아래 5비트(imm[4:0])에 들어간다. srli와 srai는 이 위 7비트로만 구분된다. <span class="tb">교재 기준</span></p>
+  <p><code>lr.d</code>·<code>sc.d</code>는 강의 범위 밖의 원자적 명령어라 문제에 쓰지 않는다. <code>lb</code>·<code>lh</code>·<code>lbu</code>·<code>lhu</code>·<code>sb</code>·<code>sh</code>의 동작은 Ch2 · 3 끝에 있다. slli·srli·srai의 funct7 칸은 실제로는 I형 12비트 즉시값의 위 7비트(imm[11:5]) 자리다. 시프트 양은 아래 5비트(imm[4:0])에 들어간다. srli와 srai는 이 위 7비트로만 구분된다. <span class="tb">교재 기준</span></p>
 
   <h3>형식별 칸 순서 (왼쪽 = 31번 비트)</h3>
   <div class="tbl"><table>
@@ -5852,7 +5999,7 @@ L2:</pre>
       <tr><td>UJ</td><td>imm[20](1) · imm[10:1](10) · imm[11](1) · imm[19:12](8) · rd(5) · opcode(7)</td><td>21비트 오프셋, 0번 비트는 저장 안 함</td></tr>
     </tbody>
   </table></div>
-  <p>형식 비트 배치는 슬라이드 그림에 있어 교재로 정리했다. <span class="tb">교재 기준</span> SB 범위 −4096 ~ 4094바이트는 <span class="ref">[Ch2 p.47]</span>, 해독 4단계는 <span class="ref">[Ch2 p.50]</span>, 리틀 엔디언은 <span class="ref">[Ch2 p.13]</span>.</p>
+  <p>형식 비트 배치는 슬라이드 그림에 있다. <span class="ref">[Ch2 p.22–24, p.47, p.50, Ch4 p.21]</span> SB 범위 −4096 ~ 4094바이트는 <span class="ref">[Ch2 p.47]</span>, 해독 4단계는 <span class="ref">[Ch2 p.50]</span>, 리틀 엔디언은 <span class="ref">[Ch2 p.13]</span>.</p>
 
   <dl class="terms">
     <dt>분기 오프셋(branch offset)</dt><dd>분기 목표 주소 − 분기 명령어 <b>자신의</b> 주소. 단위는 <b>바이트</b>다. 명령어 k개 뒤로 가면 −4k, 앞으로 가면 +4k. 어셈블리에 적는 숫자(예 <code>beq x5, x0, 8</code>의 8)가 이 값이다.</dd>
@@ -5922,6 +6069,7 @@ L2:</pre>
     <p>③ 분기 오프셋의 기준은 분기 명령어 <b>자신의</b> 주소다(다음 명령어 주소 아님). 단위는 바이트다.</p>
     <p>④ SB형은 imm[11]이 7번 비트(맨 아래 쪽), imm[12]가 31번 비트에 간다. 13비트를 그대로 왼쪽 칸에 붙이면 틀린다. UJ형도 imm[11]이 20번 비트에 따로 간다.</p>
     <p>⑤ 음수 즉시값은 칸 비트 수(I·S는 12, SB는 13, UJ는 21)의 2의 보수로 먼저 바꾼다.</p>
+    <p>⑥ 슬라이드 p.47의 bne 칸 표에는 opcode가 <code>1100111</code>로 적혀 있지만 위 문장은 "opcode: 1100011 for bne"다. 슬라이드 칸 표의 <code>1100111</code>은 오타이고 정답은 <code>1100011</code>이다(<code>1100111</code>은 jalr). 표에서 opcode를 옮길 때 이 둘을 헷갈리지 말 것. <span class="ref">[Ch2 p.47, 50]</span></p>
   </div>
 
   <div class="exam"><p class="label">시험 포인트</p><ul>
@@ -6443,7 +6591,7 @@ and  x7, x8, x9</pre>
   <div class="key">
     <p class="label">푸는 순서</p>
     <ol>
-      <li><b>그림 빈칸</b>: 왼쪽 끝에서 출발한다. PC → 명령어 메모리 → (위) PC + 4 가산기. 명령어에서 갈라지는 선을 따라 제어 유닛(위 타원), 레지스터 파일(큰 상자), ImmGen(아래 타원). 그다음 ALUSrc MUX → ALU → 데이터 메모리 → MemtoReg MUX. 위쪽 줄은 시프트 → 분기 가산기 → AND → PCSrc MUX. 타원 셋은 제어 유닛, ImmGen, ALU 제어다.</li>
+      <li><b>그림 빈칸</b>: 왼쪽 끝에서 출발한다. PC → 명령어 메모리 → (위) PC + 4 가산기. 명령어에서 갈라지는 선을 따라 제어 유닛(위 타원), 레지스터 파일(큰 상자), ImmGen(아래 타원). 그다음 ALUSrc MUX → ALU → 데이터 메모리 → MemtoReg MUX. 위쪽 줄은 분기 가산기 → AND → PCSrc MUX. ImmGen 출력은 시프트 상자 없이 분기 가산기로 바로 간다(분기용 1비트 시프트는 ImmGen이 함께 한다, 슬라이드 p.15). 타원 셋은 제어 유닛, ImmGen, ALU 제어다.</li>
       <li><b>제어 신호 표</b>: 열마다 "이 명령어에 그 기능이 필요한가?"를 묻는다. 레지스터에 결과를 쓰나(RegWrite)? ALU 둘째 입력이 즉시값인가(ALUSrc)? 메모리를 읽나·쓰나(MemRead·MemWrite)? 레지스터에 쓸 값이 메모리 값인가(MemtoReg)? 분기인가(Branch)? ALU는 더하기 00 / 빼기 01 / funct로 결정 10(ALUOp).</li>
       <li><b>X 자리</b>: RegWrite = 0인 명령어(sw, beq)의 MemtoReg만 X다. 쓰기를 안 하니 무엇을 골라도 결과가 같다.</li>
       <li><b>라인별 비트</b>: [6:0] → 제어 유닛, [19:15] → 읽기 레지스터 1, [24:20] → 읽기 레지스터 2, [11:7] → 쓰기 레지스터, [31:0] → ImmGen, [30]·[14:12] → ALU 제어. 구체 명령어가 나오면 먼저 2진수로 필드를 나누고 각 필드 값을 해당 선에 적는다.</li>
@@ -6451,127 +6599,140 @@ and  x7, x8, x9</pre>
   </div>
 
   <h3>그림: 부품 이름 빈칸</h3>
-  <p>c4-4의 전체 데이터패스에서 부품 이름을 ①~⑮로, 제어 신호 이름을 ⓐ~ⓗ로 비웠다. 포트 이름(읽기 레지스터 1 등)과 명령어 비트 범위는 남겨 두었다. 시험 그림도 포트 이름은 보통 적혀 있으니 그것을 단서로 쓴다. <span class="ref">[Ch4 p.17, p.24]</span></p>
+  <p>c4-4의 전체 데이터패스에서 부품 이름을 ①~⑭로, 제어 신호 이름을 ⓐ~ⓗ로 비웠다. 제어 유닛 출력선 ⓐ~ⓖ는 슬라이드 p.26–28과 같은 순서이고, 같은 글자의 짧은 강조 선이 그 신호가 들어가는 곳이다. 포트 이름(읽기 레지스터 1 등)과 명령어 비트 범위는 남겨 두었다. 시험 그림도 포트 이름은 보통 적혀 있으니 그것을 단서로 쓴다. <span class="ref">[Ch4 p.17, p.24, p.26]</span></p>
   <figure class="diagram">
-    <svg viewBox="0 0 1200 720" role="img" aria-label="부품 이름을 번호 ①~⑮, 제어 신호 이름을 ⓐ~ⓗ로 비운 단일 사이클 데이터패스">
+    <svg viewBox="0 0 1200 790" role="img" aria-label="부품 이름을 번호 ①~⑭, 제어 신호 이름을 ⓐ~ⓗ로 비운 단일 사이클 데이터패스">
       <defs><marker id="p7-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
 
-      <rect class="bx" x="40" y="340" width="60" height="80"/>
-      <text class="t" x="70" y="385" text-anchor="middle">①</text>
-      <path class="ln" fill="none" d="M100,380 H140" marker-end="url(#p7-arrow)"/>
-      <rect class="bx" x="140" y="320" width="150" height="140"/>
-      <text class="t" x="215" y="352" text-anchor="middle">②</text>
-      <text class="lbl" x="146" y="384">읽기 주소</text>
-      <text class="lbl" x="284" y="414" text-anchor="end">명령어</text>
+      <rect class="bx" x="40" y="400" width="60" height="80"/>
+      <text class="t" x="70" y="445" text-anchor="middle">①</text>
+      <path class="ln" fill="none" d="M100,440 H140" marker-end="url(#p7-arrow)"/>
+      <rect class="bx" x="140" y="380" width="150" height="140"/>
+      <text class="t" x="215" y="412" text-anchor="middle">②</text>
+      <text class="lbl" x="146" y="444">읽기 주소</text>
+      <text class="lbl" x="284" y="484" text-anchor="end">명령어</text>
 
-      <path class="ln" fill="none" d="M120,380 V40 H740 V150 H760" marker-end="url(#p7-arrow)"/>
-      <path class="ln" fill="none" d="M120,80 H160" marker-end="url(#p7-arrow)"/>
-      <path class="ln" fill="none" d="M140,120 H160" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M120,440 V80 H180" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M140,120 H180" marker-end="url(#p7-arrow)"/>
       <text class="lbl" x="134" y="124" text-anchor="end">4</text>
-      <rect class="bx" x="160" y="60" width="60" height="80"/>
-      <text class="t" x="190" y="105" text-anchor="middle">③</text>
-      <path class="ln" fill="none" d="M220,100 H1000" marker-end="url(#p7-arrow)"/>
+      <rect class="bx" x="180" y="60" width="60" height="80"/>
+      <text class="t" x="210" y="105" text-anchor="middle">③</text>
+      <path class="ln" fill="none" d="M240,100 H1060" marker-end="url(#p7-arrow)"/>
 
-      <path class="ln" fill="none" d="M290,420 H320"/>
-      <path class="ln" fill="none" d="M320,200 V630"/>
-      <path class="ln" fill="none" d="M320,200 H385" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="326" y="194">[6:0]</text>
-      <path class="ln" fill="none" d="M320,305 H400" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="326" y="299">[19:15]</text>
-      <path class="ln" fill="none" d="M320,345 H400" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="326" y="339">[24:20]</text>
-      <path class="ln" fill="none" d="M320,405 H400" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="326" y="399">[11:7]</text>
-      <path class="ln" fill="none" d="M320,575 H425" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="378" y="569">[31:0]</text>
-      <path class="ln" fill="none" d="M320,630 H670" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="386" y="624">[30], [14:12]</text>
+      <path class="ln" fill="none" d="M120,150 H850 V175 H870" marker-end="url(#p7-arrow)"/>
 
-      <ellipse class="hl" cx="460" cy="200" rx="75" ry="32"/>
-      <text class="t" x="460" y="205" text-anchor="middle">④</text>
+      <path class="ln" fill="none" d="M290,480 H320"/>
+      <path class="ln" fill="none" d="M320,260 V700"/>
+      <path class="ln" fill="none" d="M320,260 H390" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="326" y="254">[6:0]</text>
+      <path class="ln" fill="none" d="M320,430 H420" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="326" y="424">[19:15]</text>
+      <path class="ln" fill="none" d="M320,470 H420" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="326" y="464">[24:20]</text>
+      <path class="ln" fill="none" d="M320,520 H420" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="326" y="514">[11:7]</text>
+      <path class="ln" fill="none" d="M320,650 H445" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="330" y="644">[31:0]</text>
+      <path class="ln" fill="none" d="M320,700 H685" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="562" y="694">[30], [14:12]</text>
 
-      <rect class="bx" x="400" y="280" width="160" height="220"/>
-      <text class="lbl" x="406" y="309">읽기 레지스터 1</text>
-      <text class="lbl" x="406" y="349">읽기 레지스터 2</text>
-      <text class="lbl" x="406" y="409">쓰기 레지스터</text>
-      <text class="lbl" x="406" y="469">쓰기 데이터</text>
-      <text class="lbl" x="554" y="329" text-anchor="end">읽기 데이터 1</text>
-      <text class="lbl" x="554" y="429" text-anchor="end">읽기 데이터 2</text>
-      <text class="t" x="480" y="492" text-anchor="middle">⑤</text>
-      <path class="ac" fill="none" d="M480,258 V280" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="488" y="272">ⓐ</text>
-      <path class="ln" fill="none" d="M560,325 H690" marker-end="url(#p7-arrow)"/>
-      <path class="ln" fill="none" d="M560,425 H620" marker-end="url(#p7-arrow)"/>
+      <ellipse class="hl" cx="450" cy="260" rx="60" ry="95"/>
+      <text class="t" x="450" y="265" text-anchor="middle">④</text>
+      <path class="ac" fill="none" d="M497,200 H575"/>
+      <text class="lbl" x="514" y="196">ⓐ</text>
+      <path class="ac" fill="none" d="M504,220 H575"/>
+      <text class="lbl" x="514" y="216">ⓑ</text>
+      <path class="ac" fill="none" d="M509,240 H575"/>
+      <text class="lbl" x="514" y="236">ⓒ</text>
+      <path class="ac" fill="none" d="M510,260 H575"/>
+      <text class="lbl" x="514" y="256">ⓓ</text>
+      <path class="ac" fill="none" d="M509,280 H575"/>
+      <text class="lbl" x="514" y="276">ⓔ</text>
+      <path class="ac" fill="none" d="M504,300 H575"/>
+      <text class="lbl" x="514" y="296">ⓕ</text>
+      <path class="ac" fill="none" d="M497,320 H575"/>
+      <text class="lbl" x="514" y="316">ⓖ</text>
 
-      <ellipse class="bx" cx="480" cy="575" rx="55" ry="26"/>
-      <text class="t" x="480" y="580" text-anchor="middle">⑥</text>
-      <path class="ln" fill="none" d="M535,575 H580 V210 H640" marker-end="url(#p7-arrow)"/>
-      <path class="ln" fill="none" d="M580,455 H620" marker-end="url(#p7-arrow)"/>
-      <rect class="bx" x="640" y="190" width="60" height="40"/>
-      <text class="t" x="670" y="215" text-anchor="middle">⑦</text>
-      <path class="ln" fill="none" d="M700,210 H760" marker-end="url(#p7-arrow)"/>
+      <rect class="bx" x="420" y="400" width="160" height="200"/>
+      <text class="lbl" x="426" y="434">읽기 레지스터 1</text>
+      <text class="lbl" x="426" y="474">읽기 레지스터 2</text>
+      <text class="lbl" x="426" y="524">쓰기 레지스터</text>
+      <text class="lbl" x="426" y="574">쓰기 데이터</text>
+      <text class="lbl" x="574" y="454" text-anchor="end">읽기 데이터 1</text>
+      <text class="lbl" x="574" y="544" text-anchor="end">읽기 데이터 2</text>
+      <text class="t" x="500" y="594" text-anchor="middle">⑤</text>
+      <path class="ac" fill="none" d="M500,375 V400" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="512" y="390">ⓖ</text>
+      <path class="ln" fill="none" d="M580,450 H700" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M580,540 H640" marker-end="url(#p7-arrow)"/>
 
-      <rect class="mx" x="620" y="400" width="24" height="80" rx="12"/>
-      <text class="lbl" x="632" y="429" text-anchor="middle">0</text>
-      <text class="lbl" x="632" y="459" text-anchor="middle">1</text>
-      <text class="t" x="652" y="416">⑧</text>
-      <path class="ac" fill="none" d="M632,380 V400" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="632" y="373" text-anchor="middle">ⓑ</text>
-      <path class="ln" fill="none" d="M644,440 H690" marker-end="url(#p7-arrow)"/>
+      <ellipse class="bx" cx="500" cy="650" rx="55" ry="28"/>
+      <text class="t" x="500" y="655" text-anchor="middle">⑥</text>
+      <path class="ln" fill="none" d="M555,650 H610 V225 H870" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M610,580 H640" marker-end="url(#p7-arrow)"/>
 
-      <path class="ln" fill="none" d="M600,425 V505 H850 V470 H860" marker-end="url(#p7-arrow)"/>
+      <rect class="mx" x="640" y="520" width="24" height="80" rx="12"/>
+      <text class="lbl" x="652" y="544" text-anchor="middle">0</text>
+      <text class="lbl" x="652" y="584" text-anchor="middle">1</text>
+      <path class="ac" fill="none" d="M652,495 V520" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="652" y="488" text-anchor="middle">ⓕ</text>
+      <text class="t" x="672" y="516">⑦</text>
+      <path class="ln" fill="none" d="M664,560 H700" marker-end="url(#p7-arrow)"/>
 
-      <polygon class="bx" points="690,290 770,330 770,430 690,470 690,400 705,380 690,360"/>
-      <text class="t" x="728" y="385" text-anchor="middle">⑨</text>
-      <text class="lbl" x="764" y="349" text-anchor="end">Zero</text>
-      <text class="lbl" x="764" y="409" text-anchor="end">결과</text>
-      <path class="ln" fill="none" d="M770,405 H860" marker-end="url(#p7-arrow)"/>
-      <path class="ln" fill="none" d="M770,345 H800 V280 H940" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M595,540 V615 H880" marker-end="url(#p7-arrow)"/>
 
-      <ellipse class="bx" cx="730" cy="630" rx="60" ry="24"/>
-      <text class="t" x="730" y="635" text-anchor="middle">⑩</text>
-      <path class="ln" fill="none" d="M730,606 V452" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="736" y="590">4비트</text>
-      <path class="ac" fill="none" d="M840,630 H790" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="846" y="634">ⓒ</text>
+      <polygon class="bx" points="700,430 780,470 780,570 700,610 700,540 715,520 700,500"/>
+      <text class="t" x="742" y="525" text-anchor="middle">⑧</text>
+      <text class="lbl" x="774" y="494" text-anchor="end">Zero</text>
+      <text class="lbl" x="774" y="554" text-anchor="end">결과</text>
+      <path class="ln" fill="none" d="M780,550 H880" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M780,490 H800 V290 H960" marker-end="url(#p7-arrow)"/>
 
-      <rect class="bx" x="760" y="130" width="60" height="100"/>
-      <text class="t" x="790" y="185" text-anchor="middle">⑪</text>
-      <path class="ln" fill="none" d="M820,180 H1000" marker-end="url(#p7-arrow)"/>
-      <path class="bx" d="M940,250 H960 A20,20 0 0 1 960,290 H940 Z"/>
-      <text class="t" x="956" y="276" text-anchor="middle">⑫</text>
-      <path class="ac" fill="none" d="M890,260 H940" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="884" y="264" text-anchor="end">ⓖ</text>
-      <path class="ac" fill="none" d="M980,270 H1012 V200" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="1018" y="240">ⓗ</text>
-      <rect class="mx" x="1000" y="80" width="24" height="120" rx="12"/>
-      <text class="lbl" x="1012" y="104" text-anchor="middle">0</text>
-      <text class="lbl" x="1012" y="184" text-anchor="middle">1</text>
-      <text class="t" x="1032" y="194">⑬</text>
-      <path class="ln" fill="none" d="M1024,140 H1170 V700 H20 V380 H40" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="1040" y="132">다음 PC</text>
+      <ellipse class="bx" cx="740" cy="700" rx="55" ry="22"/>
+      <text class="t" x="740" y="705" text-anchor="middle">⑨</text>
+      <path class="ln" fill="none" d="M740,678 V592" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="746" y="662">4비트</text>
+      <path class="ac" fill="none" d="M850,700 H795" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="856" y="704">ⓓ</text>
 
-      <rect class="bx" x="860" y="330" width="150" height="160"/>
-      <text class="t" x="935" y="362" text-anchor="middle">⑭</text>
-      <text class="lbl" x="866" y="409">주소</text>
-      <text class="lbl" x="866" y="474">쓰기 데이터</text>
-      <text class="lbl" x="1004" y="449" text-anchor="end">읽기 데이터</text>
-      <path class="ac" fill="none" d="M900,510 V490" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="900" y="526" text-anchor="middle">ⓓ</text>
-      <path class="ac" fill="none" d="M970,510 V490" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="970" y="526" text-anchor="middle">ⓔ</text>
+      <rect class="bx" x="870" y="150" width="80" height="100"/>
+      <text class="t" x="896" y="205" text-anchor="middle">⑩</text>
+      <text class="lbl" x="944" y="204" text-anchor="end">Sum</text>
+      <path class="ln" fill="none" d="M950,200 H1020 V160 H1060" marker-end="url(#p7-arrow)"/>
+      <path class="bx" d="M960,260 H980 A20,20 0 0 1 980,300 H960 Z"/>
+      <text class="t" x="977" y="285" text-anchor="middle">⑪</text>
+      <path class="ac" fill="none" d="M918,270 H960" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="912" y="274" text-anchor="end">ⓐ</text>
+      <path class="ac" fill="none" d="M1000,280 H1072 V190" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="1080" y="240">ⓗ</text>
+      <rect class="mx" x="1060" y="70" width="24" height="120" rx="12"/>
+      <text class="lbl" x="1072" y="104" text-anchor="middle">0</text>
+      <text class="lbl" x="1072" y="164" text-anchor="middle">1</text>
+      <text class="t" x="1092" y="82">⑫</text>
+      <path class="ln" fill="none" d="M1084,130 H1170 V770 H20 V440 H40" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="1100" y="122">다음 PC</text>
 
-      <path class="ln" fill="none" d="M820,405 V315 H1035 V410 H1060" marker-end="url(#p7-arrow)"/>
-      <path class="ln" fill="none" d="M1010,445 H1060" marker-end="url(#p7-arrow)"/>
-      <rect class="mx" x="1060" y="390" width="24" height="80" rx="12"/>
-      <text class="lbl" x="1072" y="414" text-anchor="middle">0</text>
-      <text class="lbl" x="1072" y="449" text-anchor="middle">1</text>
-      <text class="t" x="1092" y="404">⑮</text>
-      <path class="ac" fill="none" d="M1072,370 V390" marker-end="url(#p7-arrow)"/>
-      <text class="lbl" x="1072" y="362" text-anchor="middle">ⓕ</text>
-      <path class="ln" fill="none" d="M1084,430 H1120 V670 H370 V465 H400" marker-end="url(#p7-arrow)"/>
+      <rect class="bx" x="880" y="460" width="150" height="170"/>
+      <text class="t" x="955" y="492" text-anchor="middle">⑬</text>
+      <text class="lbl" x="886" y="554">주소</text>
+      <text class="lbl" x="886" y="619">쓰기 데이터</text>
+      <text class="lbl" x="1024" y="524" text-anchor="end">읽기 데이터</text>
+      <path class="ac" fill="none" d="M955,440 V460" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="955" y="432" text-anchor="middle">ⓔ</text>
+      <path class="ac" fill="none" d="M955,665 V630" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="955" y="681" text-anchor="middle">ⓑ</text>
+
+      <path class="ln" fill="none" d="M1030,520 H1080" marker-end="url(#p7-arrow)"/>
+      <path class="ln" fill="none" d="M840,550 V645 H1060 V565 H1080" marker-end="url(#p7-arrow)"/>
+      <rect class="mx" x="1080" y="490" width="24" height="100" rx="12"/>
+      <text class="lbl" x="1092" y="524" text-anchor="middle">1</text>
+      <text class="lbl" x="1092" y="569" text-anchor="middle">0</text>
+      <text class="t" x="1112" y="505">⑭</text>
+      <path class="ac" fill="none" d="M1092,468 V490" marker-end="url(#p7-arrow)"/>
+      <text class="lbl" x="1092" y="460" text-anchor="middle">ⓒ</text>
+      <path class="ln" fill="none" d="M1104,540 H1140 V740 H395 V570 H420" marker-end="url(#p7-arrow)"/>
     </svg>
-    <figcaption>빈칸 데이터패스. ①~⑮ 부품 이름, ⓐ~ⓗ 제어 신호 이름을 쓰시오. 강조 선은 제어 신호다. 답은 아래 연습 1·2번에 있다.</figcaption>
+    <figcaption>빈칸 데이터패스. ①~⑭ 부품 이름, ⓐ~ⓗ 제어 신호 이름을 쓰시오. 강조 선은 제어 신호다. MUX 안 숫자는 슬라이드와 같다(PCSrc 위 0·아래 1, ALUSrc 위 0·아래 1, MemtoReg 위 1·아래 0). 답은 아래 연습 1·2번에 있다.</figcaption>
   </figure>
 
   <h3>완전 풀이 예제: ld, sd, beq, add의 제어 신호 (21-2 기출 유형)</h3>
@@ -6603,12 +6764,12 @@ and  x7, x8, x9</pre>
         <tr><td>beq</td><td>0</td><td>0</td><td>0</td><td>0</td><td>X</td><td>1</td><td>01</td></tr>
       </tbody>
     </table></div>
-    <p><span class="ref">[Ch4 p.24–28]</span> <span class="tb">교재 기준</span> sub, and, or도 R형이라 add와 한 줄이 똑같다. 차이는 ALU 제어 유닛이 funct로 만드는 4비트 값(add 0010, sub 0110, and 0000, or 0001)에만 있다.</p>
+    <p><span class="ref">[Ch4 p.25]</span> sub, and, or도 R형이라 add와 한 줄이 똑같다. 차이는 ALU 제어 유닛이 funct로 만드는 4비트 값(add 0010, sub 0110, and 0000, or 0001)에만 있다.</p>
     <p>주의: 시험지마다 열 순서가 다르다(교재 표는 ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch, ALUOp1, ALUOp0 순). 외운 숫자열을 그대로 옮기지 말고 열 이름을 보고 하나씩 채운다.</p>
   </div>
 
   <div class="trap"><p class="label">함정</p><ul>
-    <li>beq의 ALUSrc를 1로 쓰는 실수. beq에도 즉시값이 있지만 그것은 시프트 후 분기 가산기로 간다. ALU 둘째 입력은 rs2다.</li>
+    <li>beq의 ALUSrc를 1로 쓰는 실수. beq에도 즉시값이 있지만 그것은 ImmGen이 1비트 시프트까지 해서 분기 가산기로 보낸다. ALU 둘째 입력은 rs2다.</li>
     <li>sw(sd)의 RegWrite를 X로 쓰는 실수. 1이 되면 [11:7](sw에서는 오프셋 아래 5비트)을 번호로 하는 레지스터가 망가진다. 반드시 0이다.</li>
     <li>X는 "0이어도 1이어도 결과가 같다"는 뜻이다. 0과 같은 뜻이 아니다.</li>
     <li>ALUOp(주 제어 유닛 출력 2비트)와 ALU 제어 입력(4비트)을 섞지 말 것.</li>
@@ -6617,7 +6778,7 @@ and  x7, x8, x9</pre>
   <div class="check">
     <p class="label">연습 문제</p>
     <ol>
-      <li><p><span class="past">21-2 기출 유형</span> 위 그림의 ①~⑮에 들어갈 부품 이름을 쓰시오.</p><details><summary>답 보기</summary><div class="ans">
+      <li><p><span class="past">21-2 기출 유형</span> 위 그림의 ①~⑭에 들어갈 부품 이름을 쓰시오.</p><details><summary>답 보기</summary><div class="ans">
         <div class="tbl"><table>
           <thead><tr><th>번호</th><th>이름</th><th>찾는 단서</th></tr></thead>
           <tbody>
@@ -6627,23 +6788,22 @@ and  x7, x8, x9</pre>
             <tr><td>④</td><td>제어 유닛(주 제어)</td><td>입력이 [6:0] opcode</td></tr>
             <tr><td>⑤</td><td>레지스터 파일</td><td>포트 "읽기 레지스터 1·2", "쓰기 레지스터", "쓰기 데이터"</td></tr>
             <tr><td>⑥</td><td>ImmGen(즉시값 생성기, 부호 확장)</td><td>입력이 명령어 전체 [31:0]</td></tr>
-            <tr><td>⑦</td><td>왼쪽 1비트 시프트(shift left 1)</td><td>ImmGen 출력이 분기 가산기로 가기 전</td></tr>
-            <tr><td>⑧</td><td>ALUSrc MUX</td><td>0 = 읽기 데이터 2, 1 = ImmGen 출력</td></tr>
-            <tr><td>⑨</td><td>ALU</td><td>출력 "Zero", "결과"</td></tr>
-            <tr><td>⑩</td><td>ALU 제어</td><td>입력이 [30], [14:12]와 ALUOp, 출력 4비트</td></tr>
-            <tr><td>⑪</td><td>분기 가산기(분기 목표 주소 계산)</td><td>입력이 PC와 시프트된 오프셋</td></tr>
-            <tr><td>⑫</td><td>AND 게이트</td><td>입력이 Branch와 Zero, 출력이 PCSrc</td></tr>
-            <tr><td>⑬</td><td>PCSrc MUX</td><td>0 = PC + 4, 1 = 분기 목표, 출력 = 다음 PC</td></tr>
-            <tr><td>⑭</td><td>데이터 메모리</td><td>포트 "주소", "쓰기 데이터", "읽기 데이터"</td></tr>
-            <tr><td>⑮</td><td>MemtoReg MUX</td><td>0 = ALU 결과, 1 = 메모리 읽기 데이터, 출력이 레지스터 쓰기 데이터로</td></tr>
+            <tr><td>⑦</td><td>ALUSrc MUX</td><td>위 0 = 읽기 데이터 2, 아래 1 = ImmGen 출력</td></tr>
+            <tr><td>⑧</td><td>ALU</td><td>출력 "Zero", "결과"</td></tr>
+            <tr><td>⑨</td><td>ALU 제어</td><td>입력이 [30], [14:12]와 ALUOp, 출력 4비트</td></tr>
+            <tr><td>⑩</td><td>분기 가산기(분기 목표 주소 계산)</td><td>입력이 PC와 ImmGen 출력(이미 1비트 시프트한 오프셋), 출력 "Sum"</td></tr>
+            <tr><td>⑪</td><td>AND 게이트</td><td>입력이 Branch와 Zero, 출력이 PCSrc</td></tr>
+            <tr><td>⑫</td><td>PCSrc MUX</td><td>위 0 = PC + 4, 아래 1 = 분기 목표(Sum), 출력 = 다음 PC</td></tr>
+            <tr><td>⑬</td><td>데이터 메모리</td><td>포트 "주소", "쓰기 데이터", "읽기 데이터"</td></tr>
+            <tr><td>⑭</td><td>MemtoReg MUX</td><td>위 1 = 메모리 읽기 데이터, 아래 0 = ALU 결과, 출력이 레지스터 쓰기 데이터로</td></tr>
           </tbody>
         </table></div>
-        <p>타원 셋(④·⑥·⑩) 중 opcode를 받는 것이 제어 유닛, 명령어 전체를 받는 것이 ImmGen, funct 비트를 받고 ALU로 4비트를 보내는 것이 ALU 제어다. 가산기 둘(③·⑪)은 입력으로 가른다. 상수 4가 들어가면 PC + 4 가산기다. <span class="ref">[Ch4 p.11–17]</span></p>
+        <p>타원 셋(④·⑥·⑨) 중 opcode를 받는 것이 제어 유닛, 명령어 전체를 받는 것이 ImmGen, funct 비트를 받고 ALU로 4비트를 보내는 것이 ALU 제어다. 가산기 둘(③·⑩)은 입력으로 가른다. 상수 4가 들어가면 PC + 4 가산기다. 슬라이드 그림에는 ImmGen과 분기 가산기 사이에 시프트 상자가 없다. 분기용 1비트 왼쪽 시프트는 ImmGen이 부호 확장과 함께 한다. <span class="ref">[Ch4 p.11–17]</span> 교재의 일부 그림에는 "Shift left 1" 상자가 따로 있으니, 시험 그림에 그 상자가 있으면 그 칸의 답은 "왼쪽 1비트 시프트"다. <span class="sup">PDF 외 보충</span></p>
       </div></details></li>
 
       <li><p><span class="past">26-1 기출 유형</span> 위 그림의 제어 선 ⓐ~ⓗ의 이름을 쓰시오.</p><details><summary>답 보기</summary><div class="ans">
-        <p>ⓐ RegWrite(레지스터 파일 쓰기 허가), ⓑ ALUSrc, ⓒ ALUOp(2비트, ALU 제어로), ⓓ MemWrite, ⓔ MemRead, ⓕ MemtoReg, ⓖ Branch, ⓗ PCSrc.</p>
-        <p>ⓓ·ⓔ는 둘 다 데이터 메모리로 들어가서 헷갈린다. 위 그림은 c4-4와 같이 왼쪽을 MemWrite, 오른쪽을 MemRead로 그렸다. 시험 그림에서는 위치가 다를 수 있으니 "쓰기 데이터 포트 쪽 = 쓰기"처럼 근거를 붙여 답한다. ⓗ는 제어 유닛이 직접 내는 신호가 아니라 AND 게이트 출력이다(Branch AND Zero). <span class="ref">[Ch4 p.24–25]</span></p>
+        <p>ⓐ Branch, ⓑ MemRead, ⓒ MemtoReg, ⓓ ALUOp(2비트, ALU 제어로), ⓔ MemWrite, ⓕ ALUSrc, ⓖ RegWrite(레지스터 파일 쓰기 허가), ⓗ PCSrc. ⓐ~ⓖ는 슬라이드 p.26–28 제어 유닛 출력의 위에서부터 순서 그대로다.</p>
+        <p>ⓑ·ⓔ는 둘 다 데이터 메모리로 들어가서 헷갈린다. 위 그림은 슬라이드 p.17·p.24처럼 위를 MemWrite, 아래를 MemRead로 그렸다. 시험 그림에서는 위치가 다를 수 있으니 "쓰기 데이터 포트 쪽 = 쓰기"처럼 근거를 붙여 답한다. ⓗ는 제어 유닛이 직접 내는 신호가 아니라 AND 게이트 출력이다(Branch AND Zero, p.26–28 그림). p.17·p.24 그림에는 AND 게이트 없이 PCSrc 선만 그려져 있다. <span class="ref">[Ch4 p.24–28]</span></p>
       </div></details></li>
 
       <li><p><span class="past">예상</span> 빈칸을 채우시오. (열 순서가 예제와 다르다.)</p>
@@ -6742,14 +6902,14 @@ and  x7, x8, x9</pre>
           <span class="f" style="--w:7"><b>1100011</b><i>opcode</i></span>
         </div>
         <p>읽기 레지스터 1 = <b>5</b>, 읽기 레지스터 2 = <b>6</b>. [11:7] = <code>10000</code> = 16이 쓰기 레지스터로 가지만 RegWrite = 0이라 무시된다.</p>
-        <p>ImmGen은 분기 오프셋 필드(imm[12:1] = 8)를 부호 확장하고, 시프트가 왼쪽 1비트 밀어 16을 만든다. 분기 가산기 출력 = 0x400 + 16 = <b>0x410</b>. <span class="tb">교재 기준</span></p>
+        <p>ImmGen은 분기 오프셋 필드(imm[12:1] = 8)를 부호 확장하면서 왼쪽으로 1비트 밀어 16을 만들고, 이 값이 바로 분기 가산기로 간다. 분기 가산기 출력 = 0x400 + 16 = <b>0x410</b>. <span class="ref">[Ch4 p.15]</span></p>
         <p>ALU: 4 − 4 = 0 → Zero = 1, Branch = 1 → PCSrc = 1 → 다음 PC = <b>0x410</b>. 같지 않았다면 0x404. <span class="ref">[Ch4 p.14, p.25, p.28]</span></p>
       </div></details></li>
 
       <li><p><span class="past">예상</span> <code>sub x10, x18, x19</code>(기계어 <code>0x41390533</code>)에서 ALU 제어로 가는 [30]과 [14:12]의 값, ALUOp, ALU 제어 출력을 쓰시오. funct7 전체가 아니라 [30]만 보내도 되는 이유는?</p><details><summary>답 보기</summary><div class="ans">
         <p><code>0x41390533</code> = <code>0100 0001 0011 1001 0000 0101 0011 0011</code> → funct7 = <code>0100000</code>, rs2 = 19, rs1 = 18, funct3 = <code>000</code>, rd = 10, opcode = <code>0110011</code>.</p>
         <p>[30] = 1(funct7의 둘째 비트), [14:12] = <code>000</code>, ALUOp = 10 → sub → ALU 제어 <code>0110</code>.</p>
-        <p>이 부분집합(add, sub, and, or)에서 funct7은 <code>0000000</code>과 <code>0100000</code> 둘뿐이고, 둘을 가르는 비트가 30번 하나다. <span class="ref">[Ch4 p.18–20]</span> <span class="tb">교재 기준</span></p>
+        <p>이 부분집합(add, sub, and, or)에서 funct7은 <code>0000000</code>과 <code>0100000</code> 둘뿐이고, 둘을 가르는 비트가 30번 하나다. <span class="ref">[Ch4 p.18–20]</span></p>
       </div></details></li>
 
       <li><p><span class="past">21-2 기출 유형</span> 프로세서를 구성하는 두 가지를 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p><b>데이터패스(datapath)</b>와 <b>제어(control)</b>. 프로세서 = 데이터패스 + 제어. 데이터패스는 연산을 하고, 제어는 데이터패스·메모리·입출력이 무엇을 할지 신호를 보낸다. <span class="ref">[Ch1 p.15, Ch4 p.8]</span></p></div></details></li>
@@ -6761,7 +6921,7 @@ and  x7, x8, x9</pre>
       <li><p><span class="past">예상</span> 단일 사이클 데이터패스에 메모리가 두 개(명령어 메모리, 데이터 메모리)인 이유는?</p><details><summary>답 보기</summary><div class="ans"><p>모든 명령어를 한 클럭 사이클에 실행하므로 한 명령어 안에서 어떤 자원도 두 번 쓸 수 없다. lw·sw는 같은 사이클에 명령어 인출과 데이터 접근을 둘 다 해야 하므로 메모리를 따로 둔다. <span class="ref">[Ch4 p.16–17]</span></p></div></details></li>
 
       <li><p><span class="past">예상</span> 데이터패스의 MUX 세 개의 이름과, 각 MUX가 입력 0·1일 때 고르는 값을 쓰시오. 데이터 선에 MUX가 필요한 이유도 쓰시오.</p><details><summary>답 보기</summary><div class="ans">
-        <p>ALUSrc: 0 = 레지스터 읽기 데이터 2, 1 = 부호 확장 즉시값. MemtoReg: 0 = ALU 결과, 1 = 데이터 메모리 읽기 데이터. PCSrc: 0 = PC + 4, 1 = 분기 목표 주소.</p>
+        <p>ALUSrc: 0 = 레지스터 읽기 데이터 2, 1 = 부호 확장 즉시값. MemtoReg: 0 = ALU 결과, 1 = 데이터 메모리 읽기 데이터. PCSrc: 0 = PC + 4, 1 = 분기 목표 주소. 슬라이드 그림에서는 MemtoReg MUX만 1이 위, 0이 아래로 적혀 있으니 위치가 아니라 숫자로 읽는다. <span class="ref">[Ch4 p.24]</span></p>
         <p>이유: 데이터 선은 그냥 묶을 수 없다(cannot just join wires together). 명령어마다 다른 출처의 값을 같은 입력에 넣으려면 MUX로 하나를 골라야 한다. <span class="ref">[Ch4 p.7–8, p.16]</span></p>
       </div></details></li>
 
@@ -6958,10 +7118,10 @@ and  x7, x8, x9</pre>
       <tr><td class="t">프로그래밍 언어</td><td>○</td><td>○</td><td></td><td>문장이 명령어로 바뀌는 방식</td></tr>
       <tr><td class="t">컴파일러</td><td>○</td><td>○</td><td></td><td>어떤 명령어를 몇 개 고르는지</td></tr>
       <tr><td class="t">ISA</td><td>○</td><td>○</td><td>○</td><td>명령어 종류·사이클·구현 모두에 영향</td></tr>
-      <tr><td class="t">기술(Technology)</td><td></td><td></td><td>○</td><td>공정이 회로 속도를 정함 <span class="sup">확인 필요</span></td></tr>
+      <tr><td class="t">기술(Technology)</td><td></td><td></td><td>○</td><td>공정이 회로 속도를 정함</td></tr>
     </tbody>
   </table></div>
-  <p class="note"><span class="tb">교재 기준</span> 교재 표에는 알고리즘~ISA 4행만 있고, Technology 행은 슬라이드에서 추가된 것이라 칸 표시를 원본으로 확인해야 합니다. "CPI는 CPU 하드웨어가 정한다"<span class="ref">[Ch1 p.28]</span>와 표가 다르게 보이는 이유: 명령어별 사이클은 하드웨어가 정하지만, 그 명령어들을 어떤 비율로 섞는지는 SW가 정하기 때문.<br>
+  <p class="note">Technology 행은 교재 표에 없고 슬라이드에서 추가된 행으로, 클럭 칸에만 표시가 있습니다 <span class="ref">[Ch1 p.29]</span>. "CPI는 CPU 하드웨어가 정한다"<span class="ref">[Ch1 p.28]</span>와 표가 다르게 보이는 이유: 명령어별 사이클은 하드웨어가 정하지만, 그 명령어들을 어떤 비율로 섞는지는 SW가 정하기 때문.<br>
   단위 형태: 초/프로그램 = 명령어/프로그램 × 사이클/명령어 × 초/사이클 <span class="ref">[Ch1 p.29]</span></p>
 
   <h3>2. 교재 지정 예제 (슬라이드가 쪽을 직접 지정) <span class="tb">교재 기준</span></h3>
@@ -6984,7 +7144,7 @@ and  x7, x8, x9</pre>
     </details>
   </div>
 
-  <h3>3. 명령어 형식 비트 폭 <span class="tb">교재 기준</span> <span class="ref">[Ch2 p.21–24, 46–47]</span></h3>
+  <h3>3. 명령어 형식 비트 폭 <span class="ref">[Ch2 p.22–24, p.47, Ch4 p.21]</span></h3>
   <div class="tbl"><table>
     <thead><tr><th>형식</th><th>31 ……………………………………… 0 (괄호 = 비트 수)</th><th>용도</th></tr></thead>
     <tbody>
@@ -6996,7 +7156,7 @@ and  x7, x8, x9</pre>
       <tr><td class="t">UJ</td><td class="mono">imm[20|10:1|11|19:12](20) · rd(5) · opcode(7)</td><td>jal</td></tr>
     </tbody>
   </table></div>
-  <p class="note">rs1·rs2·rd·opcode·funct3는 그 필드가 있는 모든 형식에서 같은 위치 → 해독 전에 레지스터를 읽을 수 있음 <span class="ref">[Ch2 p.24]</span>. opcode: R형 0110011, 분기 1100011(bne funct3 = 001), jal 1101111 <span class="ref">[Ch2 p.47, 50]</span>.</p>
+  <p class="note">rs1·rs2·rd·opcode·funct3는 그 필드가 있는 모든 형식에서 같은 위치 → 해독 전에 레지스터를 읽을 수 있음 <span class="ref">[Ch2 p.24]</span>. opcode: R형 0110011, 분기 1100011(bne funct3 = 001), jal 1101111 <span class="ref">[Ch2 p.47, 50]</span>. p.47 bne 칸 표의 opcode 1100111은 오타(1100111은 jalr).<br>전체 인코딩 표(명령어별 opcode·funct3·funct7)는 Ch2 · 13 <span class="ref">[Ch2 p.50]</span>.</p>
 
   <h3>4. 레지스터 규약 <span class="ref">[Ch2 p.16, 34, 37, 39, 41, 43, 44]</span></h3>
   <div class="tbl"><table>
@@ -7034,7 +7194,7 @@ and  x7, x8, x9</pre>
   </table></div>
   <p class="note">값 = (−1)<sup>S</sup> × (1 + F) × 2<sup>(E − Bias)</sup>, 1.0 ≤ 1+F &lt; 2.0. 지수 칸 전부 0·전부 1(단정도 0·255)은 예약(NaN 등). 단정도 정규화 범위 ±1.0×2⁻¹²⁶ ≈ ±1.2×10⁻³⁸ ~ ±(2−)×2¹²⁷ ≈ ±3.4×10³⁸ <span class="ref">[Ch3 p.30]</span> (p.26의 ±2.0×10^±38은 대략값). 배정도 행의 범위는 단정도와 같은 규칙으로 계산한 값 (PDF 외 보충).</p>
 
-  <h3>7. ALU 제어 표 <span class="tb">교재 기준</span> <span class="ref">[Ch4 p.18–20]</span></h3>
+  <h3>7. ALU 제어 표 <span class="ref">[Ch4 p.18, 20]</span></h3>
   <div class="tbl"><table>
     <thead><tr><th>명령어</th><th>ALUOp</th><th>funct7</th><th>funct3</th><th>ALU 동작</th><th>ALU 제어(4비트)</th></tr></thead>
     <tbody>
@@ -7048,7 +7208,7 @@ and  x7, x8, x9</pre>
   </table></div>
   <p class="note">입력 전체 조합 2¹² = 4096 → don't care(X)로 압축 <span class="ref">[Ch4 p.20]</span>. 다단 디코딩(주 제어 → ALUOp → ALU 제어) 이점: 주 제어 유닛이 작아지고 지연도 줄 수 있음 <span class="ref">[Ch4 p.19]</span>.</p>
 
-  <h3>8. 주 제어 신호 표 <span class="tb">교재 기준</span> <span class="ref">[Ch4 p.24–28]</span></h3>
+  <h3>8. 주 제어 신호 표 <span class="ref">[Ch4 p.25]</span></h3>
   <div class="tbl"><table>
     <thead><tr><th>명령어</th><th>ALUSrc</th><th>MemtoReg</th><th>RegWrite</th><th>MemRead</th><th>MemWrite</th><th>Branch</th><th>ALUOp</th></tr></thead>
     <tbody>
@@ -7078,7 +7238,7 @@ and  x7, x8, x9</pre>
     <details><summary>정답 (먼저 풀고 열기)</summary>
       <ol class="tight">
         <li><code>0000000 00101 01111 000 10000 0110011</code> → funct7 0, rs2 5, rs1 15, funct3 0, rd 16, R형 → <b>add x16, x15, x5</b></li>
-        <li>rd = 01001 = 9 → <b>add x9, x20, x21</b> (슬라이드 텍스트의 "add x0"는 오타로 보임)</li>
+        <li>rd = 01001 = 9 → <b>add x9, x20, x21</b> (슬라이드 텍스트의 "add x0"은 원문 표기 오류, 2진수는 x9)</li>
         <li><b>lui x19, 976</b> (0x003D0 → 31~12비트) → <b>addi x19, x19, 1280</b> (0x500). 하위 12비트 최상위 비트가 1이면 addi가 부호 확장하므로 lui 값을 1 늘려야 함 (PDF 외 보충)</li>
         <li>and = <b>0x00000C00</b>, or = <b>0x00003DC0</b>, xor = <b>0xFFFFF23F</b> (RISC-V엔 NOT이 없어 xor로 대신)</li>
         <li>blt: −1 &lt; 1 → <b>분기함</b> / bltu: 2³²−1 &lt; 1 → <b>분기 안 함</b></li>

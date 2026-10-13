@@ -1,5 +1,5 @@
 // 오프라인용: 처음 열 때 노트를 저장해 두고, 인터넷이 있으면 새 버전을 받아 다음 실행 때 반영
-const CACHE = "comparch-202610131517";
+const CACHE = "comparch-202610131550";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-180.png", "./icon-600.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
