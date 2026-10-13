@@ -241,7 +241,7 @@ html:not(.js) .mock .model{display:block}
   --ink-yellow:#c9a400;--ink-lime:#4f9a43;--ink-pink:#b04e7d;--ink-sky:#3a7fb0;--ink-sel:#8fb6dd}
 [hidden]{display:none!important}
 .lesson{position:relative}
-svg.ink-layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2}
+svg.ink-layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2;shape-rendering:geometricPrecision}
 .ink-hl{opacity:.38}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .ink-hl{mix-blend-mode:multiply;opacity:.55}}
 :root[data-theme="light"] .ink-hl{mix-blend-mode:multiply;opacity:.55}
@@ -257,7 +257,7 @@ html.inking textarea.ans-in[readonly]{border-style:dashed}
 .ink-toggle[aria-pressed="true"]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
 .ink-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:50;
   background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:8px 10px;
-  display:flex;flex-direction:column;gap:6px;max-width:calc(100vw - 24px)}
+  display:flex;flex-direction:column;gap:6px;width:min(620px,calc(100vw - 24px))}
 .ink-row{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;max-width:100%}
 .ink-row::-webkit-scrollbar{display:none}
 .ink-row.ink-more{flex-wrap:wrap;justify-content:center}
@@ -10100,7 +10100,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   var LS_PAGE = "ca_ink_p:", LS_OLD = "ca_ink_pages";
 
   function validTool(t) { return t === "pen" || t === "hl" || t === "eraser" || t === "lasso"; }
-  var state = { on: false, tool: "pen", eraser: "partial", finger: false, color: { pen: "ink", hl: "yellow" }, size: { pen: 1, hl: 1 } };
+  var state = { on: false, tool: "pen", eraser: "partial", finger: false, kind: "b", stab: 1, color: { pen: "ink", hl: "yellow" }, size: { pen: 1, hl: 1 } };
   try {
     var su = JSON.parse(localStorage.getItem("ca_ink_ui") || "null");
     if (su) {
@@ -10111,9 +10111,11 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       if (su.color && COLORS.hl.indexOf(su.color.hl) >= 0) state.color.hl = su.color.hl;
       if (su.size && [0, 1, 2].indexOf(su.size.pen) >= 0) state.size.pen = su.size.pen;
       if (su.size && [0, 1, 2].indexOf(su.size.hl) >= 0) state.size.hl = su.size.hl;
+      if (su.kind === "b" || su.kind === "e") state.kind = su.kind;
+      if ([0, 1, 2].indexOf(su.stab) >= 0) state.stab = su.stab;
     }
   } catch (e) {}
-  function saveUi() { try { localStorage.setItem("ca_ink_ui", JSON.stringify({ tool: state.tool, eraser: state.eraser, finger: state.finger, color: state.color, size: state.size })); } catch (e) {} }
+  function saveUi() { try { localStorage.setItem("ca_ink_ui", JSON.stringify({ tool: state.tool, eraser: state.eraser, finger: state.finger, kind: state.kind, stab: state.stab, color: state.color, size: state.size })); } catch (e) {} }
 
   /* ---------- 획 데이터 검사 ---------- */
   function cleanStroke(s) {
@@ -10122,7 +10124,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     var p = []; for (var i = 0; i < s.p.length; i++) { var q = s.p[i]; if (Array.isArray(q) && isFinite(q[0]) && isFinite(q[1])) p.push([+q[0], +q[1], isFinite(q[2]) ? +q[2] : 0.5]); }
     if (p.length < 2) return null;
     var t = s.t === "hl" ? "hl" : "pen";
-    return { k: k, g: typeof s.g === "string" ? s.g : "", aw: +s.aw || 0, sl: +s.sl || 0, t: t, c: COLORS[t].indexOf(s.c) >= 0 ? s.c : COLORS[t][0], s: [0, 1, 2].indexOf(s.s) >= 0 ? s.s : 1, pr: !!s.pr, p: p };
+    return { k: k, g: typeof s.g === "string" ? s.g : "", aw: +s.aw || 0, sl: +s.sl || 0, t: t, c: COLORS[t].indexOf(s.c) >= 0 ? s.c : COLORS[t][0], s: [0, 1, 2].indexOf(s.s) >= 0 ? s.s : 1, pr: !!s.pr, m: s.m === "e" ? "e" : "b", z: [0, 1, 2].indexOf(s.z) >= 0 ? s.z : 1, p: p };
   }
   function cleanList(a) { if (!Array.isArray(a)) return null; var o = []; a.forEach(function (s) { var c = cleanStroke(s); if (c) o.push(c); }); return o; }
 
@@ -10266,15 +10268,34 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   /* ---------- 그리기 ---------- */
   var NS = "http://www.w3.org/2000/svg", outlineCache = (typeof WeakMap === "function") ? new WeakMap() : null;
   function sizeOf(s) { return SIZES[s.t === "hl" ? "hl" : "pen"][s.s] || 3; }
+  // 손떨림 보정 약·보통·강: streamline이 클수록 손떨림을 더 걸러 내지만 펜 끝을 조금 늦게 따라온다
+  var STAB = [{ streamline: 0.28, smoothing: 0.55 }, { streamline: 0.42, smoothing: 0.62 }, { streamline: 0.56, smoothing: 0.7 }];
+  function easePressure(t) { return Math.sin(t * Math.PI / 2); } // 가벼운 필압도 선이 너무 가늘어지지 않게
   function outline(pts, s) {
-    var hl = s.t === "hl", size = sizeOf(s);
-    var o = PF.getStroke(pts, hl
-      ? { size: size, thinning: 0, smoothing: 0.5, streamline: 0.5, simulatePressure: false, start: { cap: true }, end: { cap: true }, last: true }
-      : { size: size * 1.8, thinning: 0.55, smoothing: 0.5, streamline: 0.45, simulatePressure: !s.pr, last: true });
-    if (!o.length) return "";
-    var d = "M" + o[0][0].toFixed(1) + "," + o[0][1].toFixed(1);
-    for (var i = 1; i < o.length; i++) d += "L" + o[i][0].toFixed(1) + "," + o[i][1].toFixed(1);
+    var size = sizeOf(s), st = STAB[s.z == null ? 1 : s.z] || STAB[1], o;
+    if (s.t === "hl") o = PF.getStroke(pts, { size: size, thinning: 0, smoothing: 0.7, streamline: 0.5, simulatePressure: false, last: true });
+    else if (s.m === "e") o = PF.getStroke(pts, { size: size * 1.5, thinning: 0, smoothing: st.smoothing, streamline: st.streamline, simulatePressure: false, last: true });
+    else o = PF.getStroke(pts, { size: size * 1.8, thinning: 0.5, smoothing: st.smoothing, streamline: st.streamline, easing: easePressure, simulatePressure: !s.pr, last: true });
+    return svgPath(o);
+  }
+  // 외곽선 점들을 이차 베지어 곡선으로 잇는다(직선으로 이으면 가장자리가 자글자글해 보임).
+  // perfect-freehand README의 getSvgPathFromStroke 방식(MIT)과 같다.
+  function svgPath(o) {
+    var n = o.length; if (n < 4) return n ? "M" + o[0][0].toFixed(2) + "," + o[0][1].toFixed(2) + "Z" : "";
+    function f(v) { return v.toFixed(2); }
+    var a = o[0], b = o[1], c = o[2];
+    var d = "M" + f(a[0]) + "," + f(a[1]) + " Q" + f(b[0]) + "," + f(b[1]) + " " + f((b[0] + c[0]) / 2) + "," + f((b[1] + c[1]) / 2) + " T";
+    for (var i = 2; i < n - 1; i++) { a = o[i]; b = o[i + 1]; d += f((a[0] + b[0]) / 2) + "," + f((a[1] + b[1]) / 2) + " "; }
     return d + "Z";
+  }
+  // 그리는 중 점 추가: 필압 흔들림을 부드럽게 하고, 거의 같은 자리의 점은 합친다
+  function addPt(pt) {
+    var pts = drag.pts, last = pts[pts.length - 1];
+    if (last) {
+      if (drag.pen) pt[2] = last[2] + 0.35 * (pt[2] - last[2]);
+      if (Math.abs(pt[0] - last[0]) + Math.abs(pt[1] - last[1]) < 0.25) { last[2] = pt[2]; return; }
+    }
+    pts.push(pt);
   }
   function localOutline(s, sx) { // 블록 기준 좌표의 외곽선을 캐시해 두고 위치만 옮긴다
     var key = Math.round(sx * 1000);
@@ -10379,7 +10400,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     var list = Array.prototype.slice.call(sec.querySelectorAll(BLOCK)), b = anchorFor(e.clientX, e.clientY, sec, list);
     if (!b) return;
     var t = state.tool === "hl" ? "hl" : "pen";
-    drag = Object.assign(base, { mode: "draw", block: b, anc: blockRel(b, sr), k: list.indexOf(b), sig: sigOf(b), pts: [pt], stroke: { t: t, c: state.color[t], s: state.size[t], pr: isPen } });
+    drag = Object.assign(base, { mode: "draw", block: b, anc: blockRel(b, sr), k: list.indexOf(b), sig: sigOf(b), pts: [pt], stroke: { t: t, c: state.color[t], s: state.size[t], pr: isPen, m: t === "pen" ? state.kind : "b", z: state.stab } });
     startLive();
   }
   function onMove(e) {
@@ -10393,7 +10414,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     e.preventDefault();
     var sr = drag.sec.getBoundingClientRect(), evs = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
     if (!evs.length) evs = [e];
-    if (drag.mode === "draw") { evs.forEach(function (ev) { drag.pts.push(local(ev, sr, drag.pen)); }); updateLive(); }
+    if (drag.mode === "draw") { if (!drag.touchSrc) { evs.forEach(function (ev) { addPt(local(ev, sr, drag.pen)); }); updateLive(); } }
     else if (drag.mode === "lasso") { evs.forEach(function (ev) { drag.poly.push(local(ev, sr, false)); }); updateLive(); }
     else if (drag.mode === "erase") { var hit = false; evs.forEach(function (ev) { if (eraseAt(local(ev, sr, false))) hit = true; }); if (hit) render(); }
     else if (drag.mode === "move") {
@@ -10417,7 +10438,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       if (!d.sec.contains(d.block)) return; // 그 사이 문단이 사라진 경우
       snapshot(d.id);
       var a = toAnchor(d.anc, d.k, d.pts, d.sig);
-      var s = { k: a.k, g: a.g, aw: a.aw, sl: a.sl, t: d.stroke.t, c: d.stroke.c, s: d.stroke.s, pr: d.stroke.pr, p: a.p };
+      var s = { k: a.k, g: a.g, aw: a.aw, sl: a.sl, t: d.stroke.t, c: d.stroke.c, s: d.stroke.s, pr: d.stroke.pr, m: d.stroke.m, z: d.stroke.z, p: a.p };
       list.push(s); touch(d.id);
       if (cur === d.sec) draw();
     } else if (d.mode === "lasso") {
@@ -10461,7 +10482,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       var seg = [], segP = [];
       for (var j = 0; j <= s.p.length; j++) {
         if (j < s.p.length && !hit[j]) { seg.push(s.p[j]); segP.push(pts[j]); continue; }
-        if (seg.length > 1) { out.push({ k: s.k, g: s.g, aw: s.aw, sl: s.sl, t: s.t, c: s.c, s: s.s, pr: s.pr, p: seg }); newPlaced.push(segP); }
+        if (seg.length > 1) { out.push({ k: s.k, g: s.g, aw: s.aw, sl: s.sl, t: s.t, c: s.c, s: s.s, pr: s.pr, m: s.m, z: s.z, p: seg }); newPlaced.push(segP); }
         seg = []; segP = [];
       }
     });
@@ -10502,6 +10523,16 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   function editingEl(el) { return el && el.closest && el.closest("textarea:not([readonly]),input:not([type=checkbox]):not([type=file])"); }
   function onTouchMove(e) {
     if (!state.on) return;
+    // iPad Safari는 펜슬의 pointermove가 touchmove보다 드물게 올 때가 있어, 그리는 중이면 펜슬 터치 좌표를 쓴다
+    if (drag && drag.mode === "draw" && drag.pen) {
+      var tsr = drag.sec.getBoundingClientRect(), got = false;
+      Array.prototype.forEach.call(e.changedTouches, function (t) {
+        if (t.touchType !== "stylus") return;
+        got = true;
+        addPt([t.clientX - tsr.left, t.clientY - tsr.top, t.force > 0 ? Math.min(1, t.force) : 0.5]);
+      });
+      if (got) { drag.touchSrc = true; updateLive(); }
+    }
     var editing = editingEl(e.target);
     if (inkZone(e.target) && (drag || ((hasStylus(e) || state.finger) && !editing))) { e.preventDefault(); return; }
     if (pan && !editing) { if (e.cancelable) e.preventDefault(); movePan(e); }
@@ -10583,6 +10614,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       '<div class="ink-row ink-opts"></div>' +
       '<div class="ink-row ink-more" hidden>' +
       '<label class="ink-chk"><input type="checkbox" data-opt="finger"> 손가락으로도 쓰기(켜면 손가락 스크롤 멈춤)</label>' +
+      '<span class="ink-hint">손떨림 보정</span><button type="button" data-stab="0">약</button><button type="button" data-stab="1">보통</button><button type="button" data-stab="2">강</button>' +
       '<button type="button" data-act="backup">백업 저장</button>' +
       '<label class="ink-file">백업 불러오기<input type="file" accept="application/json,.json" data-act="restore"></label>' +
       '<button type="button" data-act="clear">이 단원 필기 지우기</button>' +
@@ -10601,6 +10633,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
         state.tool = b.dataset.tool; if (state.tool !== "lasso") { clearSel(); render(); }
         saveUi(); paintBar();
       } else if (b.dataset.color) { var t = state.tool === "hl" ? "hl" : "pen"; state.color[t] = b.dataset.color; saveUi(); paintBar(); }
+      else if (b.dataset.kind) { state.kind = b.dataset.kind === "e" ? "e" : "b"; saveUi(); paintBar(); }
+      else if (b.dataset.stab) { state.stab = +b.dataset.stab; saveUi(); paintBar(); msg("손떨림 보정: " + ["약", "보통", "강"][state.stab] + " (새로 쓰는 획부터)"); }
       else if (b.dataset.size) { var t2 = state.tool === "hl" ? "hl" : "pen"; state.size[t2] = +b.dataset.size; saveUi(); paintBar(); }
       else if (b.dataset.act === "undo") doUndo();
       else if (b.dataset.act === "redo") doRedo();
@@ -10634,12 +10668,14 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     bar.querySelector('[data-tool="eraser"]').textContent = state.tool === "eraser" ? (state.eraser === "partial" ? "지우개: 부분" : "지우개: 획") : "지우개";
     var opts = bar.querySelector(".ink-opts"), t = state.tool;
     if (t === "pen" || t === "hl") {
-      var html = COLORS[t].map(function (c) { return '<button type="button" class="ink-sw" data-color="' + c + '" aria-label="' + c + '" aria-pressed="' + (state.color[t] === c) + '"><i class="sw-' + c + '"></i></button>'; }).join("");
+      var html = t === "pen" ? '<button type="button" data-kind="b" aria-pressed="' + (state.kind === "b") + '">볼펜</button><button type="button" data-kind="e" aria-pressed="' + (state.kind === "e") + '">플러스펜</button><span class="ink-sep"></span>' : "";
+      html += COLORS[t].map(function (c) { return '<button type="button" class="ink-sw" data-color="' + c + '" aria-label="' + c + '" aria-pressed="' + (state.color[t] === c) + '"><i class="sw-' + c + '"></i></button>'; }).join("");
       html += '<span class="ink-sep"></span>' + [0, 1, 2].map(function (i) { return '<button type="button" class="ink-sz" data-size="' + i + '" aria-label="굵기 ' + (i + 1) + '" aria-pressed="' + (state.size[t] === i) + '"><i class="sz-' + i + '"></i></button>'; }).join("");
       opts.innerHTML = html;
     } else if (t === "eraser") opts.innerHTML = '<span class="ink-hint">지우개를 한 번 더 누르면 부분 지우기 ↔ 획 전체 지우기</span>';
     else opts.innerHTML = '<span class="ink-hint">올가미로 감싸 선택 → 상자 안을 끌어 옮기기</span>';
     bar.querySelector('[data-opt="finger"]').checked = state.finger;
+    Array.prototype.forEach.call(bar.querySelectorAll("[data-stab]"), function (b) { b.setAttribute("aria-pressed", +b.dataset.stab === state.stab ? "true" : "false"); });
   }
   function paintStore() {
     var el = bar.querySelector(".ink-store");
