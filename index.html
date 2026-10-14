@@ -744,13 +744,14 @@ html:not(.js) .ink-toggle{display:none}
     <li>이진 소수점을 <b>왼쪽으로 k칸</b> 옮기면 n = <b>+k</b> (수가 작아진 만큼 2<sup>k</sup>를 곱해 보충).</li>
     <li>이진 소수점을 <b>오른쪽으로 k칸</b> 옮기면 n = <b>−k</b>.</li>
   </ul>
+  <div class="key"><p class="label">표기법</p><p>앞의 가수에는 <b>₂</b>를 붙이고(2진수라는 뜻), 뒤의 <b>2<sup>n</sup></b>는 그대로 둔다. 밑 2와 지수 n은 10진수로 쓰는 것이 관례다. 예: 5.75 = 101.11<sub>2</sub> = 1.0111<sub>2</sub> × 2<sup>2</sup>. ₂를 빼고 1.0111 × 2<sup>2</sup>라고만 쓰면 10진 1.0111 × 4 = 4.0444로 읽힐 수 있다. 슬라이드도 처음 소개할 때는 1.0<sub>(2)</sub> × 2<sup>−1</sup>처럼 표시하고 <span class="ref">[Ch3 p.23–24]</span>, 계산 과정에서는 2진임이 분명하면 생략하기도 한다 <span class="ref">[Ch3 p.33]</span>. 답안에는 ₂를 붙이는 쪽이 안전하다.</p></div>
   <div class="tbl"><table>
     <thead><tr><th>10진</th><th>2진</th><th>정규화</th></tr></thead>
     <tbody>
-      <tr><td>2.625</td><td>10.101</td><td>1.0101 × 2<sup>1</sup> (왼쪽 1칸)</td></tr>
-      <tr><td>5.75</td><td>101.11</td><td>1.0111 × 2<sup>2</sup> (왼쪽 2칸)</td></tr>
-      <tr><td>−0.5</td><td>−0.1</td><td>−1.0 × 2<sup>−1</sup> (오른쪽 1칸)</td></tr>
-      <tr><td>0.0625</td><td>0.0001</td><td>1.0 × 2<sup>−4</sup> (오른쪽 4칸)</td></tr>
+      <tr><td>2.625</td><td>10.101</td><td>1.0101<sub>2</sub> × 2<sup>1</sup> (왼쪽 1칸)</td></tr>
+      <tr><td>5.75</td><td>101.11</td><td>1.0111<sub>2</sub> × 2<sup>2</sup> (왼쪽 2칸)</td></tr>
+      <tr><td>−0.5</td><td>−0.1</td><td>−1.0<sub>2</sub> × 2<sup>−1</sup> (오른쪽 1칸)</td></tr>
+      <tr><td>0.0625</td><td>0.0001</td><td>1.0<sub>2</sub> × 2<sup>−4</sup> (오른쪽 4칸)</td></tr>
     </tbody>
   </table></div>
   <p>이 정규화 결과에서 부호, 지수 n, 소수점 뒤의 xxx(가수, fraction)를 떼어 IEEE 754 비트 칸에 넣는 것이 Ch3 · 7이다. 이 단원은 그 직전까지다.</p>
@@ -787,7 +788,7 @@ html:not(.js) .ink-toggle{display:none}
     <p>정수 부분(÷2)은 나머지를 <b>아래에서 위로</b>, 소수 부분(×2)은 떼어 낸 비트를 <b>위에서 아래로</b> 읽는다. 방향을 바꾸면 틀린다.</p>
     <p>2진 → 16진에서 왼쪽부터 4자리씩 끊으면 틀린다. 1111011을 왼쪽부터 끊으면 1111 | 011 → F3이 되어 틀린다. <b>오른쪽부터</b> 끊고 왼쪽에 0을 채운다(0x7B).</p>
     <p>16진 → 2진에서 0을 "0" 한 자리로 쓰면 비트 위치가 다 밀린다. 0은 <b>0000</b>, 1은 <b>0001</b>로 4자리를 지킨다.</p>
-    <p>정규화 지수의 부호: 소수점을 왼쪽으로 옮기면 +, 오른쪽으로 옮기면 −. 0.0625 = 1.0 × 2<sup>−4</sup>이다(2<sup>4</sup> 아님).</p>
+    <p>정규화 지수의 부호: 소수점을 왼쪽으로 옮기면 +, 오른쪽으로 옮기면 −. 0.0625 = 1.0<sub>2</sub> × 2<sup>−4</sup>이다(2<sup>4</sup> 아님).</p>
     <p>0.1(10진)은 2진으로 끝나지 않는다. "0.1<sub>10</sub> = 0.1<sub>2</sub>"는 틀렸다(0.1<sub>2</sub> = 0.5).</p>
   </div>
 
@@ -804,8 +805,8 @@ html:not(.js) .ink-toggle{display:none}
       <li><p>42를 32비트 값으로 보고 16진 8자리로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>42 = 2×16 + 10 → 0x2A → <b>0x0000002A</b>.</p></div></details></li>
       <li><p><code>0x00578833</code>을 32비트 2진으로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>0000 0000 0101 0111 1000 1000 0011 0011.</p></div></details></li>
       <li><p>0.101<sub>2</sub>, 0.0001<sub>2</sub>를 10진으로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>0.5 + 0.125 = 0.625. 2<sup>−4</sup> = 0.0625.</p></div></details></li>
-      <li><p>0.0625를 2진으로 바꾸고 정규화하시오.</p><details><summary>답 보기</summary><div class="ans"><p>×2 → 0.125(0), 0.25(0), 0.5(0), 1.0(1) → 0.0001<sub>2</sub> = <b>1.0 × 2<sup>−4</sup></b>.</p></div></details></li>
-      <li><p>5.75를 2진으로 바꾸고 정규화하시오.</p><details><summary>답 보기</summary><div class="ans"><p>101.11<sub>2</sub> = <b>1.0111 × 2<sup>2</sup></b>. 검산 4 + 1 + 0.5 + 0.25.</p></div></details></li>
+      <li><p>0.0625를 2진으로 바꾸고 정규화하시오.</p><details><summary>답 보기</summary><div class="ans"><p>×2 → 0.125(0), 0.25(0), 0.5(0), 1.0(1) → 0.0001<sub>2</sub> = <b>1.0<sub>2</sub> × 2<sup>−4</sup></b>.</p></div></details></li>
+      <li><p>5.75를 2진으로 바꾸고 정규화하시오.</p><details><summary>답 보기</summary><div class="ans"><p>101.11<sub>2</sub> = <b>1.0111<sub>2</sub> × 2<sup>2</sup></b>. 검산 4 + 1 + 0.5 + 0.25.</p></div></details></li>
       <li><p>−0.5와 2.625를 정규화된 2진 표기로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p>−1.0<sub>2</sub> × 2<sup>−1</sup>, 1.0101<sub>2</sub> × 2<sup>1</sup>.</p></div></details></li>
       <li><p>0.1을 2진으로 바꿀 때 소수점 아래 8자리까지 쓰고, 끝나는지 답하시오.</p><details><summary>답 보기</summary><div class="ans"><p>0.00011001… 0.2 → 0.4 → 0.8 → 0.6 → 0.2로 되돌아와 0011이 무한 반복. 끝나지 않는다.</p></div></details></li>
       <li><p>O/X: 0.75 = 0.11<sub>2</sub> = 1.1<sub>2</sub> × 2<sup>1</sup>이다.</p><details><summary>답 보기</summary><div class="ans"><p>X. 0.11<sub>2</sub>는 소수점을 오른쪽으로 1칸 옮겨 1.1<sub>2</sub> × 2<sup>−1</sup>이다. <span class="ref">[Ch3 p.23–24]</span></p></div></details></li>
