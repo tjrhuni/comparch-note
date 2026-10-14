@@ -10283,7 +10283,17 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   // 손떨림 보정 약·보통·강: streamline이 클수록 손떨림을 더 걸러 내지만 펜 끝을 조금 늦게 따라온다
   var STAB = [{ streamline: 0.28, smoothing: 0.55 }, { streamline: 0.42, smoothing: 0.62 }, { streamline: 0.56, smoothing: 0.7 }];
   function easePressure(t) { return Math.sin(t * Math.PI / 2); } // 가벼운 필압도 선이 너무 가늘어지지 않게
+  // 점(소수점·마침표): 펜슬로 톡 찍으면 필압이 0 가까이에서 시작해 획 계산으로는 점이 아주 작거나 흐리게 나온다.
+  // 거의 움직이지 않은 획은 필압과 상관없이 펜 굵기에 맞는 둥근 점으로 그린다.
+  function pathLen(pts) { var L = 0; for (var i = 1; i < pts.length; i++) L += Math.abs(pts[i][0] - pts[i - 1][0]) + Math.abs(pts[i][1] - pts[i - 1][1]); return L; }
+  function dotRadius(s) { var size = sizeOf(s); return s.t === "hl" ? size / 2 : s.m === "e" ? Math.max(1.6, size * 0.75) : Math.max(1.8, size * 0.85); }
+  function dotPath(pts, s) {
+    var cx = 0, cy = 0; pts.forEach(function (q) { cx += q[0]; cy += q[1]; }); cx /= pts.length; cy /= pts.length;
+    var r = dotRadius(s), f = function (v) { return v.toFixed(2); };
+    return "M" + f(cx - r) + "," + f(cy) + " a" + f(r) + "," + f(r) + " 0 1,0 " + f(2 * r) + ",0 a" + f(r) + "," + f(r) + " 0 1,0 " + f(-2 * r) + ",0Z";
+  }
   function outline(pts, s) {
+    if (pathLen(pts) < 2) return dotPath(pts, s);
     var size = sizeOf(s), st = STAB[s.z == null ? 1 : s.z] || STAB[1], o;
     if (s.t === "hl") o = PF.getStroke(pts, { size: size, thinning: 0, smoothing: 0.7, streamline: 0.5, simulatePressure: false, last: true });
     else if (s.m === "e") o = PF.getStroke(pts, { size: size * 1.5, thinning: 0, smoothing: st.smoothing, streamline: st.streamline, simulatePressure: false, last: true });
@@ -10418,7 +10428,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
 
   function onDown(e) { downInner(e); log("pointerdown", e); }
   function downInner(e) {
-    if (e.pointerType === "pen") lastPenAt = performance.now();
+    if (e.pointerType === "pen") { lastPenAt = performance.now(); if (!e.forced) stylusTap = null; } // pointer가 왔으면 touch 대비는 필요 없음
     if (state.on && e.pointerType === "pen") { stopInertia(); pan = null; tapG = null; try { window.scrollTo(window.scrollX, window.scrollY); } catch (x) {} } // 남은 브라우저 관성도 끊기 시도
     if (drag || !cur || !canDraw(e) || !(e.forced || inkZone(e.target))) return;
     if (!loaded) { e.preventDefault(); msg("필기를 불러오는 중입니다. 잠시 뒤 다시 쓰세요."); return; }
@@ -10566,7 +10576,14 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (!state.on) return;
     var stylus = hasStylus(e), zone = inkZone(e.target), tap = e.target.closest && e.target.closest(TAPPABLE);
     if (!stylus) tapTrack(e);
-    if (stylus) { stopInertia(); pan = null; tapG = null; if (zone && !tap) e.preventDefault(); return; } // 버튼·답 보기는 탭이 되게 두고 나머지는 펜 전용
+    if (stylus) {
+      stopInertia(); pan = null; tapG = null;
+      if (zone && !tap) e.preventDefault(); // 버튼·답 보기는 탭이 되게 두고 나머지는 펜 전용
+      // 펜슬의 아주 짧은 탭은 pointer 이벤트 없이 touch만 오는 경우가 있어, 그때를 대비해 기억해 둔다
+      var st0 = Array.prototype.filter.call(e.changedTouches, function (t) { return t.touchType === "stylus"; })[0];
+      stylusTap = (zone && !tap && !drag && st0) ? { x: st0.clientX, y: st0.clientY, id: st0.identifier, t: performance.now(), force: st0.force } : null;
+      return;
+    }
     if (zone && (state.finger || (drag && drag.pen))) { if (!tap || (drag && drag.pen)) e.preventDefault(); return; } // 손가락 쓰기 모드, 펜 쓰는 중 닿은 손바닥
     startPan(e);
   }
@@ -10603,9 +10620,23 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (now - g.t0 > 350 || now - lastPenAt < 600) return; // 길게 누른 것, 펜을 쓰던 중 닿은 손바닥은 제외
     if (g.n === 2) { doUndo(); msg("되돌렸습니다 (두 손가락 탭)"); } else { doRedo(); msg("다시 했습니다 (세 손가락 탭)"); }
   }
+  // 펜슬 탭이 touch로만 왔을 때(pointer 없이) 그 자리에 점을 찍는다
+  var stylusTap = null;
+  function stylusTapEnd(e) {
+    var st = stylusTap; if (!st) return;
+    var t = Array.prototype.filter.call(e.changedTouches, function (x) { return x.identifier === st.id; })[0];
+    if (!t) return;
+    stylusTap = null;
+    if (e.type === "touchcancel" || drag || !state.on || !loaded) return;
+    if (performance.now() - st.t > 600 || Math.abs(t.clientX - st.x) + Math.abs(t.clientY - st.y) > 6) return;
+    var fake = { pointerId: -7, pointerType: "pen", pressure: st.force > 0 ? Math.min(1, st.force) : 0.5, clientX: st.x, clientY: st.y, target: document.elementFromPoint(st.x, st.y) || document.body, preventDefault: function () {}, forced: true };
+    downInner(fake);
+    if (drag && drag.pid === -7) { var d = drag; drag = null; finish(d); }
+  }
   function onTouchEnd(e) {
     log(e.type, e);
     if (e.type === "touchcancel") tapG = null; else tapEnd(e);
+    stylusTapEnd(e);
     if (!pan) return;
     if (e.touches.length) { startPan(e); return; } // 손가락 하나가 남으면 그 손가락으로 계속
     endPan();
