@@ -285,6 +285,26 @@ html.inking main{padding-bottom:200px}
 .ink-toast button[data-t="now"]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
 @media print{.ink-bar,.ink-selbar,.ink-toggle{display:none!important}}
 html:not(.js) .ink-toggle{display:none}
+/* 계산 연습장 */
+.mark-row{display:flex;flex-wrap:wrap;gap:6px;margin:.5em 0 .2em}
+.mark-row button{font:inherit;font-size:13px;min-height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--fg2);cursor:pointer}
+.mark-row button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-weight:700}
+.mark-row .mk-x[aria-pressed="true"]{border-color:var(--trap);color:var(--trap);background:var(--trap-soft)}
+.mark-row .mk-o[aria-pressed="true"]{border-color:var(--easy);color:var(--easy);background:var(--easy-soft)}
+.scratch{position:relative;margin:.4em 0 0;border:1px dashed var(--line);border-radius:10px;background-color:var(--surface);
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px}
+.scratch::before{content:"필기를 켜고 펜으로 풀어 보세요";position:absolute;top:6px;right:10px;font-size:12px;color:var(--fg2);opacity:.7;pointer-events:none}
+html.inking .scratch::before{content:""}
+.scratch-foot{display:flex;gap:6px;justify-content:flex-end;margin:.3em 0 .6em}
+.scratch-foot button{font:inherit;font-size:13px;min-height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--fg2);cursor:pointer}
+.check li.is-x{background:color-mix(in srgb,var(--trap-soft) 55%,transparent);border-radius:8px}
+.check li.is-o > p:first-child::after{content:" ○";color:var(--easy);font-weight:700}
+/* 오답 노트 */
+.wrong-sum{font-weight:600;color:var(--trap)}
+ol.wrong-list{padding-left:1.3em}
+ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
+.wrong-src{font-size:.8em;color:var(--fg2);margin:0 0 .2em!important}
+@media print{.mark-row,.scratch,.scratch-foot{display:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -9795,6 +9815,14 @@ for (i = 0; i &lt; n; i = i + 1) {
   </div>
 </section>
 
+<section class="lesson" id="wrongs" data-ch="m" data-title="오답 노트">
+  <p class="eyebrow">4단계 · 틀린 문제 모아 보기</p>
+  <h2>오답 노트</h2>
+  <p class="goal">스스로 확인·실전 연습 문항 아래의 <b>[틀림]</b>을 누른 문제가 단원별로 여기에 모입니다. 다시 풀어 맞히면 <b>[다시 풀어 맞음]</b>을 눌러 목록에서 빼세요. 틀린 문제는 <b>불안한 개념 목록</b>에도 한 줄씩 자동으로 들어갑니다.</p>
+  <p class="wrong-sum" role="status"></p>
+  <div class="wrong-box"></div>
+</section>
+
 
 <section class="lesson" id="sum" data-ch="9" data-title="한눈에 정리">
   <p class="eyebrow">시험 직전용</p>
@@ -10049,6 +10077,7 @@ for (i = 0; i &lt; n; i = i + 1) {
     closeToc();
   }
   function go(id){var i=L.findIndex(function(s){return s.id===id});if(i>=0){if(location.hash!=="#"+id)history.replaceState(null,"","#"+id);show(i)}}
+  window.caGo = go;
 
   toc.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;e.preventDefault();go(L[+a.dataset.i].id)});
   document.getElementById("prevBtn").onclick=function(){go(L[cur-1].id)};
@@ -10085,6 +10114,151 @@ for (i = 0; i &lt; n; i = i + 1) {
 })();
 </script>
 <script>
+/* 공부 편의 기능: 계산 연습장, 오답 자동 수집.
+   필기 레이어(ink.js)보다 먼저 실행되어야 한다(연습장 블록을 미리 만들어 두어야 필기가 거기에 붙는다). */
+(function () {
+  function lsGet(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function title(sec) { return sec ? sec.dataset.title : ""; }
+  function plain(el) { return (el ? el.textContent : "").replace(/\s+/g, " ").trim(); }
+
+  /* ---------- 계산 연습장 ----------
+     문항·예제마다 [연습장] 버튼. 펼치면 모눈 빈칸이 생기고 그 안에 펜으로 쓴다.
+     연습장마다 고정 이름(data-sig)이 있어 필기가 그 연습장에 붙어 저장된다. */
+  var scr = lsGet("ca_scr", {}); // 이름 → 높이(px), 0 또는 없음 = 접힘
+  var SCR_H = 260, SCR_STEP = 220, SCR_MAX = 1400;
+  function makeScratch(host, sig, row) {
+    var pad = document.createElement("div");
+    pad.className = "scratch"; pad.dataset.sig = sig; pad.setAttribute("aria-label", "계산 연습장");
+    var foot = document.createElement("div"); foot.className = "scratch-foot";
+    foot.innerHTML = '<button type="button" data-s="more">연습장 늘리기</button><button type="button" data-s="close">연습장 접기</button>';
+    var btn = document.createElement("button"); btn.type = "button"; btn.className = "scr-btn"; btn.textContent = "연습장";
+    row.insertBefore(btn, row.firstChild);
+    host.appendChild(pad); host.appendChild(foot);
+    function paint() {
+      var h = scr[sig] || 0;
+      pad.hidden = foot.hidden = !h;
+      pad.style.height = (h || SCR_H) + "px";
+      btn.setAttribute("aria-pressed", h ? "true" : "false");
+      btn.textContent = h ? "연습장 닫기" : "연습장";
+    }
+    btn.addEventListener("click", function () { scr[sig] = scr[sig] ? 0 : SCR_H; lsSet("ca_scr", scr); paint(); });
+    foot.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.s === "more") scr[sig] = Math.min(SCR_MAX, (scr[sig] || SCR_H) + SCR_STEP);
+      else scr[sig] = 0;
+      lsSet("ca_scr", scr); paint();
+      if (b.dataset.s === "close") btn.scrollIntoView({ block: "nearest" });
+    });
+    paint();
+  }
+
+  /* ---------- 오답 자동 수집 ---------- */
+  var marks = lsGet("ca_marks", {}); // 문항 키 → "o" | "x" | "fixed"(틀렸다가 다시 맞힘)
+  var items = {}; // 키 → { li, sec, n }
+  function markRow(li, key) {
+    var row = document.createElement("div"); row.className = "mark-row";
+    row.innerHTML = '<button type="button" class="mk mk-o" data-m="o">맞음</button><button type="button" class="mk mk-x" data-m="x">틀림</button>';
+    li.appendChild(row);
+    row.addEventListener("click", function (e) {
+      var b = e.target.closest(".mk"); if (!b) return;
+      setMark(key, b.dataset.m);
+    });
+    return row;
+  }
+  function paintMark(key) {
+    var it = items[key]; if (!it) return;
+    var m = marks[key] || "";
+    it.li.classList.toggle("is-o", m === "o" || m === "fixed");
+    it.li.classList.toggle("is-x", m === "x");
+    Array.prototype.forEach.call(it.li.querySelectorAll(":scope > .mark-row .mk"), function (b) {
+      var on = (b.dataset.m === "o" && (m === "o" || m === "fixed")) || (b.dataset.m === "x" && m === "x");
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+  function setMark(key, m) {
+    var prev = marks[key] || "";
+    if (m === "o") marks[key] = prev === "x" ? "fixed" : (prev === "o" || prev === "fixed" ? "" : "o");
+    else marks[key] = prev === "x" ? "" : "x";
+    if (!marks[key]) delete marks[key];
+    lsSet("ca_marks", marks);
+    paintMark(key);
+    if (marks[key] === "x" && prev !== "x") addWeak(key);
+    renderWrongs();
+  }
+  function addWeak(key) { // 불안한 개념 목록에 한 줄 추가(같은 문항은 한 번만)
+    var it = items[key], ta = document.getElementById("weakList"); if (!it || !ta) return;
+    var tag = "[" + key + "]";
+    if (ta.value.indexOf(tag) >= 0) return;
+    var q = plain(it.li.querySelector(":scope > p")).slice(0, 40);
+    var line = "· " + title(it.sec) + " 스스로 확인 " + it.n + "번: " + q + " " + tag;
+    ta.value = (ta.value ? ta.value.replace(/\s+$/, "") + "\n" : "") + line;
+    ta.dispatchEvent(new Event("input", { bubbles: true })); // 자동 저장 갱신
+  }
+
+  /* ---------- 오답 노트 단원 ---------- */
+  var box = null, sum = null;
+  function renderWrongs() {
+    if (!box) return;
+    var keys = Object.keys(items).filter(function (k) { return marks[k] === "x"; });
+    var fixed = Object.keys(items).filter(function (k) { return marks[k] === "fixed"; }).length;
+    sum.textContent = "지금 틀린 문항 " + keys.length + "개 · 다시 풀어 맞힌 문항 " + fixed + "개";
+    var a = document.querySelector('#toc a[href="#wrongs"] span:nth-child(2)');
+    if (a) a.textContent = "오답 노트" + (keys.length ? " (" + keys.length + ")" : "");
+    box.innerHTML = "";
+    if (!keys.length) { box.innerHTML = '<p class="note">아직 없습니다. 스스로 확인·실전 연습 문항 아래의 [틀림]을 누르면 여기에 모입니다.</p>'; return; }
+    var bySec = {};
+    keys.forEach(function (k) { var s = items[k].sec.id; (bySec[s] = bySec[s] || []).push(k); });
+    Object.keys(bySec).forEach(function (sid) {
+      var sec = document.getElementById(sid), h = document.createElement("h3");
+      h.textContent = title(sec); box.appendChild(h);
+      var ol = document.createElement("ol"); ol.className = "wrong-list";
+      bySec[sid].forEach(function (k) {
+        var it = items[k], li = document.createElement("li");
+        li.dataset.wkey = k;
+        var head = document.createElement("p"); head.className = "wrong-src"; head.textContent = "스스로 확인 " + it.n + "번";
+        li.appendChild(head);
+        Array.prototype.forEach.call(it.li.children, function (c) { // 문제와 답(접힘)만 복사
+          if (c.classList.contains("mark-row") || c.classList.contains("scratch") || c.classList.contains("scratch-foot")) return;
+          li.appendChild(c.cloneNode(true));
+        });
+        var row = document.createElement("div"); row.className = "mark-row";
+        row.innerHTML = '<button type="button" data-w="go">이 문제로 가기</button><button type="button" class="mk mk-o" data-w="ok">다시 풀어 맞음</button>';
+        row.addEventListener("click", function (e) {
+          var b = e.target.closest("button"); if (!b) return;
+          if (b.dataset.w === "ok") setMark(k, "o");
+          else if (window.caGo) { window.caGo(it.sec.id); setTimeout(function () { it.li.scrollIntoView({ block: "center" }); }, 60); }
+        });
+        li.appendChild(row);
+        ol.appendChild(li);
+      });
+      box.appendChild(ol);
+    });
+  }
+
+  /* ---------- 설치 ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll("section.lesson"), function (sec) {
+    if (sec.id === "wrongs") return;
+    // 스스로 확인(실전 연습 포함) 문항: [연습장] [맞음] [틀림]
+    Array.prototype.forEach.call(sec.querySelectorAll(".check > ol > li"), function (li, i) {
+      var key = sec.id + ":" + (i + 1);
+      items[key] = { li: li, sec: sec, n: i + 1 };
+      var row = markRow(li, key);
+      makeScratch(li, "scr:" + key, row);
+      paintMark(key);
+    });
+    // 예제 상자, 모의고사 문항: [연습장]만
+    Array.prototype.forEach.call(sec.querySelectorAll(".example, ol.mq > li"), function (el, i) {
+      var row = document.createElement("div"); row.className = "mark-row";
+      el.appendChild(row);
+      makeScratch(el, "scr:" + sec.id + ":ex" + (i + 1), row);
+    });
+  });
+  var wsec = document.getElementById("wrongs");
+  if (wsec) { box = wsec.querySelector(".wrong-box"); sum = wsec.querySelector(".wrong-sum"); renderWrongs(); }
+  document.addEventListener("lesson:shown", function (e) { if (e.detail === "wrongs") renderWrongs(); });
+})();
+
 /* perfect-freehand 1.2.2 · MIT License · Copyright (c) 2021 Stephen Ruiz Ltd · https://github.com/steveruizok/perfect-freehand */
 var PF=(function(){
 function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[1]]}function l(e,t){return[e[0]+t[0],e[1]+t[1]]}function a(e,t){return[e[0]-t[0],e[1]-t[1]]}function b(e,t){return[e[0]*t,e[1]*t]}function he(e,t){return[e[0]/t,e[1]/t]}function R(e){return[e[1],-e[0]]}function B(e,t){return e[0]*t[0]+e[1]*t[1]}function ue(e,t){return e[0]===t[0]&&e[1]===t[1]}function ge(e){return Math.hypot(e[0],e[1])}function de(e){return e[0]*e[0]+e[1]*e[1]}function A(e,t){return de(a(e,t))}function G(e){return he(e,ge(e))}function ie(e,t){return Math.hypot(e[1]-t[1],e[0]-t[0])}function L(e,t,u){let x=Math.sin(u),h=Math.cos(u),y=e[0]-t[0],n=e[1]-t[1],f=y*h-n*x,d=y*x+n*h;return[f+t[0],d+t[1]]}function K(e,t,u){return l(e,b(a(t,e),u))}function ee(e,t,u){return l(e,b(t,u))}var{min:C,PI:xe}=Math,pe=.275,V=xe+1e-4;function ce(e,t={}){let{size:u=16,smoothing:x=.5,thinning:h=.5,simulatePressure:y=!0,easing:n=r=>r,start:f={},end:d={},last:D=!1}=t,{cap:S=!0,easing:j=r=>r*(2-r)}=f,{cap:q=!0,easing:c=r=>--r*r*r+1}=d;if(e.length===0||u<=0)return[];let p=e[e.length-1].runningLength,g=f.taper===!1?0:f.taper===!0?Math.max(u,p):f.taper,T=d.taper===!1?0:d.taper===!0?Math.max(u,p):d.taper,te=Math.pow(u*x,2),_=[],M=[],H=e.slice(0,10).reduce((r,i)=>{let o=i.pressure;if(y){let s=C(1,i.distance/u),W=C(1,1-s);o=C(1,r+(W-r)*(s*pe))}return(r+o)/2},e[0].pressure),m=$(u,h,e[e.length-1].pressure,n),U,X=e[0].vector,z=e[0].point,F=z,O=z,E=F,J=!1;for(let r=0;r<e.length;r++){let{pressure:i}=e[r],{point:o,vector:s,distance:W,runningLength:I}=e[r];if(r<e.length-1&&p-I<3)continue;if(h){if(y){let v=C(1,W/u),Z=C(1,1-v);i=C(1,H+(Z-H)*(v*pe))}m=$(u,h,i,n)}else m=u/2;U===void 0&&(U=m);let le=I<g?j(I/g):1,fe=p-I<T?c((p-I)/T):1;m=Math.max(.01,m*Math.min(le,fe));let re=(r<e.length-1?e[r+1]:e[r]).vector,Y=r<e.length-1?B(s,re):1,be=B(s,X)<0&&!J,ne=Y!==null&&Y<0;if(be||ne){let v=b(R(X),m);for(let Z=1/13,w=0;w<=1;w+=Z)O=L(a(o,v),o,V*w),_.push(O),E=L(l(o,v),o,V*-w),M.push(E);z=O,F=E,ne&&(J=!0);continue}if(J=!1,r===e.length-1){let v=b(R(s),m);_.push(a(o,v)),M.push(l(o,v));continue}let oe=b(R(K(re,s,Y)),m);O=a(o,oe),(r<=1||A(z,O)>te)&&(_.push(O),z=O),E=l(o,oe),(r<=1||A(F,E)>te)&&(M.push(E),F=E),H=i,X=s}let P=e[0].point.slice(0,2),k=e.length>1?e[e.length-1].point.slice(0,2):l(e[0].point,[1,1]),Q=[],N=[];if(e.length===1){if(!(g||T)||D){let r=ee(P,G(R(a(P,k))),-(U||m)),i=[];for(let o=1/13,s=o;s<=1;s+=o)i.push(L(r,P,V*2*s));return i}}else{if(!(g||T&&e.length===1))if(S)for(let i=1/13,o=i;o<=1;o+=i){let s=L(M[0],P,V*o);Q.push(s)}else{let i=a(_[0],M[0]),o=b(i,.5),s=b(i,.51);Q.push(a(P,o),a(P,s),l(P,s),l(P,o))}let r=R(se(e[e.length-1].vector));if(T||g&&e.length===1)N.push(k);else if(q){let i=ee(k,r,m);for(let o=1/29,s=o;s<1;s+=o)N.push(L(i,k,V*3*s))}else N.push(l(k,b(r,m)),l(k,b(r,m*.99)),a(k,b(r,m*.99)),a(k,b(r,m)))}return _.concat(N,M.reverse(),Q)}function me(e,t={}){var q;let{streamline:u=.5,size:x=16,last:h=!1}=t;if(e.length===0)return[];let y=.15+(1-u)*.85,n=Array.isArray(e[0])?e:e.map(({x:c,y:p,pressure:g=.5})=>[c,p,g]);if(n.length===2){let c=n[1];n=n.slice(0,-1);for(let p=1;p<5;p++)n.push(K(n[0],c,p/4))}n.length===1&&(n=[...n,[...l(n[0],[1,1]),...n[0].slice(2)]]);let f=[{point:[n[0][0],n[0][1]],pressure:n[0][2]>=0?n[0][2]:.25,vector:[1,1],distance:0,runningLength:0}],d=!1,D=0,S=f[0],j=n.length-1;for(let c=1;c<n.length;c++){let p=h&&c===j?n[c].slice(0,2):K(S.point,n[c],y);if(ue(S.point,p))continue;let g=ie(p,S.point);if(D+=g,c<j&&!d){if(D<x)continue;d=!0}S={point:p,pressure:n[c][2]>=0?n[c][2]:.5,vector:G(a(S.point,p)),distance:g,runningLength:D},f.push(S)}return f[0].vector=((q=f[1])==null?void 0:q.vector)||[0,0],f}function ae(e,t={}){return ce(me(e,t),t)}var _e=ae;return{getStroke:ae};
@@ -10096,7 +10270,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
    저장: 변경 즉시 localStorage(단원별 키)에 동기 저장 + IndexedDB에 비동기 저장, 불러올 때 더 최근 것을 쓴다.
    펜 획 모양은 perfect-freehand(MIT). */
 (function () {
-  var BLOCK = "p,li,h2,h3,h4,pre,table,figure,.formula,.fmt,dl,.example,.key,.trap,.exam,.easy,.check,.card,textarea,.summary,.legend,.rq,.model";
+  var BLOCK = "p,li,h2,h3,h4,pre,table,figure,.formula,.fmt,dl,.example,.key,.trap,.exam,.easy,.check,.card,textarea,.summary,.legend,.rq,.model,.scratch";
   var SCROLLER = ".tbl,figure.diagram,pre.asm,.formula";
   var NOINK = "button,summary,a,textarea,input,label,select,.ink-bar,.ink-selbar";
   var TAPPABLE = "button,summary,a,label,select,input"; // 펜으로 탭하면 원래대로 눌리고, 끌면 획이 된다
@@ -10218,7 +10392,13 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
 
   /* ---------- 블록과 좌표 ---------- */
   var cur = null, layer = null, live = null, blocks = [], sigs = [], placed = [];
-  function sigOf(el) { var t = (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60); var h = 5381; var s = el.tagName + "|" + t; for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+  // 문단 서명용 글자: 연습장·맞음·틀림 같은 버튼 글자는 빼서, 버튼이 생겨도 기존 필기가 붙은 문단을 그대로 찾게 한다
+  function textOf(el) {
+    var s = "", w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: function (n) { return n.parentElement && n.parentElement.closest(".mark-row,.scratch-foot") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
+    while (w.nextNode()) { s += w.currentNode.nodeValue; if (s.length > 400) break; }
+    return s;
+  }
+  function sigOf(el) { if (el.dataset && el.dataset.sig) return el.dataset.sig; var t = textOf(el).replace(/\s+/g, " ").trim().slice(0, 60); var h = 5381; var s = el.tagName + "|" + t; for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
   function scan(sec) { blocks = Array.prototype.slice.call(sec.querySelectorAll(BLOCK)); sigs = blocks.map(sigOf); }
   function isLeaf(el) { return !el.querySelector(BLOCK); }
   function scrollerOf(el) { return el.closest ? el.closest(SCROLLER) : null; }
@@ -10433,7 +10613,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (drag || !cur || !canDraw(e) || !(e.forced || inkZone(e.target))) return;
     if (!loaded) { e.preventDefault(); msg("필기를 불러오는 중입니다. 잠시 뒤 다시 쓰세요."); return; }
     if (!e.forced && e.target.closest(TAPPABLE)) { // 일단 기다렸다가 움직이면 획으로 바꾼다
-      drag = { mode: "pending", pid: e.pointerId, sec: cur, x: e.clientX, y: e.clientY, type: e.pointerType, pressure: e.pressure };
+      drag = { mode: "pending", pid: e.pointerId, sec: cur, x: e.clientX, y: e.clientY, type: e.pointerType, pressure: e.pressure, el: e.target.closest(TAPPABLE) };
       return;
     }
     e.preventDefault();
@@ -10460,7 +10640,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (!drag || e.pointerId !== drag.pid) return;
     if (drag.mode === "pending") {
       if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
-      var p = drag; drag = null; swallowClick();
+      var p = drag; drag = null; swallowClick(p.el);
       downInner({ pointerId: p.pid, pointerType: p.type, pressure: p.pressure, clientX: p.x, clientY: p.y, target: document.body, preventDefault: function () {}, forced: true });
       if (!drag) return;
     }
@@ -10517,8 +10697,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   }
   function onUp(e) { if (e && e.pointerType === "pen") { log(e.type, e); lastPenAt = performance.now(); } if (!drag || (e && e.pointerId !== drag.pid)) return; var d = drag; drag = null; if (d.mode !== "pending") finish(d); }
   function inkZone(el) { return !!(el && el.closest && el.closest("main,.shell") && !el.closest(OFFZONE)); } // 화면 양옆 여백(.shell 안쪽 여백)까지 포함
-  function swallowClick() { // 버튼 위에서 시작한 획 뒤에 따라오는 클릭 한 번을 무시
-    function eat(ev) { ev.preventDefault(); ev.stopPropagation(); document.removeEventListener("click", eat, true); }
+  function swallowClick(el) { // 버튼 위에서 시작한 획 뒤에 따라오는, 그 버튼의 클릭 한 번만 무시(다른 곳의 진짜 탭은 통과)
+    function eat(ev) { document.removeEventListener("click", eat, true); if (!el || !(ev.target === el || el.contains(ev.target))) return; ev.preventDefault(); ev.stopPropagation(); }
     document.addEventListener("click", eat, true); setTimeout(function () { document.removeEventListener("click", eat, true); }, 600);
   }
   function segDist2(px, py, a, b) {
