@@ -2448,6 +2448,43 @@ Exit:</pre>
     </ul>
   </div>
 
+  <div class="key"><p class="label">명령어 모음</p>
+    <p>이름 읽는 법: 끝의 <b>i</b> = immediate(세 번째 값이 명령어에 적힌 상수), 끝의 <b>u</b> = unsigned(무부호), <b>l</b>/<b>s</b>로 시작 = load(메모리에서 읽기)/store(메모리에 쓰기), <b>w</b>/<b>d</b> = word 4바이트/doubleword 8바이트.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>분류</th><th>명령어</th><th>이름 풀이</th><th>하는 일</th><th>형식</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3">산술 <span class="ref">[Ch2 p.9–10, 16]</span></td><td><code>add rd, rs1, rs2</code></td><td>add</td><td>rd = rs1 + rs2</td><td>R</td></tr>
+        <tr><td><code>sub rd, rs1, rs2</code></td><td>subtract</td><td>rd = rs1 − rs2</td><td>R</td></tr>
+        <tr><td><code>addi rd, rs1, imm</code></td><td>add immediate</td><td>rd = rs1 + 상수(subi는 없음, 음수 상수로 대신)</td><td>I</td></tr>
+        <tr><td rowspan="3">메모리 <span class="ref">[Ch2 p.11–15]</span></td><td><code>lw rd, imm(rs1)</code></td><td>load word</td><td>rd = 메모리[rs1 + imm]의 4바이트</td><td>I</td></tr>
+        <tr><td><code>sw rs2, imm(rs1)</code></td><td>store word</td><td>메모리[rs1 + imm] = rs2의 4바이트</td><td>S</td></tr>
+        <tr><td><code>ld</code>, <code>sd</code></td><td>load / store doubleword</td><td>8바이트 읽기·쓰기. 21-2 기출, 제어 신호는 lw·sw와 같음 <span class="sup">PDF 외 보충</span></td><td>I / S</td></tr>
+        <tr><td rowspan="3">논리 <span class="ref">[Ch2 p.26–27]</span></td><td><code>and</code>, <code>andi</code></td><td>and (immediate)</td><td>비트별 AND, 일부 비트만 남기기(마스크)</td><td>R / I</td></tr>
+        <tr><td><code>or</code>, <code>ori</code></td><td>or (immediate)</td><td>비트별 OR, 일부 비트를 1로</td><td>R / I</td></tr>
+        <tr><td><code>xor</code>, <code>xori</code></td><td>exclusive or (immediate)</td><td>비트별 XOR, 다르면 1. 111…1과 XOR = NOT</td><td>R / I</td></tr>
+        <tr><td rowspan="3">시프트 <span class="ref">[Ch2 p.25]</span></td><td><code>sll</code>, <code>slli</code></td><td>shift left logical</td><td>왼쪽으로, 빈칸 0. k칸 = × 2<sup>k</sup></td><td>R / I</td></tr>
+        <tr><td><code>srl</code>, <code>srli</code></td><td>shift right logical</td><td>오른쪽으로, 빈칸 0</td><td>R / I</td></tr>
+        <tr><td><code>sra</code>, <code>srai</code></td><td>shift right arithmetic</td><td>오른쪽으로, 빈칸 부호 비트(1100 0011 → 1110 0001)</td><td>R / I</td></tr>
+        <tr><td rowspan="5">조건 분기 <span class="ref">[Ch2 p.28–31]</span></td><td><code>beq rs1, rs2, L</code></td><td>branch if equal</td><td>같으면 L로</td><td>SB</td></tr>
+        <tr><td><code>bne</code></td><td>branch if not equal</td><td>다르면 L로</td><td>SB</td></tr>
+        <tr><td><code>blt</code></td><td>branch if less than</td><td>rs1 &lt; rs2(부호 있게)면 L로</td><td>SB</td></tr>
+        <tr><td><code>bge</code></td><td>branch if greater or equal</td><td>rs1 ≥ rs2(부호 있게)면 L로</td><td>SB</td></tr>
+        <tr><td><code>bltu</code>, <code>bgeu</code></td><td>위 둘의 unsigned판</td><td>무부호로 비교</td><td>SB</td></tr>
+        <tr><td rowspan="2">점프 <span class="ref">[Ch2 p.35]</span></td><td><code>jal x1, L</code></td><td>jump and link</td><td>PC + 4를 x1에 저장하고 L로(함수 호출)</td><td>UJ</td></tr>
+        <tr><td><code>jalr x0, 0(x1)</code></td><td>jump and link register</td><td>x1 + 0 주소로(함수 복귀), 주소 지정은 베이스 방식</td><td>I</td></tr>
+        <tr><td>큰 상수 <span class="ref">[Ch2 p.46]</span></td><td><code>lui rd, imm</code></td><td>load upper immediate</td><td>20비트 상수를 31~12번 비트에, 아래 12비트는 0. 이어서 addi</td><td>U</td></tr>
+        <tr><td rowspan="3">곱셈·나눗셈 <span class="ref">[Ch3 p.13, 20]</span></td><td><code>mul</code></td><td>multiply</td><td>곱의 하위 32비트</td><td>R</td></tr>
+        <tr><td><code>mulh</code>, <code>mulhu</code>, <code>mulhsu</code></td><td>multiply high (unsigned / signed-unsigned)</td><td>곱의 상위 32비트(부호×부호 / 무×무 / 부호×무)</td><td>R</td></tr>
+        <tr><td><code>div</code>, <code>divu</code>, <code>rem</code>, <code>remu</code></td><td>divide / remainder (unsigned)</td><td>몫 / 나머지</td><td>R</td></tr>
+        <tr><td rowspan="3">부동소수점 <span class="ref">[Ch3 p.37]</span></td><td><code>fadd</code>, <code>fsub</code>, <code>fmul</code>, <code>fdiv</code>, <code>fsqrt</code> (<code>.s</code>/<code>.d</code>)</td><td>FP 사칙연산·제곱근</td><td>.s = 단정도, .d = 배정도, 레지스터 f0~f31(f0은 0 고정 아님)</td><td></td></tr>
+        <tr><td><code>feq</code>, <code>flt</code>, <code>fle</code></td><td>FP equal / less than / less or equal</td><td>결과 0 또는 1을 <b>정수 레지스터</b>에, 이어서 beq·bne로 분기</td><td></td></tr>
+        <tr><td><code>flw</code>, <code>fsw</code> / <code>fld</code>, <code>fsd</code></td><td>FP load / store word·doubleword</td><td>단정도 / 배정도 값 메모리 읽기·쓰기</td><td></td></tr>
+      </tbody>
+    </table></div>
+    <p>Ch4 단일 사이클이 구현하는 명령어는 <b>lw, sw, add, sub, and, or, beq</b> 일곱 개뿐이다. 제어 신호 표 문제는 이 일곱 개로 나온다. <span class="ref">[Ch4 p.3]</span></p>
+    <p>외울 것은 뿌리 10개(add/sub, lw/sw, and/or/xor, sll/srl/sra, beq/bne/blt/bge, jal/jalr, lui) + i·u 규칙. 곱셈은 상위·하위 구분, FP는 위 두 줄(정수 레지스터, f0)만.</p>
+  </div>
+
   <div class="check"><p class="label">회독 점검</p><ol>
     <li><p>−20을 8비트 2의 보수로 쓰고 16진으로 나타내시오.</p><details><summary>답 보기</summary><div class="ans"><p><b>1110 1100<sub>2</sub> = 0xEC</b></p><p>① 20 = 16 + 4 → 0001 0100<sub>2</sub>.</p><p>② 음수는 ~x + 1: 비트를 뒤집으면 1110 1011<sub>2</sub>, 1을 더하면 1110 1100<sub>2</sub>.</p><p>③ 4비트씩 16진: 1110 = E, 1100 = C → 0xEC.</p><p>검산: 무부호로 읽으면 0xEC = 14 × 16 + 12 = 236, 236 − 256 = −20(8비트 2의 보수는 256을 빼면 음수 값).</p></div></details></li>
     <li><p>명령어 4 × 10<sup>9</sup>개, CPI 1.25, 클럭 2.5 GHz다. CPU 시간과 MIPS는?</p><details><summary>답 보기</summary><div class="ans"><p><b>2 s, 2000 MIPS</b></p><p>① CPU 시간 = IC × CPI / 클럭 속도 = 4 × 10<sup>9</sup> × 1.25 / (2.5 × 10<sup>9</sup>) = 5 × 10<sup>9</sup> / (2.5 × 10<sup>9</sup>) = 2 s.</p><p>② MIPS = 클럭 속도 / (CPI × 10<sup>6</sup>) = 2.5 × 10<sup>9</sup> / (1.25 × 10<sup>6</sup>) = 2 × 10<sup>3</sup> = 2000.</p><p>검산: MIPS = IC / (시간 × 10<sup>6</sup>) = 4 × 10<sup>9</sup> / (2 × 10<sup>6</sup>) = 2000. <span class="ref">[Ch1 p.28, 34]</span></p></div></details></li>
