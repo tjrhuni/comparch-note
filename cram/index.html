@@ -537,7 +537,8 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
 
   <div class="trap"><p class="label">함정</p><ul>
     <li>뒤집기만 하고 +1을 빼먹는다. ~x는 −x − 1이다.</li>
-    <li>부호 확장을 항상 0으로 채운다. MSB가 1이면 1로 채워야 값이 유지된다(0으로 채우면 큰 양수가 됨).</li>
+    <li>자리마다 16 − (숫자)를 한다. 16은 덧셈 넘침·뺄셈 빌림에만 쓴다. 뒤집기는 15 − (숫자) 후 끝에 +1 한 번이고, 헷갈리면 크기는 <b>다음 큰 수에서 한 번에 빼기</b>로 구한다: 0xFE8의 크기 = 0x1000 − 0xFE8 = 0x18 = 24(자리마다 빼면 0x128 = 296이 되어 틀림).</li>
+    <li>부호 확장하면서 원래 숫자를 바꾼다. 부호 확장은 <b>옮겨 적기</b>라 원래 자리는 그대로 두고 왼쪽 빈칸만 MSB로 채운다: 0xFE8 → 0xFFFFFFE8. MSB가 1인데 0으로 채우면 큰 양수가 된다.</li>
     <li>0xFFFFFFFF는 blt에서 −1, bltu에서 2<sup>32</sup> − 1(자세히는 Ch2 · 2). <span class="ref">[Ch2 p.31]</span></li>
   </ul></div>
 
@@ -545,8 +546,8 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     <details><summary>풀이 보기</summary><div class="ans">
       <p><b>0xFFFFFFFA</b></p>
       <p>① +6을 32비트로 쓴다: 0x00000006, 마지막 바이트는 0000 0110.</p>
-      <p>② 모든 비트를 뒤집는다(~x): 0은 1로, 1은 0으로. 16진 자리마다 15 − (그 자리 숫자)가 되므로 0x00000006 → 0xFFFFFFF9.</p>
-      <p>③ 1을 더한다: 0xFFFFFFF9 + 1 = 0xFFFFFFFA. 맨 끝 9 + 1 = 10 = A, 올림 없음.</p>
+      <p>② 모든 비트를 뒤집는다(~x): 0은 1로, 1은 0으로. 16진으로 한꺼번에 하려면 자리마다 <b>15</b> − (그 자리 숫자)다(F = 1111에서 빼는 것이라 15, 16이 아님). 0x00000006 → 0xFFFFFFF9.</p>
+      <p>③ 1을 <b>맨 끝에 한 번만</b> 더한다(자리마다 더하지 않음): 0xFFFFFFF9 + 1 = 0xFFFFFFFA. 맨 끝 9 + 1 = 10 = A, 올림 없음.</p>
       <p>④ 확인: MSB가 1이라 음수. 0xFFFFFFFA는 2<sup>32</sup>에서 6 모자라므로 −6이다.</p>
     </div></details></div>
 
