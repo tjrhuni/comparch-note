@@ -495,6 +495,14 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
   <h2>2의 보수와 부호 확장</h2>
   <p class="goal">시험에 나오는 모양: 음수를 2진·16진으로 쓰기, 0xFFFFFFFC 같은 값을 10진으로 읽기, 12비트 즉시값을 32비트로 부호 확장하기, 같은 비트를 부호 있는 수·무부호 수로 읽기.</p>
 
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li><b>명령어(instruction)</b>: CPU에게 시키는 일 하나. 예 "더해라", "메모리에서 읽어라". 하나가 32비트 기계어로 저장된다. <span class="ref">[Ch2 p.2]</span></li>
+      <li><b>레지스터(register)</b>: CPU 안에 있는 32개의 저장 칸 x0~x31. 칸 하나에 32비트 값이 들어간다. 계산은 이 칸들 사이에서 한다. <span class="ref">[Ch2 p.10]</span></li>
+      <li><b>즉시값(immediate)</b>: 명령어 안에 직접 적힌 상수. 기본 12비트라서 계산 전에 32비트로 늘려야 한다. 그 일을 하는 장치가 ImmGen(즉시값 생성기)이다. <span class="ref">[Ch2 p.16, Ch4 p.13]</span></li>
+    </ul>
+  </div>
+
   <div class="easy"><p class="label">쉽게 말하면</p><p>2의 보수(two's complement)에서는 맨 왼쪽 비트(MSB, Most Significant Bit)의 자릿값만 음수다. 맨 오른쪽 비트는 LSB(Least Significant Bit)라 부른다. 8비트라면 맨 왼쪽 자리가 +128이 아니라 −128이다. 나머지 자리는 무부호와 똑같다.</p></div>
 
   <div class="key"><p class="label">외울 것</p>
@@ -601,6 +609,16 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
   <h2>비트 연산과 시프트</h2>
   <p class="goal">시험에 나오는 모양: and·or·xor 결과를 16진으로 쓰기, sll·srl·sra 결과 쓰기, [19:15] 같은 비트 범위 읽기, slli 2가 왜 ×4인지(배열 인덱스).</p>
 
+  <div class="easy"><p class="label">먼저: 어셈블리 한 줄 읽는 법</p>
+    <p>이 단원 예제와 점검에는 <code>and x9, x10, x11</code> 같은 줄이 나온다. 읽는 규칙은 세 가지다(자세한 표는 기초 · 4).</p>
+    <ol>
+      <li><b>맨 앞 단어 = 할 일(명령어 이름)</b>. <code>and</code> = AND 하라, <code>srli</code> = 오른쪽으로 밀어라(shift right logical immediate).</li>
+      <li><b>쉼표 뒤 첫 번째 = 결과를 넣을 칸</b>, 그 뒤 = 계산에 쓸 값. <code>and x9, x10, x11</code> = "x10과 x11을 AND해서 x9에 넣어라", 즉 x9 ← x10 and x11. x10과 x11은 읽기만 하므로 값이 그대로다. <span class="ref">[Ch2 p.9]</span></li>
+      <li><b>이름 끝에 i가 붙으면 마지막 값이 숫자 상수</b>(즉시값)다. <code>srli x9, x9, 8</code> = "x9를 오른쪽으로 8칸 밀어서 다시 x9에 넣어라", 즉 x9 ← x9 &gt;&gt; 8. 결과 칸과 읽는 칸이 같으면 자기 값을 바꾼 것이다.</li>
+    </ol>
+    <p>"실행했다"는 맨 앞 칸(결과 칸)의 값이 바뀌었다는 뜻이다. 문제가 묻는 것은 보통 그 칸의 새 값이다.</p>
+  </div>
+
   <div class="key"><p class="label">외울 것</p>
     <div class="tbl"><table>
       <thead><tr><th>a</th><th>b</th><th>and</th><th>or</th><th>xor</th></tr></thead>
@@ -646,6 +664,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
   <div class="example"><p class="label">예제 (시험 수준)</p><p>x10 = 0x12345678이다. x11 = 0x0000FF00일 때 <code>and x9, x10, x11</code>을 실행한 뒤 <code>srli x9, x9, 8</code>을 실행했다. 각 단계의 x9를 16진 8자리로 쓰시오.</p>
     <details><summary>풀이 보기</summary><div class="ans">
       <p><b>and 뒤 0x00005600, srli 뒤 0x00000056</b></p>
+      <p>⓪ 두 줄을 말로 읽는다. <code>and x9, x10, x11</code> = x9 ← x10 and x11(0x12345678 and 0x0000FF00). <code>srli x9, x9, 8</code> = x9 ← (방금 만든 x9)를 오른쪽으로 8비트 민 값.</p>
       <p>① 자리를 맞춘다: 1 2 3 4 5 6 7 8 과 0 0 0 0 F F 0 0.</p>
       <p>② and는 마스크가 0인 자리를 0으로, F인 자리를 그대로 남긴다. F는 5번째·6번째 자리(5, 6)에만 있으므로 0x00005600.</p>
       <p>③ srli 8칸 = 16진 두 자리 오른쪽 이동. 맨 오른쪽 00이 버려지고 왼쪽에 0이 두 자리 들어온다: 0x00000056.</p>
