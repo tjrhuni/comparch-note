@@ -328,7 +328,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
 <section class="lesson" id="home" data-ch="0" data-title="시작하기">
   <p class="eyebrow">COMP0411 중간고사 · 10월 21일(수) 10:30</p>
   <h2>컴퓨터구조 벼락치기</h2>
-  <p class="goal">시험에 나올 것만 모은 압축판입니다. 회독 점검을 풀지 않고 읽기만 하면 한 번에 2시간 15분 정도, 점검까지 모두 풀면 첫 회독은 7~8시간 걸립니다. 두 번째부터는 빨라집니다. 시험 전까지 <b>세 번 이상</b> 읽는 것이 목표입니다. 자세한 설명이 필요하면 이론 노트를 여세요: <a href="https://tjrhuni.github.io/comparch-note/">이론 노트 열기</a></p>
+  <p class="goal">시험에 나올 것만 모은 압축판입니다. 회독 점검을 풀지 않고 읽기만 하면 한 번에 3시간 정도(처음 보는 용어 설명 포함), 점검까지 모두 풀면 첫 회독은 7~8시간 걸립니다. 두 번째부터는 빨라집니다. 시험 전까지 <b>세 번 이상</b> 읽는 것이 목표입니다. 자세한 설명이 필요하면 이론 노트를 여세요: <a href="https://tjrhuni.github.io/comparch-note/">이론 노트 열기</a></p>
 
   <div class="tbl"><table>
     <thead><tr><th colspan="2">중간고사 공지</th></tr></thead>
@@ -547,7 +547,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     <li>뒤집기만 하고 +1을 빼먹는다. ~x는 −x − 1이다.</li>
     <li>자리마다 16 − (숫자)를 한다. 16은 덧셈 넘침·뺄셈 빌림에만 쓴다. 뒤집기는 15 − (숫자) 후 끝에 +1 한 번이고, 헷갈리면 크기는 <b>다음 큰 수에서 한 번에 빼기</b>로 구한다: 0xFE8의 크기 = 0x1000 − 0xFE8 = 0x18 = 24(자리마다 빼면 0x128 = 296이 되어 틀림).</li>
     <li>부호 확장하면서 원래 숫자를 바꾼다. 부호 확장은 <b>옮겨 적기</b>라 원래 자리는 그대로 두고 왼쪽 빈칸만 MSB로 채운다: 0xFE8 → 0xFFFFFFE8. MSB가 1인데 0으로 채우면 큰 양수가 된다.</li>
-    <li>0xFFFFFFFF는 blt에서 −1, bltu에서 2<sup>32</sup> − 1(자세히는 Ch2 · 2). <span class="ref">[Ch2 p.31]</span></li>
+    <li>같은 비트도 읽는 방식에 따라 값이 다르다. 두 레지스터를 비교해 "작으면 다른 줄로 건너뛰는" 명령어가 둘 있는데, blt는 부호 있는 수로, bltu는 무부호 수로 읽고 비교한다. 그래서 0xFFFFFFFF는 blt에서 −1, bltu에서 2<sup>32</sup> − 1이다(자세히는 Ch2 · 2). <span class="ref">[Ch2 p.31]</span></li>
   </ul></div>
 
   <div class="example"><p class="label">예제 (시험 수준)</p><p>−6을 32비트 2의 보수로 나타내 16진 8자리로 쓰고, 결과를 다시 10진으로 읽어 확인하시오.</p>
@@ -635,7 +635,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
       <li><b>xor = 뒤집기</b>: 같으면 0, 다르면 1. 마스크 1인 자리만 뒤집힌다. 모두 1인 값과 xor하면 NOT이 된다(RISC-V에는 NOT 명령이 없음). <span class="ref">[Ch2 p.27]</span></li>
       <li>비트 연산은 자리끼리만 계산하고 올림이 없다. 그래서 <b>16진 자리 단위</b>로 계산해도 된다: and F = 그대로, and 0 = 0, or F = F, or 0 = 그대로, xor F = 15 − (그 자리 숫자), xor 0 = 그대로.</li>
       <li><b>비트 번호</b>: 맨 오른쪽(LSB)이 0번, 32비트면 맨 왼쪽(MSB)이 31번. <b>[hi:lo]</b> = hi번~lo번 비트(슬라이드의 [19-15]와 같은 뜻). [19:15]는 19, 18, 17, 16, 15번의 5개. imm[12:1]은 즉시값의 12번~1번 비트(0번은 칸에 없음).</li>
-      <li>레지스터 칸 5비트는 10진으로 바꾼 값이 레지스터 번호: 10011<sub>2</sub> = 16 + 2 + 1 = 19 → x19.</li>
+      <li>명령어 32비트 기계어 안에는 쓸 레지스터 번호를 적는 5비트 칸이 있다. 계산에 읽는 첫 번째 레지스터 칸을 <b>rs1</b>, 두 번째를 <b>rs2</b>, 결과를 넣을 칸을 <b>rd</b>라 부른다(rs1 칸은 [19:15], 형식은 Ch2 · 4). <span class="ref">[Ch2 p.22]</span> 칸의 5비트를 10진으로 바꾼 값이 레지스터 번호다: 10011<sub>2</sub> = 16 + 2 + 1 = 19 → x19.</li>
     </ul>
     <div class="tbl"><table>
       <thead><tr><th>시프트</th><th>방향</th><th>빈칸 채우기</th><th>값으로 보면</th></tr></thead>
@@ -645,7 +645,8 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
         <tr><td>sra, srai</td><td>오른쪽</td><td>왼쪽에 부호 비트(MSB) 복사</td><td>부호 있는 ÷ 2<sup>k</sup>(내림)</td></tr>
       </tbody>
     </table></div>
-    <p>슬라이드 예: 1100 0011을 sra 1칸 → 1110 0001. <span class="ref">[Ch2 p.25]</span> 4칸 시프트 = 16진 한 자리 이동. int 배열 인덱스 i의 바이트 오프셋 i × 4는 <code>slli x10, x22, 2</code>로 구한다. <span class="ref">[Ch2 p.30]</span></p>
+    <p>슬라이드 예: 1100 0011을 sra 1칸 → 1110 0001. <span class="ref">[Ch2 p.25]</span> 4칸 시프트 = 16진 한 자리 이동.</p>
+    <p>시프트가 가장 많이 쓰이는 곳은 배열 주소 계산이다. 메모리(memory)는 바이트마다 0부터 번호가 붙은 긴 칸 줄이고, 그 번호가 <b>주소(address)</b>다. <span class="ref">[Ch2 p.12]</span> 배열(array)은 같은 종류의 값을 메모리에 차례로 붙여 놓은 것이고, A[i]는 배열 A의 i번 원소(0번부터 셈)다. int(정수) 하나는 4바이트라 A[i]는 배열 시작 주소에서 i × 4바이트 떨어져 있다. 이 거리(바이트 수)를 <b>오프셋(offset)</b>이라 한다. i × 4는 <code>slli x10, x22, 2</code>(x22 = i를 왼쪽으로 2칸)로 구한다. <span class="ref">[Ch2 p.30]</span></p>
   </div>
 
   <h3>푸는 순서</h3>
@@ -724,6 +725,13 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
   <h2>단위와 어셈블리 읽는 법</h2>
   <p class="goal">시험에 나오는 모양: GHz ↔ ps 환산과 10의 거듭제곱 계산(성능 공식), 어셈블리 한 줄을 C 문장으로 읽기, 배열 원소 주소 계산.</p>
 
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li><b>클럭(clock)</b>: CPU가 일정한 박자에 맞춰 일하게 하는 신호. 박자 한 번이 <b>클럭 사이클(clock cycle)</b>, 그 한 번의 길이(시간)가 <b>클럭 주기(clock period)</b>, 1 s에 박자가 몇 번인지가 <b>클럭 속도(clock rate)</b>다. 속도 단위 Hz = 1 s에 1번. <span class="ref">[Ch1 p.26]</span></li>
+      <li><b>C 문장</b>: 시험의 "C로 쓰시오"는 <code>A[7] = A[5] - 1;</code> 같은 한 줄을 말한다. <code>=</code>는 "오른쪽을 계산해 왼쪽에 넣어라", <code>A[5]</code>는 배열 A의 5번 원소(기초 · 3), 끝의 <code>;</code>는 문장의 끝 표시다. <span class="sup">PDF 외 보충</span></li>
+    </ul>
+  </div>
+
   <div class="key"><p class="label">외울 것</p>
     <div class="tbl"><table>
       <thead><tr><th>큰 쪽</th><th>값</th><th>작은 쪽</th><th>값</th></tr></thead>
@@ -749,14 +757,14 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
         <tr><td><code>addi x5, x6, -3</code></td><td>x5 ← x6 + (−3). 즉시값(immediate)은 상수</td></tr>
         <tr><td><code>lw x9, 32(x22)</code></td><td>주소 x22 + 32에서 word를 읽어 x9에 넣는다. <span class="ref">[Ch2 p.14]</span></td></tr>
         <tr><td><code>sw x9, 48(x22)</code></td><td>x9를 주소 x22 + 48에 쓴다(x9는 그대로)</td></tr>
-        <tr><td><code>beq x5, x6, L</code></td><td>x5 == x6이면 L로 건너뛰고, 아니면 다음 줄. bne = 같지 않으면, blt = 작으면, bge = 크거나 같으면 L로</td></tr>
+        <tr><td><code>beq x5, x6, L</code></td><td>x5 == x6이면 L로 건너뛰고, 아니면 다음 줄. 이렇게 조건에 따라 다른 줄로 건너뛰는 것을 <b>분기(branch)</b>라 한다. <span class="ref">[Ch2 p.28]</span> bne = 같지 않으면, blt = 작으면, bge = 크거나 같으면 L로</td></tr>
         <tr><td><code>Loop:</code></td><td>라벨(label). 명령어 위치의 이름, 분기 목적지로 쓴다</td></tr>
         <tr><td><code>// …</code></td><td>주석. 실행되지 않는다</td></tr>
       </tbody>
     </table></div>
     <ul>
       <li><b>PC(Program Counter)</b>: 실행할 명령어의 주소를 담는 레지스터. 명령어 하나가 4바이트라 보통 다음은 PC + 4. <span class="ref">[Ch2 p.35]</span></li>
-      <li><b>배열 주소</b>: int A[i]의 주소 = 시작 주소 + i × 4. 연속된 word의 주소는 4씩 차이 난다. <span class="ref">[Ch2 p.12, 14]</span></li>
+      <li><b>배열 주소</b>: int 하나 = word = 4바이트라 int A[i]의 주소 = 시작 주소 + i × 4. <code>lw</code>·<code>sw</code>의 괄호 앞 숫자(32, 48)가 이 i × 4, 즉 오프셋이다. 연속된 word의 주소는 4씩 차이 난다. <span class="ref">[Ch2 p.12, 14]</span></li>
     </ul>
   </div>
 
@@ -855,7 +863,7 @@ sw   x9, 28(x23)</pre>
     <ul>
       <li>계층: 응용 소프트웨어 → 시스템 소프트웨어(OS, 컴파일러) → 하드웨어. <span class="ref">[Ch1 p.13]</span></li>
       <li>운영체제(OS) 역할 3 = 기본 입출력 처리, 저장공간·메모리 할당, 자원 공유·작업 스케줄링. <span class="ref">[Ch1 p.13]</span></li>
-      <li>고급 언어 장점 = 생산성(productivity)·이식성(portability). 어셈블리어 = 기계어 명령의 기호 표현. 어셈블러 = 기호 버전 → 2진 버전으로 번역. <span class="ref">[Ch1 p.14]</span></li>
+      <li>고급 언어 장점 = 생산성(productivity)·이식성(portability). 컴파일러 = 고급 언어(C 등) 프로그램을 하드웨어가 실행하는 명령어로 번역. <span class="ref">[Ch1 p.13]</span> 어셈블리어 = 기계어 명령의 기호 표현. 어셈블러 = 기호 버전 → 2진 버전으로 번역. <span class="ref">[Ch1 p.14]</span></li>
     </ul>
     <p><b>8대 위대한 아이디어</b> <span class="ref">[Ch1 p.12]</span></p>
     <div class="tbl"><table>
@@ -881,6 +889,7 @@ sw   x9, 28(x23)</pre>
       <li>(하) 네트워크 장점 = 통신·자원 공유·원격 접근(사용자가 컴퓨터 가까이 있을 필요가 <b>없다(NOT)</b>). LAN = 한 건물 안(예 이더넷), WAN = 수백 km~대륙(예 인터넷). 실리콘은 전기가 잘 통하지 <b>않아(NOT)</b> 반도체. <span class="ref">[Ch1 p.19, 21]</span></li>
     </ul>
     <p><b>칩 비용</b> <span class="ref">[Ch1 p.22]</span></p>
+    <p>웨이퍼(wafer) = 칩을 찍어 내는 둥근 실리콘 판, 다이(die) = 웨이퍼에서 잘라 낸 칩 한 개, 수율(yield) = 만든 다이 중 정상인 것의 비율. <span class="ref">[Ch1 p.21–22]</span></p>
     <div class="formula">다이당 비용 = 웨이퍼당 비용 / (웨이퍼당 다이 수 × 수율)</div>
     <div class="formula">수율 = 1 / (1 + 면적당 결함 수 × 다이 면적 / 2)<sup>N</sup></div>
     <ul>
@@ -888,18 +897,18 @@ sw   x9, 28(x23)</pre>
     </ul>
     <p><b>성능</b></p>
     <ul>
-      <li>응답 시간(= 실행 시간) vs 처리량(= 대역폭). 프로세서 <b>교체</b> → 둘 다 개선, <b>추가</b> → 처리량만. <span class="ref">[Ch1 p.24]</span></li>
+      <li>응답 시간(response time, = 실행 시간) = 작업 하나의 시작부터 끝까지 걸린 시간. 처리량(throughput, = 대역폭) = 정해진 시간에 해낸 일의 총량. 프로세서 <b>교체</b> → 둘 다 개선, <b>추가</b> → 처리량만. <span class="ref">[Ch1 p.24]</span></li>
       <li>경과 시간(wall clock) = I/O·OS 오버헤드까지 모두 포함. CPU 시간은 I/O·다른 프로그램 시간을 포함하지 <b>않는다(NOT)</b>. CPU 시간 = 사용자(user) CPU 시간 + 시스템(system) CPU 시간. <span class="ref">[Ch1 p.25]</span></li>
       <li>성능 개선 = 클럭 사이클 수 줄이기 또는 클럭 주기 줄이기(클럭 속도 올리기). 둘은 트레이드오프. <span class="ref">[Ch1 p.27]</span></li>
-      <li><b>성능을 결정하는 3요소 = 명령어 수(IC), CPI, 클럭 주기.</b> 누가 정하나: IC = 프로그램·ISA·컴파일러, CPI = CPU 하드웨어, 클럭 주기 = 하드웨어(공정·구조). 상세 표는 Ch1 · 2. <span class="ref">[Ch1 p.28, Ch4 p.2]</span></li>
+      <li><b>성능을 결정하는 3요소 = 명령어 수(IC), CPI, 클럭 주기.</b> IC(Instruction Count) = 실행되는 명령어 개수, CPI = 명령어 하나에 드는 평균 클럭 사이클 수(계산은 Ch1 · 2). 누가 정하나: IC = 프로그램·ISA·컴파일러, CPI = CPU 하드웨어, 클럭 주기 = 하드웨어(공정·구조). 상세 표는 Ch1 · 2. <span class="ref">[Ch1 p.28, Ch4 p.2]</span></li>
     </ul>
     <p><b>에너지·전력과 MIPS</b></p>
     <ul>
-      <li>동적 에너지 ∝ 용량성 부하 × 전압<sup>2</sup> (전력은 여기에 × 주파수, 계산은 Ch1 · 2). <span class="ref">[Ch1 p.30]</span></li>
+      <li>동적 에너지 ∝ 용량성 부하 × 전압<sup>2</sup> (전력은 여기에 × 주파수(= 클럭 속도), 계산은 Ch1 · 2). <span class="ref">[Ch1 p.30]</span></li>
       <li>전력 장벽 ① 전압을 더 낮출 수 <b>없다(NOT)</b>: 누설(leakage). <span class="ref">[Ch1 p.31]</span></li>
       <li>전력 장벽 ② 열을 더 제거할 수 <b>없다(NOT)</b>: 냉각 비용(cooling cost). <span class="ref">[Ch1 p.31]</span></li>
-      <li>2006년부터 멀티코어, 이득은 응답 시간보다 처리량. <span class="ref">[Ch1 p.32]</span></li>
-      <li>MIPS가 부적절한 이유 ① ISA 차이 ② 명령어 복잡도 차이를 반영 못 함 ③ 같은 CPU도 프로그램마다 CPI가 다름. <span class="ref">[Ch1 p.34]</span></li>
+      <li>2006년부터 멀티코어(칩 하나에 프로세서 코어 여러 개), 이득은 응답 시간보다 처리량. <span class="ref">[Ch1 p.32]</span></li>
+      <li>MIPS(초당 백만 명령어 수, 계산은 Ch1 · 2)가 성능 지표로 부적절한 이유 ① ISA 차이 ② 명령어 복잡도 차이를 반영 못 함 ③ 같은 CPU도 프로그램마다 CPI가 다름. <span class="ref">[Ch1 p.34]</span></li>
     </ul>
   </div>
 
@@ -930,6 +939,7 @@ sw   x9, 28(x23)</pre>
       <li>클럭 사이클(clock cycle) = 클럭이 한 번 똑딱하는 단위. 그 길이가 클럭 주기. <span class="ref">[Ch1 p.26]</span></li>
       <li>CPI(Cycles Per Instruction) = 명령어 하나에 드는 평균 클럭 사이클 수. <span class="ref">[Ch1 p.28]</span></li>
       <li>MIPS(Million Instructions Per Second) = 초당 백만 명령어 수. <span class="ref">[Ch1 p.34]</span></li>
+      <li>명령어 종류별로 CPI가 다르다. 문제에 나오는 종류: 산술(add 등), load/store(메모리 읽기·쓰기 명령어, lw·sw), 분기(beq 등). 캐시(cache)는 메모리 앞의 작고 빠른 메모리라(Ch1 · 1) 개선하면 load/store가 빨라진다. <span class="ref">[Ch1 p.17, 28]</span></li>
     </ul>
     <div class="formula">CPU 시간 = 명령어 수(IC) × CPI × 클럭 주기 = IC × CPI / 클럭 속도 <span class="ref">[Ch1 p.28]</span></div>
     <div class="formula">사이클 수 = 실행 시간 × 클럭 속도 = IC × CPI <span class="ref">[Ch1 p.27–28]</span></div>
@@ -1016,14 +1026,14 @@ sw   x9, 28(x23)</pre>
       </tbody>
     </table></div>
     <ul>
-      <li>임시(temporary)·저장(saved) 레지스터 구분은 Ch2 · 3에서 다룬다.</li>
+      <li>표의 x1·sp·fp·인자·반환값은 함수(프로시저)를 부를 때 쓰는 레지스터다. 인자 = 함수에 넘기는 값, 반환값 = 함수가 돌려주는 결과, jal = 함수로 건너가는 명령어, 스택 = 값을 잠시 맡겨 두는 메모리 영역. 이 단원 문제에는 x0만 필요하고, 나머지는 Ch2 · 3에서 다룬다. 임시(temporary)·저장(saved) 레지스터 구분도 Ch2 · 3. <span class="ref">[Ch2 p.32, 37]</span></li>
       <li>x0 활용: <code>sub x1, x0, x1</code> = 부정(= 부호 반전, x1 = −x1). <span class="ref">[Ch2 p.16]</span> <code>beq x0, x0, L</code> = 무조건 분기. <span class="ref">[Ch2 p.29]</span></li>
       <li>산술은 레지스터에서만, 메모리는 load·store로. <span class="ref">[Ch2 p.11]</span> 바이트 주소, 연속한 word는 4씩 차이. <span class="ref">[Ch2 p.12]</span></li>
     </ul>
     <div class="formula">A[i]의 주소 = 시작 주소(베이스) + i × 4 (4바이트 정수 배열)</div>
     <ul>
       <li>rd = 결과를 받는 레지스터, rs1 = 주소의 기준(베이스) 레지스터(읽는 법은 기초 · 4). <code>lw rd, 오프셋(rs1)</code>: 메모리 → 레지스터. <code>sw rs2, 오프셋(rs1)</code>: 레지스터 → 메모리(rs2 = 저장할 값). 오프셋은 바이트 단위. <span class="ref">[Ch2 p.14]</span></li>
-      <li>빅 엔디언 = 최상위 바이트를 가장 낮은 주소에. 리틀 엔디언 = 최하위 바이트를 가장 낮은 주소에. <b>RISC-V = 리틀 엔디언.</b> <span class="ref">[Ch2 p.13]</span></li>
+      <li>32비트 값은 4바이트라 메모리 주소 4개에 나눠 담긴다. 이때 순서를 정하는 규칙이 엔디언(endianness)이다. 최상위 바이트 = 16진 8자리로 썼을 때 맨 왼쪽 두 자리(0x00112233의 00), 최하위 바이트 = 맨 오른쪽 두 자리(33). 빅 엔디언 = 최상위 바이트를 가장 낮은 주소에. 리틀 엔디언 = 최하위 바이트를 가장 낮은 주소에. <b>RISC-V = 리틀 엔디언.</b> <span class="ref">[Ch2 p.13]</span></li>
       <li>RISC-V는 정렬 제한이 없다: word가 4의 배수 주소에서 시작할 필요 <b>없다(NOT)</b>. <span class="ref">[Ch2 p.13]</span></li>
       <li>레지스터가 훨씬 빠르다. 덜 쓰는 변수만 메모리로(spill). <span class="ref">[Ch2 p.15]</span></li>
     </ul>
@@ -1088,6 +1098,13 @@ addi x0, x5, 3</pre><details><summary>답 보기</summary><div class="ans"><p><b
   <h2>C ↔ 어셈블리</h2>
   <p class="goal">시험에 나오는 모양: C 한두 줄을 RISC-V로, RISC-V 몇 줄을 C로 바꾸기, 짧은 코드를 실행한 뒤 레지스터 값 쓰기. (기출: 26-1 C → 어셈블리 2문제, 어셈블리 → C 1문제, 실행 후 레지스터 결과값)</p>
 
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li>C의 <code>if (조건) 문장1; else 문장2;</code> = 조건이 참이면 문장1, 거짓이면 문장2를 실행. <code>while (조건) 문장;</code> = 조건이 참인 동안 문장을 되풀이. <span class="ref">[Ch2 p.28–30]</span></li>
+      <li>비교 기호: <code>==</code> 같다, <code>!=</code> 같지 않다, <code>&lt;</code> 작다, <code>&gt;=</code> 크거나 같다. <code>i += 1</code>은 <code>i = i + 1</code>과 같다. 조건 분기 명령어 beq·bne·blt·bge는 기초 · 4 표. <span class="sup">PDF 외 보충</span></li>
+    </ul>
+  </div>
+
   <div class="easy"><p class="label">쉽게 말하면</p><p>C 한 줄은 정해진 틀 몇 가지 중 하나로 바뀐다. 틀을 외우고 레지스터 번호만 끼워 넣는다. 레지스터·메모리 자체는 Ch2 · 1 참고.</p></div>
 
   <div class="key"><p class="label">외울 것</p>
@@ -1096,7 +1113,7 @@ addi x0, x5, 3</pre><details><summary>답 보기</summary><div class="ans"><p><b
       <li>p.14 배열 예제: h = x21, A의 시작 주소 = x22, 중간값 x9. <span class="ref">[Ch2 p.14]</span></li>
       <li>p.29 if-else 예제: f, g, h, i, j = x19, x20, x21, x22, x23. <span class="ref">[Ch2 p.29]</span></li>
       <li>p.30 while 예제: i = x22, k = x24, save의 시작 주소 = x25, 중간값 x10·x9. <span class="ref">[Ch2 p.30]</span></li>
-      <li>규약상 임시 레지스터 = x5~x7, x28~x31. x9는 슬라이드 예제가 임시로 쓰지만 규약상 저장 레지스터(Ch2 · 3). <span class="ref">[Ch2 p.39]</span></li>
+      <li>임시 레지스터 = 계산 중간값을 잠깐 담는 레지스터. 규약상 임시 레지스터 = x5~x7, x28~x31. x9는 슬라이드 예제가 임시로 쓰지만 규약상 저장 레지스터(Ch2 · 3). <span class="ref">[Ch2 p.39]</span></li>
     </ul>
     <p>번역 틀 (아래 표는 p.29 배정 f~j = x19~x23)</p>
     <div class="tbl"><table>
@@ -1106,7 +1123,7 @@ addi x0, x5, 3</pre><details><summary>답 보기</summary><div class="ans"><p><b
         <tr><td><code>f = (g + h) - (i + j);</code></td><td><code>add x5, x20, x21</code> · <code>add x6, x22, x23</code> · <code>sub x19, x5, x6</code></td><td>괄호마다 임시 레지스터</td></tr>
         <tr><td><code>f = g + 10;</code> / <code>f = g - 10;</code></td><td><code>addi x19, x20, 10</code> / <code>addi x19, x20, -10</code></td><td>subi 없음, 음수를 더함 <span class="ref">[Ch2 p.16]</span></td></tr>
         <tr><td><code>f = A[i];</code> (이 행만 A = x25, i = x22)</td><td><code>slli x5, x22, 2</code> · <code>add x5, x5, x25</code> · <code>lw x19, 0(x5)</code></td><td>상수 인덱스면 오프셋 = 인덱스 × 4(Ch2 · 1). 변수 인덱스면 × 4 → 시작 주소 더함 → 오프셋 0</td></tr>
-        <tr><td>32비트 큰 상수</td><td><code>lui</code>(상위 20비트) + <code>addi</code>(하위 12비트)</td><td><span class="ref">[Ch2 p.46]</span></td></tr>
+        <tr><td>32비트 큰 상수</td><td><code>lui</code>(상위 20비트) + <code>addi</code>(하위 12비트)</td><td>addi 즉시값은 12비트뿐이라 큰 상수를 한 번에 못 넣는다. <code>lui rd, 상수</code>(load upper immediate) = 20비트 상수를 rd의 31~12번 비트에 넣고 아래 12비트는 0으로. 이어서 addi로 아래 12비트를 더한다 <span class="ref">[Ch2 p.46]</span></td></tr>
       </tbody>
     </table></div>
     <p>if-else와 while (슬라이드 순서 그대로) <span class="ref">[Ch2 p.29–30]</span></p>
@@ -1239,6 +1256,15 @@ Exit:</pre>
   <h2>프로시저와 스택</h2>
   <p class="goal">시험에 나오는 모양: 레지스터 번호를 주고 "스택에 저장 → 계산 → 복원 → 복귀" 코드 쓰기·빈칸, sp 값 계산, 누가 저장하는지 O/X. (기출: 21-2 스택 할당 → 덧셈 → 원래 주소로 복귀)</p>
 
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li><b>프로시저(procedure)</b> = 함수. 다른 코드가 이름으로 불러 쓰는 코드 묶음. 부르는 쪽이 <b>호출자(caller)</b>, 불려 가는 쪽이 <b>피호출자(callee)</b>다. <span class="ref">[Ch2 p.32]</span></li>
+      <li><b>인자(argument)</b> = 호출자가 피호출자에게 넘기는 값, <b>반환값(return value)</b> = 피호출자가 돌려주는 결과(C의 <code>return</code>). <span class="ref">[Ch2 p.32]</span></li>
+      <li><b>스택(stack)</b> = 레지스터 값을 잠시 맡겨 두는 메모리 영역. <b>sp(stack pointer, x2)</b>는 스택 맨 위 칸의 주소를 담는 레지스터다. <span class="ref">[Ch2 p.37]</span></li>
+      <li><b>jal</b>(jump and link) = 복귀 주소를 x1에 남기고 함수로 건너가는 명령어, <b>jalr</b>(jump and link register) = 레지스터에 든 주소로 건너가는 명령어(복귀에 씀). 아래 공식 두 줄이 정확한 동작이다. <span class="ref">[Ch2 p.35–36]</span></li>
+    </ul>
+  </div>
+
   <div class="easy"><p class="label">쉽게 말하면</p><p>호출 = 인자를 x10부터 놓고 <code>jal</code>로 건너가 일한 뒤, 결과를 x10에 놓고 x1의 주소로 돌아오기. 레지스터가 모자라면 스택에 잠시 맡긴다.</p></div>
 
   <div class="key"><p class="label">외울 것</p>
@@ -1263,7 +1289,7 @@ Exit:</pre>
     <div class="formula">jal x1, L : x1 = PC + 4(다음 명령어 주소), PC = L</div>
     <div class="formula">jalr x0, 0(x1) : PC = x1 + 0, 링크 값은 x0에 써서 버림</div>
     <p>스택: LIFO(last-in-first-out, 나중에 넣은 것을 먼저 꺼냄), push/pop 명령어 없음(<code>sw</code>/<code>lw</code>), 높은 → 낮은 주소로 자람, 레지스터 하나에 sp 4바이트. <span class="ref">[Ch2 p.37]</span></p>
-    <p>leaf 예(다른 프로시저를 안 부름), g~j = x10~x13, f = x20 <span class="ref">[Ch2 p.38]</span></p>
+    <p>leaf 예(다른 프로시저를 안 부름). C 코드: <code>int leaf_example(int g, int h, int i, int j) { int f; f = (g + h) - (i + j); return f; }</code>, g~j = x10~x13, f = x20 <span class="ref">[Ch2 p.38]</span></p>
     <pre class="asm">leaf_example:
     addi sp, sp, -12     // 3개 x 4바이트 자리
     sw   x5, 8(sp)
@@ -1287,10 +1313,10 @@ Exit:</pre>
       </tbody>
     </table></div>
     <p>그래서 위 예에서 x5·x6의 sw/lw는 불필요, x20은 필요. <span class="ref">[Ch2 p.39]</span></p>
-    <p>nonleaf·재귀: 다시 호출하면 <code>jal</code>이 x1을 덮으므로 자기 x1(과 필요한 인자)을 저장. 재귀 예 fact = 팩토리얼(n!): <code>addi sp, sp, -8</code>로 x1(복귀 주소)·x10(인자 n) 두 개 저장. <span class="ref">[Ch2 p.41–42]</span></p>
+    <p>nonleaf(안에서 다른 프로시저를 부름)·재귀(recursion, 자기 자신을 부름): 다시 호출하면 <code>jal</code>이 x1을 덮으므로 자기 x1(과 필요한 인자)을 저장. 재귀 예 fact = 팩토리얼(n!): <code>addi sp, sp, -8</code>로 x1(복귀 주소)·x10(인자 n) 두 개 저장. <span class="ref">[Ch2 p.41–42]</span></p>
     <div class="tbl"><table>
       <thead><tr><th>text</th><th>static data</th><th>heap</th><th>stack</th></tr></thead>
-      <tbody><tr><td>기계어 코드</td><td>상수·정적(전역) 변수</td><td>동적 할당(malloc/free), 위로 자람</td><td>지역 변수·레지스터 저장, 아래로 자람</td></tr></tbody>
+      <tbody><tr><td>기계어 코드</td><td>상수·정적(전역) 변수</td><td>동적 할당(실행 중에 malloc으로 빌리고 free로 반납), 위로 자람</td><td>지역 변수·레지스터 저장, 아래로 자람</td></tr></tbody>
     </table></div>
     <p>스택과 힙은 서로를 향해 자란다. <span class="ref">[Ch2 p.44–45]</span></p>
   </div>
@@ -1395,6 +1421,14 @@ Exit:</pre>
   <h2>명령어 인코딩·디코딩</h2>
   <p class="goal">시험에 나오는 모양: 어셈블리 → 32비트 기계어(16진) → 리틀 엔디언 바이트, 기계어 → 어셈블리, 빈칸으로 branch offset과 형식(encoding) 이름. (기출: 26-1)</p>
 
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li><b>기계어(machine code)</b> = 명령어를 2진으로 바꾼 32비트 값. <b>형식(instruction format)</b> = 그 32비트를 어떤 칸(필드, field)으로 나누는지 정한 배치. R형·I형·S형·SB형·U형·UJ형이 있다. <span class="ref">[Ch2 p.21]</span></li>
+      <li><b>opcode</b>(operation code) = 무슨 일을 하는 명령어인지 나타내는 7비트 칸. <b>funct3·funct7</b> = opcode가 같은 명령어들(예 add와 sub) 중 하나를 골라 주는 추가 칸(3비트·7비트). <span class="ref">[Ch2 p.3, 22]</span></li>
+      <li><b>rd·rs1·rs2</b> = 레지스터 번호를 적는 5비트 칸(기초 · 3), <b>imm</b> = 즉시값을 적는 칸. imm[11:5]는 즉시값의 11~5번 비트라는 뜻이다(기초 · 3의 [hi:lo]).</li>
+    </ul>
+  </div>
+
   <div class="easy"><p class="label">쉽게 말하면</p><p>기계어 만들기는 32칸 양식지 채우기다. 형식마다 칸 순서·크기가 정해져 있고, 다 채운 뒤 4비트씩 끊어 16진수로 읽는다.</p></div>
 
   <div class="key"><p class="label">외울 것</p>
@@ -1477,7 +1511,7 @@ Exit:</pre>
   </ol>
   <p>디코딩 (16진 → 어셈블리) <span class="ref">[Ch2 p.50]</span></p>
   <ol>
-    <li>(덤프면 바이트를 거꾸로 모아) 16진 → 2진.</li>
+    <li>(메모리 덤프, 즉 메모리 바이트를 주소 순서로 늘어놓은 것이 주어지면 리틀 엔디언이라 바이트를 거꾸로 모아) 16진 → 2진.</li>
     <li>맨 오른쪽 7비트 opcode로 형식 결정.</li>
     <li>형식의 칸 폭대로 자른다.</li>
     <li>funct3·funct7로 명령어를 고르고 rd, rs1, rs2 순서로 쓴다.</li>
@@ -1588,7 +1622,7 @@ Exit:</pre>
     <div class="tbl"><table>
       <thead><tr><th></th><th>CISC (x86)</th><th>RISC (ARM, MIPS, SPARC, RISC-V)</th></tr></thead>
       <tbody>
-        <tr><td>명령어</td><td>복잡, 가변 길이, 마이크로코드로 변환</td><td>단순·규격화, 집합이 작음, 바로 실행</td></tr>
+        <tr><td>명령어</td><td>복잡, 가변 길이, 마이크로코드(CPU 안에서 복잡한 명령어를 더 단순한 동작들로 풀어 놓은 것)로 변환</td><td>단순·규격화, 집합이 작음, 바로 실행</td></tr>
         <tr><td>장점</td><td>어셈블리 프로그래밍 쉬움(컴파일러 단순), 명령어 메모리 적게 씀</td><td>CPU 설계 쉬움, 작은 집합 → 높은 클럭</td></tr>
         <tr><td>단점</td><td>CPU 설계가 훨씬 어려움</td><td>코드가 길어짐(컴파일러 문제), 메모리를 많이 씀</td></tr>
         <tr><td>기타</td><td colspan="2">현대 x86 대부분은 RISC 기법으로 구현 <span class="ref">[Ch2 p.6–7]</span></td></tr>
@@ -1615,7 +1649,7 @@ Exit:</pre>
         <tr><td colspan="3">한 연산이 여러 방식을 쓸 수 있다(덧셈 = add/addi) <span class="ref">[Ch2 p.49]</span></td></tr>
       </tbody>
     </table></div>
-    <p>프로그램 번역 4단계: 컴파일러 → 어셈블러 → 링커 → 로더. <span class="ref">[Ch2 p.51]</span></p>
+    <p>프로그램 번역 4단계: 컴파일러 → 어셈블러 → 링커 → 로더. 컴파일러 = C → 어셈블리, 어셈블러 = 어셈블리 → 기계어(목적 파일, object file), 링커 = 여러 목적 파일을 합쳐 실행 파일로, 로더 = 실행 파일을 메모리에 올려 실행을 시작. <span class="ref">[Ch2 p.51]</span></p>
   </div>
 
   <div class="trap"><p class="label">함정</p><ul>
@@ -1657,6 +1691,15 @@ Exit:</pre>
   <p class="eyebrow">Ch3 · 1 <span class="pages">슬라이드 p.4–20</span></p>
   <h2>오버플로·곱셈·나눗셈</h2>
   <p class="goal">시험에 나오는 모양: 오버플로 판정(O/X, 조건 빈칸), 곱셈·나눗셈 반복 표 빈칸, 곱셈 upper·lower 표, 부호 있는 나눗셈의 몫·나머지. (기출: 21-2 부호 없는/있는/부호 다른 곱셈 upper·lower 빈칸)</p>
+
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li>A × B에서 곱해지는 수 A가 <b>피승수(multiplicand)</b>, 곱하는 수 B가 <b>승수(multiplier)</b>, 결과가 <b>곱(product)</b>. A ÷ B에서 나눠지는 수가 <b>피제수(dividend)</b>, 나누는 수가 <b>제수(divisor)</b>, 결과가 <b>몫(quotient)</b>과 <b>나머지(remainder)</b>. <span class="ref">[Ch3 p.7, 14]</span></li>
+      <li>2진 손 곱셈: 승수의 비트를 오른쪽부터 보며 1인 자리마다 피승수를 그 자리만큼 왼쪽으로 민 값을 더한다(0인 자리는 더하지 않음). 곱셈기는 이것을 "LSB 검사 → 더하기 → 시프트"로 한 비트씩 반복하는 하드웨어다. <span class="ref">[Ch3 p.7–8]</span></li>
+      <li><b>ALU(산술 논리 장치, Arithmetic Logic Unit)</b> = 덧셈·뺄셈·AND·OR 같은 계산을 하는 회로. <span class="ref">[Ch3 p.8]</span></li>
+      <li>"1판"은 슬라이드의 첫 번째 하드웨어 설계, "개선판"은 레지스터·ALU 크기를 줄인 다음 설계다. 표의 "반복"은 한 비트를 처리하는 한 바퀴다.</li>
+    </ul>
+  </div>
 
   <div class="key"><p class="label">외울 것</p>
     <p><b>오버플로(overflow)</b> = 결과를 정해진 비트 수의 하드웨어로 표현할 수 없는 것. 2의 보수에서는 결과의 부호가 뒤집혀 보인다. <span class="ref">[Ch3 p.4–5]</span></p>
@@ -1706,7 +1749,7 @@ Exit:</pre>
     </table></div>
     <p>부호 있는 곱셈 = 양수로 바꿔 31번 반복, 부호가 다르면 곱을 부정(= 부호 반전). 빠른 곱셈 = 여러 덧셈기의 병렬 트리(비용과 성능의 맞바꿈). <span class="ref">[Ch3 p.12–13]</span></p>
 
-    <p><b>피제수 = 몫 × 제수 + 나머지</b>, 제수 ≠ 0. 나눗셈기 1판 = 곱셈기 1판과 같은 하드웨어, 시프트 방향 반대, 뺄셈(Subtract-Test-Shift). 제수는 왼쪽 절반에서 시작, 나머지 레지스터는 피제수로 초기화. 한 번의 반복 = ① 나머지 − 제수 ② 결과가 음수(MSB 1)면 제수를 다시 더해 <b>복원</b>, 몫 왼쪽 시프트·끝 비트 0 / 0 이상이면 몫 왼쪽 시프트·끝 비트 1 ③ 제수 오른쪽 시프트. <b>n+1번</b> 반복(32비트 33번, 4비트 5번). <span class="ref">[Ch3 p.14–16]</span></p>
+    <p><b>피제수 = 몫 × 제수 + 나머지</b>, 제수 ≠ 0. 나눗셈기 1판 = 곱셈기 1판과 같은 하드웨어, 시프트 방향 반대, 뺄셈(Subtract-Test-Shift). 제수는 왼쪽 절반에서 시작, 나머지 레지스터는 피제수로 초기화. 한 번의 반복 = ① 나머지 − 제수 ② 결과가 음수(MSB 1)면 제수를 다시 더해 <b>복원</b>, 몫 왼쪽 시프트·끝 비트 0 / 0 이상이면 몫 왼쪽 시프트·끝 비트 1 ③ 제수 오른쪽 시프트. 몫의 끝 비트(0번 비트)를 아래 표에서 Q0라 쓴다. <b>n+1번</b> 반복(32비트 33번, 4비트 5번). <span class="ref">[Ch3 p.14–16]</span></p>
     <p><b>1판 반복 표</b> (슬라이드 예 0000 0111<sub>2</sub> ÷ 0010<sub>2</sub> = 7 ÷ 2, 각 반복이 끝난 뒤 값) <span class="ref">[Ch3 p.16]</span></p>
     <div class="tbl"><table>
       <thead><tr><th>반복</th><th>단계: 빼기 결과 → 판정</th><th>몫(2진)</th><th>제수(2진)</th><th>나머지(2진)</th></tr></thead>
@@ -1728,7 +1771,7 @@ Exit:</pre>
         <tr><td>−7 ÷ −2</td><td>3</td><td>−1</td><td>3 × (−2) − 1 = −7</td></tr>
       </tbody>
     </table></div>
-    <p>규칙: 절댓값으로 나눔 → 두 부호가 다르면 몫 부정 → <b>나머지 부호 = 피제수 부호</b>. −7 ÷ 2를 몫 −4·나머지 1로 하지 않는다. <span class="ref">[Ch3 p.19]</span> 나눗셈은 뺄셈이 앞 나머지 부호에 달린 조건부라 병렬화 불가. SRT = 표를 보고 한 단계에 몫 비트 여러 개 예측. div·divu·rem·remu. <span class="ref">[Ch3 p.20]</span></p>
+    <p>규칙: 절댓값으로 나눔 → 두 부호가 다르면 몫 부정 → <b>나머지 부호 = 피제수 부호</b>. −7 ÷ 2를 몫 −4·나머지 1로 하지 않는다. <span class="ref">[Ch3 p.19]</span> 나눗셈은 뺄셈이 앞 나머지 부호에 달린 조건부라 병렬화 불가. SRT = 표를 보고 한 단계에 몫 비트 여러 개 예측. 나눗셈 명령어: div(몫)·rem(나머지), 끝의 u는 무부호판(divu·remu). <span class="ref">[Ch3 p.20]</span></p>
   </div>
 
   <h3>푸는 순서</h3>
@@ -1824,6 +1867,15 @@ Exit:</pre>
   <p class="eyebrow">Ch3 · 2 <span class="pages">슬라이드 p.27–31</span></p>
   <h2>IEEE 754 변환</h2>
   <p class="goal">시험에 나오는 모양: 10진 → 2진 정규화 → IEEE 754 16진수, 16진수 → 10진, 지수 칸 값 계산, 16비트(1-5-10) 표현. (기출: 26-1 10진 → 2진, A = −0.5·B = 2.625 표현, 16비트 1-5-10)</p>
+
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li><b>정규화(normalized)</b> = 소수점 왼쪽에 0이 아닌 숫자가 딱 한 자리인 과학적 표기. 10진 1.0 × 10<sup>−9</sup>처럼, 2진이면 맨 앞이 늘 1이라 1.xxx<sub>2</sub> × 2<sup>n</sup> 꼴이 된다. <span class="ref">[Ch3 p.23–24]</span></li>
+      <li><b>부동소수점(floating point)</b> = 소수점 위치를 고정하지 않고 지수 n으로 나타내는 수 표현. 정규화 꼴의 xxx 부분이 <b>가수(fraction)</b>, n이 <b>지수(exponent)</b>다. <span class="ref">[Ch3 p.24]</span></li>
+      <li><b>IEEE 754</b> = 부동소수점을 비트로 저장하는 표준. 32비트 <b>단정도(single precision)</b>와 64비트 <b>배정도(double precision)</b>가 있다. <span class="ref">[Ch3 p.27]</span></li>
+      <li><b>bias</b> = 지수를 저장할 때 더해 두는 고정값(단정도 127). 저장된 값을 <b>지수 칸</b>, 원래 n을 <b>실제 지수</b>라 구별해 부른다. <span class="ref">[Ch3 p.28]</span></li>
+    </ul>
+  </div>
 
   <div class="key"><p class="label">외울 것</p>
     <div class="tbl"><table>
@@ -1929,6 +1981,7 @@ Exit:</pre>
   <p class="goal">시험에 나오는 모양: FP 덧셈 4단계·곱셈 5단계의 순서와 단계별 값, 부동소수점 문장 T/F·빈칸, GRS 반올림 판정. (기출: 26-1 A = −0.5, B = 2.625로 A+B, A×B)</p>
 
   <div class="key"><p class="label">외울 것</p>
+    <p>FP = 부동소수점(floating point). 단계 ③의 오버플로 = 지수가 너무 커서, 언더플로(underflow) = 음의 지수가 너무 커서(0에 너무 가까워서) 지수 칸에 담을 수 없는 것(아래 외울 문장). <span class="ref">[Ch3 p.26]</span></p>
     <p>슬라이드 예: 0.5 = 1.000<sub>2</sub> × 2<sup>−1</sup>, −0.4375 = −1.110<sub>2</sub> × 2<sup>−2</sup> (유효숫자 4비트) <span class="ref">[Ch3 p.33, 36]</span></p>
     <div class="tbl"><table>
       <thead><tr><th>덧셈 4단계</th><th>0.5 + (−0.4375)</th></tr></thead>
@@ -2032,6 +2085,14 @@ Exit:</pre>
   <p class="eyebrow">Ch4 · 1 <span class="pages">슬라이드 p.3–17, 21</span></p>
   <h2>데이터패스 구성과 그림</h2>
   <p class="goal">시험에 나오는 모양: 그림 빈칸(ALU, 가산기 등), 기계어를 주고 각 선(rs1·rs2·rd)의 레지스터 번호 쓰기, "레지스터가 있는 하드웨어" 이름. (기출: 21-2 그림 빈칸·프로세서 두 가지, 26-1 control line·라인별 레지스터 번호)</p>
+
+  <div class="easy"><p class="label">먼저 알아 둘 말</p>
+    <ul>
+      <li><b>인출(fetch)</b> = PC가 가리키는 주소에서 명령어를 메모리로부터 가져오는 일. <span class="ref">[Ch4 p.3]</span> <b>포트(port)</b> = 장치에 값이 들어가고 나오는 입구·출구.</li>
+      <li><b>제어 신호(control signal)</b> = 제어 유닛이 장치마다 보내는 0/1 스위치. 이 단원 문제에 필요한 뜻만: RegWrite = 1이면 레지스터 파일에 결과를 쓴다(0이면 안 씀). MemRead·MemWrite = 1이면 데이터 메모리를 읽는다·쓴다. ALUSrc = 0이면 ALU 둘째 입력이 레지스터 값, 1이면 즉시값. sw·beq는 RegWrite = 0, lw는 ALUSrc = 1이다. 전체 표는 Ch4 · 2. <span class="ref">[Ch4 p.24–25]</span></li>
+      <li><b>클럭 엣지(clock edge)</b> = 클럭 신호가 0에서 1(또는 1에서 0)로 바뀌는 순간. <span class="ref">[Ch4 p.10]</span> <span class="sup">PDF 외 보충</span></li>
+    </ul>
+  </div>
 
   <div class="key"><p class="label">외울 것</p>
     <ul>
@@ -2273,6 +2334,7 @@ Exit:</pre>
       </tbody>
     </table></div>
     <p><span class="ref">[Ch4 p.24–25]</span> <span class="tb">교재 기준</span></p>
+    <p>아래 표의 <b>ALUOp</b>(2비트, ALUOp1·ALUOp0) = 주 제어 유닛이 ALU 제어 유닛에 주는 힌트: 00 = 덧셈, 01 = 뺄셈, 10 = funct 칸을 보고 정함(맨 아래 표). <span class="ref">[Ch4 p.18–20]</span> <b>X</b> = don't care(0이든 1이든 결과가 같음, 표 아래 규칙).</p>
     <div class="tbl"><table>
       <thead><tr><th>명령어</th><th>ALUSrc</th><th>MemtoReg</th><th>RegWrite</th><th>MemRead</th><th>MemWrite</th><th>Branch</th><th>ALUOp1</th><th>ALUOp0</th></tr></thead>
       <tbody>
