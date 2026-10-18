@@ -110,7 +110,31 @@ details.cats[open]>summary::after{content:"접기"}
 .qz-wrong{margin:0;padding-left:1.3em}
 .qz-wrong li{margin:.6em 0;line-height:1.5}
 .qz-wrong .a{color:var(--easy);font-weight:700}
-#qzEnd .qz-row{flex-direction:column;margin-top:auto}
+#qzEnd .qz-row{flex-direction:column;margin-top:4px}
+/* 해설 펼치기 */
+details.exp{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+details.exp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px;padding:0 16px;font-weight:700;font-size:16px;-webkit-user-select:none;user-select:none}
+details.exp>summary::-webkit-details-marker{display:none}
+details.exp>summary .cnt{font-weight:500;color:var(--fg2);font-size:14px}
+details.exp>summary .cnt::after{content:"  펼치기";color:var(--accent)}
+details.exp[open]>summary .cnt::after{content:"  접기"}
+details.exp[open]>summary{border-bottom:1px solid var(--line)}
+.ex{padding:14px 16px 14px 14px;border-left:4px solid var(--line)}
+.ex+.ex{border-top:1px solid var(--line)}
+.ex.ok{border-left-color:var(--easy)}
+.ex.no{border-left-color:var(--trap)}
+.ex-h{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg2);margin-bottom:6px}
+.ex-n{min-width:24px;height:24px;border-radius:12px;background:var(--bg);border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--fg)}
+.ex-mark{margin-left:auto;font-weight:700}
+.ex.ok .ex-mark{color:var(--easy)}
+.ex.no .ex-mark{color:var(--trap)}
+.ex-q{font-weight:700;font-size:16px;line-height:1.5;margin:0 0 10px;word-break:keep-all}
+.ex-d{display:grid;grid-template-columns:44px 1fr;gap:6px 10px;margin:0;font-size:15px;line-height:1.55}
+.ex-d dt{color:var(--fg2);font-size:13px;padding-top:2px}
+.ex-d dd{margin:0;word-break:keep-all}
+.ex-d dd.mine{color:var(--trap)}
+.ex-d dd.ans{color:var(--easy);font-weight:700}
+.ex-note{margin-top:4px;padding:6px 10px;border-left:2px solid var(--trap);background:var(--trap-soft);border-radius:0 8px 8px 0;color:var(--fg);font-size:14px}
 #qzEnd .qz-row .qz-btn.sub{flex:none}
 </style>
 </head>
@@ -724,32 +748,35 @@ Object.assign(window.QZN, {
   function pool(s) { return B.filter(function (q) { return !s.length || s.indexOf(q[0]) >= 0; }); }
   // 덱 방식: 범위의 문제를 한 번 섞어 줄 세우고 판마다 앞에서 꺼낸다. 다 쓰면 다시 섞어 다음 바퀴.
   // 틀린 문제는 복습 대기에 넣어 다음 판에 최대 REVIEW_MAX개 섞는다(맞히면 빠짐).
+  // 덱에서 꺼내기만 하고 저장은 하지 않는다. 판을 끝까지 풀었을 때만 commit()으로 반영(그만두면 바퀴 진행에 안 들어감).
   function draw(list) {
     var m = modeKey(sel), ids = list.map(function (q) { return q.idx; });
     var has = {}; ids.forEach(function (i) { has[i] = 1; });
     var deck = (data.deck[m] || []).filter(function (i) { return has[i]; });
+    var known = {}; ((data.known || {})[m] || []).forEach(function (i) { known[i] = 1; });
     // 바퀴 도중에 새 문제가 추가됐으면 남은 덱의 무작위 자리에 끼워 이번 바퀴에 나오게 한다
-    data.known = data.known || {};
-    var known = {}; (data.known[m] || []).forEach(function (i) { known[i] = 1; });
     if (data.deck[m]) ids.forEach(function (i) { if (!known[i]) deck.splice(Math.floor(Math.random() * (deck.length + 1)), 0, i); });
-    data.known[m] = ids.slice();
+    var lap = data.lap[m] || 0;
     var review = (data.review[m] || []).filter(function (i) { return has[i]; });
     var take = review.slice(0, REVIEW_MAX), inRound = {};
     take.forEach(function (i) { inRound[i] = 1; });
     var guard = 0;
     while (take.length < 20 && guard++ < 50) {
-      if (!deck.length) { deck = shuffle(ids.slice()); data.lap[m] = (data.lap[m] || 0) + 1; }
+      if (!deck.length) { deck = shuffle(ids.slice()); lap++; }
       var i = deck.shift();
       if (inRound[i] && ids.length > 20) continue; // 이번 판에 이미 있으면 건너뜀(범위가 20개 이하면 중복 허용)
       take.push(i); inRound[i] = 1;
     }
-    if (!data.lap[m]) data.lap[m] = 1;
-    data.deck[m] = deck; data.review[m] = review; save(data);
-    return shuffle(take.map(function (i) { return B[i]; }));
+    return { qs: shuffle(take.map(function (i) { return B[i]; })), pending: { m: m, deck: deck, lap: Math.max(lap, 1), known: ids.slice() } };
+  }
+  function commit(p) {
+    if (!p) return;
+    data.deck[p.m] = p.deck; data.lap[p.m] = p.lap; data.known = data.known || {}; data.known[p.m] = p.known; save(data);
   }
   function start(list, retry) {
-    var qs = retry ? shuffle(list.slice()) : draw(list);
-    round = { qs: qs, i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel), name: retry ? "틀린 문제 다시" : modeName(sel) };
+    var d = retry ? { qs: shuffle(list.slice()), pending: null } : draw(list), qs = d.qs;
+    round = { pending: d.pending, log: [], qs: qs, 
+i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel), name: retry ? "틀린 문제 다시" : modeName(sel) };
     $("qzSetup").hidden = true; $("qzEnd").hidden = true; $("qzPlay").hidden = false; setTop(true); window.scrollTo(0, 0);
     clearInterval(timer); timer = setInterval(tick, 100); tick(); show();
   }
@@ -780,6 +807,7 @@ Object.assign(window.QZN, {
     var rv = data.review[round.mode] = data.review[round.mode] || [], at = rv.indexOf(q.idx);
     if (b.dataset.right) { if (at >= 0) rv.splice(at, 1); } else if (at < 0) rv.push(q.idx);
     save(data);
+    round.log.push({ q: q, mine: b.qzOpt, ok: !!b.dataset.right, note: b.dataset.right ? "" : noteOf(q, b.qzOpt) });
     if (b.dataset.right) {
       round.ok++; $("qzScore").textContent = "맞힌 수 " + round.ok;
       setTimeout(next, 350);
@@ -802,6 +830,7 @@ Object.assign(window.QZN, {
   function finish() {
     clearInterval(timer);
     var ms = performance.now() - round.t0, n = round.qs.length, r = round; round = null;
+    commit(r.pending); // 끝까지 푼 판만 바퀴 진행에 넣는다
     var rec = { score: r.ok, n: n, ms: ms };
     var html = '<p class="qz-res-big">' + r.ok + " / " + n + " · " + fmt(ms) + "</p>";
     if (!r.retry && n === 20) {
@@ -812,15 +841,23 @@ Object.assign(window.QZN, {
       data.hist.unshift({ date: (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + ("0" + d.getMinutes()).slice(-2), mode: r.name, score: r.ok, n: n, ms: ms });
       data.hist = data.hist.slice(0, 30); save(data);
     } else html += '<p class="note">틀린 문제 다시 풀기는 최고 기록에 넣지 않습니다.</p>';
-    if (r.wrong.length) {
-      html += "<h3>틀린 문제 " + r.wrong.length + "개</h3><ol class=\"qz-wrong\">" + r.wrong.map(function (w) {
-        return "<li>" + w.q[1] + "<br><span class=\"m\">고른 것: " + w.mine + (w.note ? " → " + w.note : "") + "</span>" +
-          "<br><span class=\"a\">정답: " + w.q[2] + "</span> · " + w.q[6] + "</li>";
-      }).join("") + "</ol>";
-    }
     html += '<div class="qz-row"><button type="button" class="qz-btn" id="qzAgain">다시 도전</button>' +
       (r.wrong.length ? '<button type="button" class="qz-btn sub" id="qzRetry">틀린 문제만 다시</button>' : "") +
       '<button type="button" class="qz-btn sub" id="qzHome">범위 바꾸기</button></div>';
+    // 해설: 문제 카드 하나 = 머리줄(번호·범위·결과) / 질문 / 내 답·정답·이유를 들여 쓴 표
+    function card(e, k) {
+      var h = '<div class="ex ' + (e.ok ? "ok" : "no") + '">' +
+        '<div class="ex-h"><span class="ex-n">' + k + '</span><span class="ex-cat">' + CATS[e.q[0]] + '</span><span class="ex-mark">' + (e.ok ? "맞음" : "틀림") + "</span></div>" +
+        '<div class="ex-q">' + e.q[1] + "</div><dl class=\"ex-d\">";
+      if (!e.ok) h += '<dt>내 답</dt><dd class="mine">' + e.mine + (e.note ? '<div class="ex-note">' + e.note + "</div>" : "") + "</dd>";
+      h += '<dt>정답</dt><dd class="ans">' + e.q[2] + "</dd><dt>이유</dt><dd>" + e.q[6] + "</dd></dl></div>";
+      return h;
+    }
+    var wrongs = r.log.filter(function (e) { return !e.ok; });
+    html += '<details class="exp"' + (wrongs.length ? "" : " hidden") + '><summary><span>틀린 문제 해설</span><span class="cnt">' + wrongs.length + "개</span></summary>" +
+      wrongs.map(function (e) { return card(e, r.log.indexOf(e) + 1); }).join("") + "</details>";
+    html += '<details class="exp"><summary><span>전체 문제 해설</span><span class="cnt">' + r.log.length + "개</span></summary>" +
+      r.log.map(function (e, k) { return card(e, k + 1); }).join("") + "</details>";
     var end = $("qzEnd"); end.innerHTML = html; end.hidden = false; $("qzPlay").hidden = true;
     $("qzAgain").onclick = function () { start(pool(sel)); };
     if ($("qzRetry")) $("qzRetry").onclick = function () { start(r.wrong.map(function (w) { return w.q; }), true); };
