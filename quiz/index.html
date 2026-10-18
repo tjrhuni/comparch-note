@@ -70,6 +70,16 @@ details.cats[open]>summary::after{content:"접기"}
 .hist td:nth-child(3),.hist td:nth-child(4){text-align:right;white-space:nowrap}
 .hist td:nth-child(2){color:var(--fg2);font-size:13px}
 .spacer{flex:1}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;cursor:pointer;color:var(--fg)}
+.toggle small{display:block;color:var(--fg2);font-size:13px;margin-top:3px;line-height:1.45}
+.toggle .v{flex:none;min-width:56px;text-align:center;padding:7px 10px;border-radius:999px;border:1px solid var(--line);font-size:14px;color:var(--fg2)}
+.toggle[aria-pressed="true"]{border-color:var(--accent)}
+.toggle[aria-pressed="true"] .v{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.qz-tools{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.qz-tools .ghost[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--fg);font-weight:700}
+.qz-fb .guessed{padding:10px 14px;background:var(--accent-soft);font-weight:700}
+.ex.guess{border-left-color:var(--accent)}
+.ex.guess .ex-mark{color:var(--accent)}
 .deckrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
 .deckrow .best-s{margin:0}
 .deckrow .ghost{flex:none;min-height:36px;font-size:13px}
@@ -149,6 +159,7 @@ details.exp[open]>summary{border-bottom:1px solid var(--line)}
       <p class="best-s" id="qzBest"></p>
       <div class="deckrow"><p class="best-s" id="qzDeck"></p><button type="button" class="ghost" id="qzReset">진행 초기화</button></div>
     </div>
+    <button type="button" class="toggle card" id="qzRecall" aria-pressed="false"><span><b>먼저 떠올리기 모드</b><small>질문만 먼저 보고 답을 머릿속이나 종이에 떠올린 뒤 보기를 엽니다. 단답형 시험 연습.</small></span><span class="v">꺼짐</span></button>
     <details class="cats card"><summary><span>범위 고르기 <span id="qzSelN"></span></span></summary>
       <div class="qz-cats" id="qzCats"></div>
       <p class="note" style="margin-top:10px">아무것도 안 고르면 전체. 기록은 범위 조합마다 따로 저장됩니다.</p>
@@ -163,6 +174,8 @@ details.exp[open]>summary{border-bottom:1px solid var(--line)}
     <div class="qz-bar"><span id="qzCount">1 / 20</span><span class="qz-time" id="qzTime">0.0초</span><span id="qzScore">맞힌 수 0</span></div>
     <div class="qz-prog"><i id="qzProg"></i></div>
     <div class="qarea"><p class="qz-cat" id="qzCat"></p><p class="qz-q" id="qzQ"></p></div>
+    <div id="qzReveal" hidden><button type="button" class="qz-btn" id="qzRevealBtn">답을 떠올렸으면 보기 열기</button></div>
+    <div class="qz-tools" id="qzTools"><button type="button" class="ghost" id="qzGuess" aria-pressed="false">찍었어요</button><span class="note">확실하지 않으면 먼저 누르고 고르세요</span></div>
     <div class="qz-opts" id="qzOpts"></div>
     <div class="qz-fb" id="qzFb" hidden></div>
     <div class="qz-row" id="qzNextRow" hidden><button type="button" class="qz-btn sub" id="qzQuit">그만</button><button type="button" class="qz-btn" id="qzNext">다음</button></div>
@@ -798,18 +811,36 @@ i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel
       box.appendChild(b);
     });
     $("qzFb").hidden = true; $("qzNextRow").hidden = true;
+    // 찍었어요: 문제마다 꺼진 채로 시작. 먼저 떠올리기: 보기를 가리고 [보기 열기]를 보여 준다
+    round.guess = false;
+    if ($("qzGuess")) $("qzGuess").setAttribute("aria-pressed", "false");
+    var hide = !!data.recall;
+    box.hidden = hide; if ($("qzTools")) $("qzTools").hidden = hide; if ($("qzReveal")) $("qzReveal").hidden = !hide;
+  }
+  function reveal() {
+    if (!round || !$("qzReveal") || $("qzReveal").hidden) return;
+    $("qzReveal").hidden = true; $("qzOpts").hidden = false; if ($("qzTools")) $("qzTools").hidden = false;
   }
   function pick(b) {
     if (!round || round.locked) return;
     round.locked = true;
     var q = round.qs[round.i], btns = $("qzOpts").querySelectorAll("button");
     Array.prototype.forEach.call(btns, function (x) { x.disabled = true; if (x.dataset.right) x.classList.add("ok"); });
+    // 복습 대기: 틀렸거나 찍어서 맞힌 문제는 넣고, 확실하게 맞힌 문제는 뺀다
+    var guessed = !!round.guess, sure = b.dataset.right && !guessed;
     var rv = data.review[round.mode] = data.review[round.mode] || [], at = rv.indexOf(q.idx);
-    if (b.dataset.right) { if (at >= 0) rv.splice(at, 1); } else if (at < 0) rv.push(q.idx);
+    if (sure) { if (at >= 0) rv.splice(at, 1); } else if (at < 0) rv.push(q.idx);
     save(data);
-    round.log.push({ q: q, mine: b.qzOpt, ok: !!b.dataset.right, note: b.dataset.right ? "" : noteOf(q, b.qzOpt) });
+    round.log.push({ q: q, mine: b.qzOpt, ok: !!b.dataset.right, guess: guessed, note: b.dataset.right ? "" : noteOf(q, b.qzOpt) });
+    if (b.dataset.right && guessed) round.wrong.push({ q: q, mine: b.qzOpt, note: "" });
     if (b.dataset.right) {
       round.ok++; $("qzScore").textContent = "맞힌 수 " + round.ok;
+      if (guessed) { // 찍어서 맞힘: 정답과 이유를 잠깐 보여 주고 [다음]으로 넘어간다
+        var gfb = $("qzFb"); gfb.className = "qz-fb";
+        gfb.innerHTML = '<div class="guessed">찍어서 맞힘 · 복습에 넣었습니다</div><div class="right">정답: <b>' + q[2] + "</b><br>" + q[6] + "</div>";
+        gfb.hidden = false; $("qzNextRow").hidden = false; $("qzNext").focus({ preventScroll: true });
+        return;
+      }
       setTimeout(next, 350);
     } else {
       b.classList.add("no");
@@ -842,19 +873,19 @@ i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel
       data.hist = data.hist.slice(0, 30); save(data);
     } else html += '<p class="note">틀린 문제 다시 풀기는 최고 기록에 넣지 않습니다.</p>';
     html += '<div class="qz-row"><button type="button" class="qz-btn" id="qzAgain">다시 도전</button>' +
-      (r.wrong.length ? '<button type="button" class="qz-btn sub" id="qzRetry">틀린 문제만 다시</button>' : "") +
+      (r.wrong.length ? '<button type="button" class="qz-btn sub" id="qzRetry">틀리거나 찍은 문제 다시</button>' : "") +
       '<button type="button" class="qz-btn sub" id="qzHome">범위 바꾸기</button></div>';
     // 해설: 문제 카드 하나 = 머리줄(번호·범위·결과) / 질문 / 내 답·정답·이유를 들여 쓴 표
     function card(e, k) {
-      var h = '<div class="ex ' + (e.ok ? "ok" : "no") + '">' +
-        '<div class="ex-h"><span class="ex-n">' + k + '</span><span class="ex-cat">' + CATS[e.q[0]] + '</span><span class="ex-mark">' + (e.ok ? "맞음" : "틀림") + "</span></div>" +
+      var h = '<div class="ex ' + (e.ok ? (e.guess ? "ok guess" : "ok") : "no") + '">' +
+        '<div class="ex-h"><span class="ex-n">' + k + '</span><span class="ex-cat">' + CATS[e.q[0]] + '</span><span class="ex-mark">' + (e.ok ? (e.guess ? "맞음 · 찍음" : "맞음") : "틀림") + "</span></div>" +
         '<div class="ex-q">' + e.q[1] + "</div><dl class=\"ex-d\">";
       if (!e.ok) h += '<dt>내 답</dt><dd class="mine">' + e.mine + (e.note ? '<div class="ex-note">' + e.note + "</div>" : "") + "</dd>";
       h += '<dt>정답</dt><dd class="ans">' + e.q[2] + "</dd><dt>이유</dt><dd>" + e.q[6] + "</dd></dl></div>";
       return h;
     }
-    var wrongs = r.log.filter(function (e) { return !e.ok; });
-    html += '<details class="exp"' + (wrongs.length ? "" : " hidden") + '><summary><span>틀린 문제 해설</span><span class="cnt">' + wrongs.length + "개</span></summary>" +
+    var wrongs = r.log.filter(function (e) { return !e.ok || e.guess; });
+    html += '<details class="exp"' + (wrongs.length ? "" : " hidden") + '><summary><span>틀리거나 찍은 문제 해설</span><span class="cnt">' + wrongs.length + "개</span></summary>" +
       wrongs.map(function (e) { return card(e, r.log.indexOf(e) + 1); }).join("") + "</details>";
     html += '<details class="exp"><summary><span>전체 문제 해설</span><span class="cnt">' + r.log.length + "개</span></summary>" +
       r.log.map(function (e, k) { return card(e, k + 1); }).join("") + "</details>";
@@ -867,6 +898,12 @@ i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel
   }
 
   $("qzStart").addEventListener("click", function () { start(pool(sel)); });
+  // 먼저 떠올리기 모드(시작 화면에서 켜고 끔), 찍었어요(문제마다), 보기 열기
+  function paintRecall() { var b = $("qzRecall"); if (b) { b.setAttribute("aria-pressed", data.recall ? "true" : "false"); b.querySelector(".v").textContent = data.recall ? "켜짐" : "꺼짐"; } }
+  if ($("qzRecall")) $("qzRecall").addEventListener("click", function () { data.recall = !data.recall; save(data); paintRecall(); });
+  if ($("qzGuess")) $("qzGuess").addEventListener("click", function () { if (!round || round.locked) return; round.guess = !round.guess; this.setAttribute("aria-pressed", round.guess ? "true" : "false"); });
+  if ($("qzRevealBtn")) $("qzRevealBtn").addEventListener("click", reveal);
+  paintRecall();
   if ($("qzReset")) $("qzReset").addEventListener("click", function () {
     if (!confirm("범위 「" + modeName(sel) + "」의 바퀴 진행과 복습 대기를 처음부터 다시 시작할까요? (최고 기록과 최근 기록은 그대로입니다.)")) return;
     resetProgress(modeKey(sel)); paintSetup();
@@ -876,6 +913,7 @@ i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel
   document.addEventListener("keydown", function (e) {
     if (!round || $("qzPlay").hidden || e.target.closest && e.target.closest("input,textarea")) return;
     if (round.locked && (e.key === "Enter" || e.key === " ")) { if (!$("qzNextRow").hidden) { e.preventDefault(); next(); } return; }
+    if ($("qzOpts").hidden) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); reveal(); } return; }
     var k = +e.key; if (k >= 1 && k <= 4) { var b = $("qzOpts").children[k - 1]; if (b) { e.preventDefault(); pick(b); } }
   });
   // 다른 단원으로 가면 진행 중인 판은 멈춘다
