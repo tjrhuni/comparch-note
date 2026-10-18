@@ -1812,6 +1812,70 @@ sw   x9, (나)(x22)</pre>
 </ol></div>
 </section>
 
+<section class="lesson" id="kb6" data-ch="b" data-title="암기 스피드 퀴즈">
+  <p class="eyebrow">기초 · 6 <span class="pages">기초 · 1 ~ 4 암기</span></p>
+  <h2>암기 스피드 퀴즈</h2>
+  <p class="goal">기초 1~4에서 외워야 하는 것만 모은 4지선다 퀴즈입니다. 한 판에 20문제가 무작위로 나오고, 다 풀 때까지 시간을 잽니다. 점수와 시간은 이 기기에 자동 저장되고, 다음 판에는 최고 기록이 목표로 표시됩니다.</p>
+
+  <style>
+    .qz{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:18px;margin:1.2em 0}
+    .qz-cats{display:flex;flex-wrap:wrap;gap:8px;margin:.6em 0 1em}
+    .qz-cats button{font-size:14px;min-height:38px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg2);cursor:pointer}
+    .qz-cats button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--fg)}
+    .qz-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:.6em 0}
+    .qz-btn{font-size:16px;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer;font-weight:600}
+    .qz-btn.sub{background:var(--bg);color:var(--fg);border-color:var(--line);font-weight:500}
+    .qz-best{font-size:15px;color:var(--fg2)}
+    .qz-best b{color:var(--fg)}
+    .qz-bar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums;color:var(--fg2);font-size:15px}
+    .qz-bar .qz-time{font-size:22px;font-weight:700;color:var(--fg)}
+    .qz-prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:8px 0 14px}
+    .qz-prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+    .qz-cat{font-size:13px;color:var(--fg2);margin:0 0 4px}
+    .qz-q{font-size:1.15em;font-weight:600;line-height:1.5;margin:0 0 14px}
+    .qz-opts{display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width:700px){.qz-opts{grid-template-columns:1fr 1fr}}
+    .qz-opts button{text-align:left;font-size:16px;line-height:1.45;min-height:58px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;display:flex;gap:10px;align-items:center}
+    .qz-opts button .k{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:var(--fg2)}
+    .qz-opts button.ok{border-color:var(--easy);background:var(--easy-soft)}
+    .qz-opts button.no{border-color:var(--trap);background:var(--trap-soft)}
+    .qz-opts button:disabled{cursor:default;opacity:1}
+    .qz-fb{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--trap-soft);font-size:15px;line-height:1.55}
+    .qz-fb.good{background:var(--easy-soft)}
+    .qz-res-big{font-size:28px;font-weight:800;margin:.2em 0}
+    .qz-new{color:var(--easy);font-weight:700}
+    .qz-wrong li{margin:.5em 0}
+    .qz-wrong .a{color:var(--easy);font-weight:600}
+    .qz-hist td,.qz-hist th{font-variant-numeric:tabular-nums}
+  </style>
+
+  <div class="qz" id="qz">
+    <div id="qzSetup">
+      <p><b>범위 고르기</b> (여러 개 선택 가능, 아무것도 안 고르면 전체)</p>
+      <div class="qz-cats" id="qzCats"></div>
+      <div class="qz-row">
+        <button type="button" class="qz-btn" id="qzStart">시작 (20문제)</button>
+        <span class="qz-best" id="qzBest"></span>
+      </div>
+      <p class="note">답을 고르면 바로 채점합니다. 맞으면 다음 문제로 넘어가고, 틀리면 정답과 이유가 나온 뒤 [다음]을 눌러야 넘어갑니다(그동안에도 시간은 흐릅니다). 키보드 1~4로도 고를 수 있습니다. 기록은 범위마다 따로 저장됩니다.</p>
+    </div>
+    <div id="qzPlay" hidden>
+      <div class="qz-bar"><span id="qzCount">1 / 20</span><span class="qz-time" id="qzTime">0.0초</span><span id="qzScore">맞힌 수 0</span></div>
+      <div class="qz-prog"><i id="qzProg"></i></div>
+      <p class="qz-cat" id="qzCat"></p>
+      <p class="qz-q" id="qzQ"></p>
+      <div class="qz-opts" id="qzOpts"></div>
+      <div class="qz-fb" id="qzFb" hidden></div>
+      <div class="qz-row" id="qzNextRow" hidden><button type="button" class="qz-btn" id="qzNext">다음</button><button type="button" class="qz-btn sub" id="qzQuit">그만두기</button></div>
+    </div>
+    <div id="qzEnd" hidden></div>
+  </div>
+
+  <h3>최근 기록</h3>
+  <div class="tbl"><table class="qz-hist"><thead><tr><th>날짜</th><th>범위</th><th>점수</th><th>시간</th></tr></thead><tbody id="qzHist"><tr><td colspan="4">아직 기록이 없습니다.</td></tr></tbody></table></div>
+  <p class="note">기록은 이 기기의 브라우저에만 저장됩니다. 사파리에서 방문 기록·웹 사이트 데이터를 지우면 함께 지워집니다.</p>
+</section>
+
 <section class="lesson" id="k1-1" data-ch="1" data-title="Ch1 외울 문장">
   <p class="eyebrow">Ch1 · 1 <span class="pages">슬라이드 p.3–34</span></p>
   <h2>Ch1 외울 문장</h2>
@@ -3995,6 +4059,355 @@ Exit:</pre>
   document.addEventListener("lesson:shown", function (e) { if (e.detail === "wrongs") renderWrongs(); });
 })();
 
+try{
+/* 기초 · 6 암기 스피드 퀴즈. 문제 = [범위, 질문, 정답, 오답1, 오답2, 오답3, 이유]. 질문·보기는 HTML(sup 등) 허용. */
+(function () {
+  var root = document.getElementById("qz");
+  if (!root) return;
+  var S = function (n) { return "<sup>" + n + "</sup>"; };
+  var CATS = ["명령어 뜻", "클럭·시간 공식", "크기 단위", "큰 수(만·억)", "단위 접두어", "2의 거듭제곱", "16진·2진", "진법 규칙", "2의 보수", "비트 연산", "시프트", "비트 번호·레지스터", "어셈블리 읽기"];
+  var B = [
+    // 0 명령어 뜻 (기초 · 3, 4)
+    [0, "<code>add x5, x6, x7</code>", "x5 = x6 + x7", "x7 = x5 + x6", "x5 = x6 − x7", "x6 = x5 + x7", "맨 앞(x5)이 결과를 넣을 칸, 뒤의 둘을 더한다."],
+    [0, "<code>sub x5, x6, x7</code>", "x5 = x6 − x7", "x5 = x7 − x6", "x7 = x5 − x6", "x5 = x6 + x7", "적힌 순서 그대로 뺀다: 첫 번째 읽는 값 − 두 번째 읽는 값."],
+    [0, "<code>addi x5, x6, -3</code>", "x5 = x6 + (−3)", "x5 = x6 − (−3)", "x5 = x6 + x3", "x6 = x5 − 3", "이름 끝 i = 마지막 값이 상수(즉시값). x3 레지스터가 아니라 숫자 −3이다."],
+    [0, "<code>lw x9, 32(x22)</code>", "주소 x22 + 32에 든 값을 x9에 넣는다", "x9의 값을 주소 x22 + 32에 쓴다", "x9 = x22 + 32", "주소 x9 + 32에 든 값을 x22에 넣는다", "lw(load word) = 메모리에서 읽기. 레지스터에 들어가는 것은 주소가 아니라 그 주소의 값이다."],
+    [0, "<code>sw x9, 48(x22)</code>", "x9의 값을 주소 x22 + 48에 쓴다", "주소 x22 + 48에 든 값을 x9에 넣는다", "x9 = x22 + 48", "x22의 값을 주소 x9 + 48에 쓴다", "sw(store word) = 메모리에 쓰기. sw는 맨 앞 레지스터가 결과 칸이 아니라 쓸 값이다(x9는 그대로)."],
+    [0, "<code>and x9, x10, x11</code>", "x9 = x10과 x11을 비트마다 AND", "x9 = x10 + x11", "x9 = x10과 x11 중 작은 값", "x10 = x9와 x11을 비트마다 AND", "and는 같은 번호 비트끼리 '둘 다 1일 때만 1'. 작은 쪽 고르기가 아니다."],
+    [0, "<code>or x9, x10, x11</code>", "x9 = x10과 x11을 비트마다 OR", "x9 = x10과 x11 중 큰 값", "x9 = x10 + x11", "x9 = x10과 x11을 비트마다 XOR", "or = 비트마다 '하나라도 1이면 1'."],
+    [0, "<code>xor x9, x10, x11</code>", "x9 = x10과 x11을 비트마다 XOR", "x9 = x10 − x11", "x9 = x10과 x11을 비트마다 OR", "x9 = x10의 모든 비트를 뒤집은 값", "xor = 비트마다 '서로 다르면 1'."],
+    [0, "<code>xori x9, x10, -1</code> (−1은 모든 비트가 1)", "x9 = x10의 모든 비트를 뒤집은 값(NOT)", "x9 = x10 − 1", "x9 = −x10", "x9 = x10 그대로", "1과 xor하면 그 비트가 뒤집힌다. 모든 비트가 1인 값과 xor = NOT."],
+    [0, "<code>andi x9, x10, 0xFF</code>", "x9 = x10의 아래 8비트만 남기고 나머지는 0", "x9 = x10의 아래 8비트를 모두 1로 바꾼 값", "x9 = x10 + 255", "x9 = x10의 위 8비트만 남기고 나머지는 0", "andi = and + 상수. 0xFF는 아래 8비트만 1이라 그 자리만 남는다(마스크)."],
+    [0, "<code>slli x10, x22, 2</code>", "x10 = x22 × 4", "x10 = x22 × 2", "x10 = x22 + 2", "x10 = x22 ÷ 4", "왼쪽 2칸 시프트 = × 2" + S(2) + " = × 4."],
+    [0, "<code>srli x9, x9, 8</code>", "x9를 오른쪽으로 8칸 밀고 왼쪽 빈칸은 0", "x9를 오른쪽으로 8칸 밀고 왼쪽 빈칸은 MSB", "x9를 왼쪽으로 8칸 민다", "x9 = x9 − 8", "srl = shift right logical: 빈칸은 항상 0."],
+    [0, "<code>srai x9, x9, 4</code>", "x9를 오른쪽으로 4칸 밀고 왼쪽 빈칸은 MSB(부호 비트)", "x9를 오른쪽으로 4칸 밀고 왼쪽 빈칸은 0", "x9를 왼쪽으로 4칸 민다", "x9 = x9 ÷ 4", "sra = shift right arithmetic: 빈칸을 MSB로 채워 부호를 지킨다."],
+    [0, "<code>sll x5, x6, x7</code>", "x6을 x7에 든 값만큼 왼쪽으로 밀어 x5에", "x6을 7칸 왼쪽으로 밀어 x5에", "x7을 x6에 든 값만큼 왼쪽으로 밀어 x5에", "x5를 x6만큼 왼쪽으로 밀어 x7에", "i가 없으니 칸 수는 레지스터(x7)에 든 값이다."],
+    [0, "<code>beq x5, x6, L</code>", "x5 == x6이면 L로 건너뛰고, 아니면 다음 줄", "x5 != x6이면 L로 건너뛴다", "x5에 x6을 넣고 L로 간다", "항상 L로 건너뛴다", "beq = branch if equal(같으면 분기)."],
+    [0, "<code>bne x5, x6, L</code>", "x5 != x6이면 L로 건너뛴다", "x5 == x6이면 L로 건너뛴다", "x5 < x6이면 L로 건너뛴다", "x5에서 x6을 빼고 L로 간다", "bne = branch if not equal(다르면 분기)."],
+    [0, "<code>blt x5, x6, L</code>", "x5 < x6(부호 있게)이면 L로", "x5 > x6이면 L로", "x5 < x6(무부호로)이면 L로", "x5 ≤ x6이면 L로", "blt = branch if less than. u가 없으니 부호 있는 수로 비교한다."],
+    [0, "<code>bge x5, x6, L</code>", "x5 ≥ x6(부호 있게)이면 L로", "x5 > x6이면 L로", "x5 ≤ x6이면 L로", "x5 ≥ x6(무부호로)이면 L로", "bge = branch if greater or equal. u가 없으니 부호 있는 수로 비교한다."],
+    [0, "<code>bltu x5, x6, L</code>", "x5 < x6(무부호로)이면 L로", "x5 < x6(부호 있게)이면 L로", "x5 ≥ x6(무부호로)이면 L로", "x5와 x6이 같으면 L로", "끝의 u = unsigned(무부호)."],
+    [0, "명령어 이름 끝에 붙은 <b>i</b>의 뜻", "마지막 값이 명령어에 적힌 상수(즉시값)", "무부호로 계산한다", "메모리에서 읽는다", "결과를 두 번 저장한다", "add ↔ addi, xor ↔ xori처럼 짝을 이룬다."],
+    [0, "명령어 이름 끝에 붙은 <b>u</b>의 뜻 (예 bltu)", "무부호(unsigned)로 비교·계산", "상수를 쓴다", "위쪽(upper) 비트만 쓴다", "결과를 메모리에 쓴다", "bltu, bgeu처럼 u는 unsigned."],
+    [0, "RISC-V에는 NOT 명령이 없다. NOT은 어떻게 만드나?", "모든 비트가 1인 값과 xor", "0과 and", "모든 비트가 1인 값과 or", "0에서 sub", "b xor 1 = b의 반대이므로 모든 비트가 뒤집힌다."],
+    // 1 클럭·시간 공식 (기초 · 4)
+    [1, "클럭 주기를 구하는 올바른 식", "1 ÷ 클럭 속도", "클럭 속도 × 1000", "클럭 속도 ÷ 1000", "시간 × 클럭 속도", "주기와 속도는 역수: 1초에 f번 똑딱이면 한 번에 1/f초."],
+    [1, "지나간 클럭 사이클 수를 구하는 올바른 식", "시간 × 클럭 속도", "시간 ÷ 클럭 속도", "클럭 속도 ÷ 시간", "시간 × 클럭 주기", "1초에 f번이면 t초 동안 t × f번."],
+    [1, "시간을 구하는 올바른 식 (사이클 수와 클럭 속도를 알 때)", "사이클 수 ÷ 클럭 속도", "사이클 수 × 클럭 속도", "클럭 속도 ÷ 사이클 수", "사이클 수 − 클럭 속도", "사이클 수 = 시간 × 클럭 속도의 양쪽을 클럭 속도로 나눈다."],
+    [1, "시간을 구하는 올바른 식 (사이클 수와 클럭 주기를 알 때)", "사이클 수 × 클럭 주기", "사이클 수 ÷ 클럭 주기", "클럭 주기 ÷ 사이클 수", "사이클 수 + 클럭 주기", "한 사이클이 주기만큼 걸리니 개수 × 한 번 시간."],
+    [1, "Hz(헤르츠)의 뜻", "1초에 몇 번인가", "한 번에 몇 초인가", "1초에 몇 비트인가", "1 ns에 몇 번인가", "1 Hz = 1초에 한 번. GHz = 1초에 10" + S(9) + "번."],
+    [1, "1 GHz의 클럭 주기", "1 ns", "1 ps", "1 µs", "1 ms", "1 ÷ 10" + S(9) + " = 10" + S("−9") + " s = 1 ns."],
+    [1, "4 GHz의 클럭 주기", "250 ps", "4 ns", "25 ps", "2.5 ns", "1000 ÷ 4 = 250 ps (GHz는 1000 ÷ 숫자 = ps)."],
+    [1, "2 GHz의 클럭 주기", "500 ps", "2 ns", "50 ps", "0.2 ns", "1000 ÷ 2 = 500 ps = 0.5 ns."],
+    [1, "500 MHz의 클럭 주기", "2 ns", "500 ns", "0.5 ns", "2 µs", "1 ÷ (5 × 10" + S(8) + ") = 2 × 10" + S("−9") + " s = 2 ns."],
+    [1, "클럭 주기 250 ps의 클럭 속도", "4 GHz", "250 MHz", "2.5 GHz", "400 MHz", "1 ÷ (250 × 10" + S("−12") + ") = 4 × 10" + S(9) + " Hz."],
+    [1, "GHz 단위 클럭 속도를 ps 단위 주기로 빠르게 바꾸는 법", "1000 ÷ (GHz 숫자) ps", "(GHz 숫자) × 1000 ps", "(GHz 숫자) ÷ 1000 ps", "1 ÷ (GHz 숫자) ps", "1 ns = 1000 ps이고 1 GHz의 주기가 1 ns이기 때문."],
+    [1, "클럭 속도 2 GHz에서 3 s 동안 지나간 사이클 수", "6 × 10" + S(9), "1.5 × 10" + S(9), "6 × 10" + S(6), "6 × 10" + S(12), "3 × 2 × 10" + S(9) + " = 6 × 10" + S(9) + "."],
+    [1, "클럭 주기가 길어지면 클럭 속도는?", "느려진다(작아진다)", "빨라진다", "변하지 않는다", "두 배가 된다", "주기와 속도는 역수 관계다."],
+    // 2 크기 단위
+    [2, "1바이트는 몇 비트?", "8비트", "4비트", "16비트", "2비트", "바이트(byte) = 8비트."],
+    [2, "word(워드)의 크기", "4바이트 = 32비트", "2바이트 = 16비트", "8바이트 = 64비트", "1바이트 = 8비트", "RISC-V에서 word = 32비트 = 4바이트."],
+    [2, "doubleword의 크기", "8바이트", "4바이트", "16바이트", "2바이트", "word(4바이트)의 두 배."],
+    [2, "int 하나의 크기", "4바이트", "4비트", "8바이트", "2바이트", "int = word = 4바이트. 그래서 배열 오프셋이 i × 4."],
+    [2, "16진 숫자 한 자리는 몇 비트?", "4비트", "8비트", "2비트", "16비트", "2" + S(4) + " = 16가지를 나타내려면 4비트."],
+    [2, "32비트 값은 16진 몇 자리?", "8자리", "4자리", "16자리", "32자리", "32 ÷ 4 = 8."],
+    [2, "1바이트는 16진 몇 자리?", "2자리", "1자리", "4자리", "8자리", "8비트 ÷ 4 = 2자리(예 0xFF)."],
+    [2, "메모리 주소 하나가 가리키는 크기", "1바이트", "1비트", "4바이트", "8바이트", "주소는 바이트마다 하나씩 붙는다. int 하나는 주소 4개를 차지."],
+    [2, "RISC-V 레지스터 하나의 크기", "32비트", "8비트", "16비트", "5비트", "레지스터 x0~x31 각각 32비트."],
+    [2, "RISC-V 레지스터 개수", "32개 (x0 ~ x31)", "31개", "16개", "64개", "번호 0~31, 모두 32개."],
+    [2, "1 KiB", "1024바이트", "1000바이트", "1024비트", "512바이트", "KiB = 2" + S(10) + "바이트, KB = 1000바이트."],
+    // 3 큰 수
+    [3, "10" + S(3), "천", "만", "백", "십만", "1,000 = 천."],
+    [3, "10" + S(4), "만", "천", "십만", "억", "10,000 = 만."],
+    [3, "10" + S(5), "십만", "만", "백만", "천만", "100,000 = 십만."],
+    [3, "10" + S(6), "백만", "십만", "천만", "억", "1,000,000 = 백만."],
+    [3, "10" + S(7), "천만", "백만", "억", "십억", "10,000,000 = 천만."],
+    [3, "10" + S(8), "억", "천만", "십억", "조", "1억 = 10" + S(8) + "(만 × 만 = 10" + S(4) + " × 10" + S(4) + ")."],
+    [3, "10" + S(9), "십억", "억", "백억", "조", "10" + S(9) + " = 10 × 10" + S(8) + " = 십억."],
+    [3, "10" + S(12), "조", "억", "천억", "십조", "1조 = 만 × 억 = 10" + S(4) + " × 10" + S(8) + " = 10" + S(12) + "."],
+    [3, "6 × 10" + S(8), "6억", "60억", "6천만", "600만", "10" + S(8) + " = 억."],
+    [3, "3 × 10" + S(9), "30억", "3억", "300억", "3천만", "10" + S(9) + " = 십억이므로 3 × 십억 = 30억."],
+    [3, "32억", "3.2 × 10" + S(9), "3.2 × 10" + S(8), "32 × 10" + S(9), "3.2 × 10" + S(10), "32억 = 32 × 10" + S(8) + " = 3.2 × 10" + S(9) + "."],
+    [3, "1600만", "1.6 × 10" + S(7), "1.6 × 10" + S(6), "1.6 × 10" + S(8), "16 × 10" + S(7), "1600만 = 1600 × 10" + S(4) + " = 1.6 × 10" + S(7) + "."],
+    [3, "4 × 10" + S(4), "4만", "4천", "40만", "4억", "10" + S(4) + " = 만."],
+    // 4 단위 접두어
+    [4, "k(킬로)", "10" + S(3), "10" + S(6), "10" + S("−3"), "10" + S(2), "kilo = 천."],
+    [4, "M(메가)", "10" + S(6), "10" + S(3), "10" + S(9), "10" + S("−6"), "mega = 백만."],
+    [4, "G(기가)", "10" + S(9), "10" + S(6), "10" + S(12), "10" + S("−9"), "giga = 십억."],
+    [4, "m(밀리)", "10" + S("−3"), "10" + S(6), "10" + S("−6"), "10" + S(3), "소문자 m은 밀리(작은 쪽), 대문자 M은 메가."],
+    [4, "µ(마이크로)", "10" + S("−6"), "10" + S("−3"), "10" + S("−9"), "10" + S(6), "micro = 백만분의 1."],
+    [4, "n(나노)", "10" + S("−9"), "10" + S("−6"), "10" + S("−12"), "10" + S(9), "nano = 십억분의 1."],
+    [4, "p(피코)", "10" + S("−12"), "10" + S("−9"), "10" + S("−15"), "10" + S(12), "pico = 조분의 1."],
+    [4, "10" + S("−9") + "을 나타내는 접두어", "n(나노)", "µ(마이크로)", "p(피코)", "G(기가)", "작은 쪽: m 10" + S("−3") + ", µ 10" + S("−6") + ", n 10" + S("−9") + ", p 10" + S("−12") + "."],
+    [4, "10" + S(6) + "을 나타내는 접두어", "M(메가)", "m(밀리)", "k(킬로)", "G(기가)", "큰 쪽: k 10" + S(3) + ", M 10" + S(6) + ", G 10" + S(9) + "."],
+    [4, "10" + S("−12") + "을 나타내는 접두어", "p(피코)", "n(나노)", "µ(마이크로)", "m(밀리)", "pico = 10" + S("−12") + "."],
+    [4, "1 ns는 몇 ps?", "1000 ps", "100 ps", "10 ps", "0.001 ps", "10" + S("−9") + " ÷ 10" + S("−12") + " = 10" + S(3) + "."],
+    [4, "1 µs는 몇 ns?", "1000 ns", "100 ns", "10" + S(6) + " ns", "0.001 ns", "단위가 한 칸 작아질 때마다 1000배."],
+    [4, "1 ms는 몇 µs?", "1000 µs", "100 µs", "10 µs", "10" + S(6) + " µs", "10" + S("−3") + " ÷ 10" + S("−6") + " = 10" + S(3) + "."],
+    [4, "1 s는 몇 ns?", "10" + S(9) + " ns", "10" + S(6) + " ns", "10" + S(12) + " ns", "1000 ns", "1 ÷ 10" + S("−9") + " = 10" + S(9) + "."],
+    // 5 2의 거듭제곱
+    [5, "2" + S(4), "16", "8", "32", "64", "2 × 2 × 2 × 2."],
+    [5, "2" + S(5), "32", "16", "64", "25", "레지스터 번호 5비트로 0~31, 32개."],
+    [5, "2" + S(7), "128", "256", "64", "127", "8비트 부호 있는 수의 최솟값이 −2" + S(7) + " = −128."],
+    [5, "2" + S(8), "256", "128", "512", "255", "1바이트로 나타낼 수 있는 값의 개수."],
+    [5, "2" + S(10), "1024", "1000", "2048", "512", "1 KiB = 1024바이트."],
+    [5, "2" + S(11), "2048", "1024", "4096", "2000", "12비트 즉시값 범위 −2048 ~ 2047."],
+    [5, "2" + S(12), "4096", "2048", "8192", "4000", "0x1000 = 4096."],
+    [5, "2" + S(16), "65536", "32768", "65535", "131072", "2" + S(8) + " × 2" + S(8) + " = 256 × 256."],
+    [5, "2" + S(32) + "에 가장 가까운 것", "약 43억", "약 4억", "약 430억", "약 6만 5천", "4,294,967,296."],
+    [5, "2" + S("−1"), "0.5", "0.25", "2", "−2", "소수점 오른쪽 첫 자리의 자릿값."],
+    [5, "2" + S("−2"), "0.25", "0.5", "0.125", "−4", "1 ÷ 4."],
+    [5, "2" + S("−3"), "0.125", "0.25", "0.0625", "−8", "1 ÷ 8."],
+    // 6 16진·2진
+    [6, "16진 A를 2진 4자리로", "1010", "1011", "1100", "0101", "A = 10 = 8 + 2."],
+    [6, "16진 B를 2진 4자리로", "1011", "1010", "1101", "0111", "B = 11 = 8 + 2 + 1."],
+    [6, "16진 C를 2진 4자리로", "1100", "1010", "1110", "0011", "C = 12 = 8 + 4."],
+    [6, "16진 D를 2진 4자리로", "1101", "1011", "1110", "1100", "D = 13 = 8 + 4 + 1."],
+    [6, "16진 E를 2진 4자리로", "1110", "1101", "1111", "0111", "E = 14 = 8 + 4 + 2."],
+    [6, "16진 F를 2진 4자리로", "1111", "1110", "0000", "1000", "F = 15 = 8 + 4 + 2 + 1."],
+    [6, "16진 7을 2진 4자리로", "0111", "1110", "0110", "1000", "7 = 4 + 2 + 1."],
+    [6, "16진 9를 2진 4자리로", "1001", "1000", "0110", "1010", "9 = 8 + 1."],
+    [6, "2진 0110을 16진으로", "6", "3", "C", "9", "4 + 2 = 6."],
+    [6, "2진 1100을 16진으로", "C", "B", "D", "6", "8 + 4 = 12 = C."],
+    [6, "0x10 (10진으로)", "16", "10", "1", "32", "16의 자리에 1."],
+    [6, "0x100 (10진으로)", "256", "100", "4096", "16", "16" + S(2) + " = 256."],
+    [6, "0x1000 (10진으로)", "4096", "1000", "256", "65536", "16" + S(3) + " = 4096."],
+    [6, "0xFF (10진으로)", "255", "256", "1515", "240", "15 × 16 + 15 = 255."],
+    [6, "16진 자릿값 (오른쪽부터)", "1, 16, 256, 4096", "1, 10, 100, 1000", "1, 2, 4, 8", "1, 16, 32, 64", "한 자리 왼쪽으로 갈 때마다 16배."],
+    // 7 진법 규칙
+    [7, "10진 → 2진(2로 나누기): 언제 멈추나?", "몫이 0이 될 때", "몫이 1이 될 때", "나머지가 0이 될 때", "나머지가 1이 될 때", "1 ÷ 2 = 몫 0, 나머지 1까지 해야 맨 앞자리가 나온다."],
+    [7, "2로 나누기의 나머지를 읽는 방향", "아래(마지막)에서 위(처음)로", "위(처음)에서 아래(마지막)로", "큰 수부터", "1만 골라서", "처음 나온 나머지가 1의 자리(소수점 바로 옆)."],
+    [7, "10진 소수 → 2진(×2 반복): 정수 부분을 읽는 방향", "위(처음)에서 아래(마지막)로", "아래에서 위로", "큰 수부터", "0만 골라서", "처음 나온 숫자가 0.5의 자리(소수점 바로 오른쪽)."],
+    [7, "10진 → 2진(정수는 ÷2 반복, 소수는 ×2 반복)에서 처음 나온 숫자가 놓이는 자리", "소수점 바로 옆", "소수점에서 가장 먼 자리", "정수든 소수든 소수점 바로 왼쪽", "정수든 소수든 소수점 바로 오른쪽", "그래서 나누기는 왼쪽으로, 곱하기는 오른쪽으로 적어 나간다."],
+    [7, "16진 덧셈에서 한 자리 합이 16 이상이면", "16을 빼서 쓰고 1을 올린다", "15를 빼서 쓰고 1을 올린다", "10을 빼서 쓰고 1을 올린다", "그대로 쓰고 올리지 않는다", "한 자리가 한 바퀴 도는 크기가 16(숫자 0~F가 16개)."],
+    [7, "16진 뺄셈에서 앞자리에서 빌려 오면", "이 자리에 16을 더한다", "이 자리에 15를 더한다", "이 자리에 10을 더한다", "이 자리에 1을 더한다", "앞자리 1 = 이 자리 16."],
+    [7, "2진 → 16진", "오른쪽부터 4비트씩 묶어 바꾼다", "왼쪽부터 4비트씩 묶어 바꾼다", "3비트씩 묶는다", "8비트씩 묶는다", "모자란 왼쪽 묶음은 앞에 0을 채운다."],
+    [7, "10진 정수 → 16진","16으로 나누고 나머지를 아래 → 위로", "16을 곱하고 정수 부분을 위 → 아래로", "2로 나누고 4로 묶는다(이것만 가능)", "10으로 나누고 나머지를 위 → 아래로", "2로 나누기와 같은 방법, 나누는 수만 16."],
+    [7, "2진 덧셈 1 + 1", "0을 쓰고 1을 올린다(10₂)", "2를 쓴다", "1을 쓴다", "0을 쓰고 올리지 않는다", "2진은 한 자리가 0과 1뿐이라 2가 되면 넘친다."],
+    [7, "2진 덧셈 1 + 1 + 1(올림 포함)", "1을 쓰고 1을 올린다(11₂)", "0을 쓰고 1을 올린다", "3을 쓴다", "1을 쓰고 올리지 않는다", "3 = 2 + 1 → 1을 쓰고 1 올림."],
+    // 8 2의 보수
+    [8, "음수 −x를 2의 보수로 만드는 법", "x의 모든 비트를 뒤집고 1을 더한다", "x의 모든 비트를 뒤집기만 한다", "x의 MSB만 1로 바꾼다", "x에 1을 더하고 MSB를 1로 바꾼다", "뒤집으면 더해서 1111, +1 하면 넘쳐서 0이 된다."],
+    [8, "0xFFFFFFFF (부호 있게)", "−1", "0", "−15", "−16", "1을 더하면 넘쳐서 0이 되니 −1."],
+    [8, "0xFFFFFFF0 (부호 있게)", "−16", "−15", "−240", "16", "0xFFFFFFFF = −1에서 15칸 아래. 16을 더해야 0이 된다."],
+    [8, "0xFFFFFFFA (부호 있게)", "−6", "−5", "−10", "−250", "끝자리 A = 10, 10 − 16 = −6."],
+    [8, "0xFFFFFF00 (부호 있게)", "−256", "−255", "−16", "256", "0x100(256)을 더해야 0이 된다."],
+    [8, "0xFFFFFFFF (무부호)", "2" + S(32) + " − 1", "−1", "2" + S(32), "2" + S(31) + " − 1", "무부호에는 음수가 없다. 가장 큰 32비트 값."],
+    [8, "n비트 패턴 −x를 무부호로 읽으면", "2" + S("n") + " − x", "x", "2" + S("n") + " + x", "2" + S("n−1") + " − x", "예 8비트 −37 = 256 − 37 = 219."],
+    [8, "부호 있게 읽을 때 MSB가 1이면", "음수", "양수", "0", "오버플로", "MSB = 맨 왼쪽 비트 = 부호."],
+    [8, "32비트 16진에서 맨 앞 숫자가 무엇이면 음수(부호 있게)?", "8 ~ F", "0 ~ 7", "F만", "A ~ F", "맨 앞 16진 숫자 8~F는 2진으로 1로 시작한다."],
+    [8, "8비트 부호 있는 수의 범위", "−128 ~ 127", "−127 ~ 127", "−128 ~ 128", "0 ~ 255", "−2" + S(7) + " ~ 2" + S(7) + " − 1."],
+    [8, "8비트 무부호 수의 범위", "0 ~ 255", "−128 ~ 127", "0 ~ 256", "1 ~ 256", "0 ~ 2" + S(8) + " − 1."],
+    [8, "n비트 2의 보수 범위", "−2" + S("n−1") + " ~ 2" + S("n−1") + " − 1", "−2" + S("n") + " ~ 2" + S("n") + " − 1", "−2" + S("n−1") + " ~ 2" + S("n−1"), "0 ~ 2" + S("n") + " − 1", "음수가 하나 더 많다(0이 양수 쪽에 있어서)."],
+    [8, "부호 확장할 때 늘어난 왼쪽 칸을 채우는 값", "원래 MSB와 같은 값", "항상 0", "항상 1", "원래 맨 앞 16진 숫자", "MSB가 1이면 1(16진 F), 0이면 0으로."],
+    [8, "12비트 0xFE8을 32비트로 부호 확장", "0xFFFFFFE8", "0x00000FE8", "0xFFFFF128", "0xF0000FE8", "원래 FE8은 그대로, MSB(F = 1111의 첫 비트) 1이라 앞을 F로."],
+    [8, "12비트 0x7F0을 32비트로 부호 확장", "0x000007F0", "0xFFFFF7F0", "0xFFFFF810", "0x7F000000", "MSB(7 = 0111의 첫 비트)가 0이라 앞을 0으로."],
+    [8, "16진으로 모든 비트를 뒤집을 때 각 자리는", "15 − (그 자리 숫자)", "16 − (그 자리 숫자)", "(그 자리 숫자) − 15", "(그 자리 숫자) + 1", "F(1111)에서 빼는 것이라 15. +1은 2의 보수에서 끝에 한 번만."],
+    [8, "'보수'의 뜻", "채워 주는 수", "반대 부호의 수", "2로 나눈 수", "보조 레지스터", "2의 보수 = 2" + S("n") + "을 채우는 수, 1의 보수 = 1111…을 채우는 수."],
+    [8, "1의 보수를 만드는 법", "모든 비트 뒤집기", "뒤집고 1 더하기", "MSB만 뒤집기", "1 빼기", "~x. 여기에 1을 더해야 2의 보수(−x)가 된다. 슬라이드: 부호-크기, 1의 보수, 2의 보수 중 최종 해법은 2의 보수."],
+    [8, "8비트 1000 0000 (부호 있게)", "−128", "128", "0", "−127", "맨 앞 자릿값 −128만 1."],
+    [8, "8비트 0111 1111 (부호 있게)", "127", "−127", "255", "−1", "64 + 32 + 16 + 8 + 4 + 2 + 1."],
+    [8, "4비트 2의 보수에서 맨 앞 자리의 자릿값", "−8", "8", "−1", "−16", "자릿값 −8, 4, 2, 1."],
+    [8, "−x가 맞는지 확인하는 법", "x와 더해 넘친 비트를 버리면 0이 된다", "x와 곱하면 1이 된다", "MSB가 0이다", "x와 xor하면 0이 된다", "−x의 정의 = x와 더해 0이 되는 수."],
+    [8, "0xFFFFFFE8의 크기(부호 있게) 빠른 계산", "0x100 − 0xE8 = 24 → −24", "자리마다 16 − 숫자 → −296", "0xE8 = 232 → −232", "0xFFFFFFE8 − 0xFF = −24", "앞의 F는 무시하고 꼬리 E8을 다음 큰 수 0x100에서 한 번에 뺀다."],
+    // 9 비트 연산
+    [9, "AND 규칙", "둘 다 1일 때만 1", "하나라도 1이면 1", "서로 다르면 1", "서로 같으면 1", "그래서 0 and 0 = 0."],
+    [9, "OR 규칙", "하나라도 1이면 1", "둘 다 1일 때만 1", "서로 다르면 1", "둘 다 0이면 1", "둘 다 0일 때만 0."],
+    [9, "XOR 규칙", "서로 다르면 1", "서로 같으면 1", "둘 다 1일 때만 1", "하나라도 1이면 1", "1 xor 1 = 0."],
+    [9, "0 and 0", "0", "1", "2", "알 수 없다", "AND는 '같은가'가 아니라 '둘 다 1인가'."],
+    [9, "1 xor 1", "0", "1", "2", "알 수 없다", "같으면 0."],
+    [9, "16진 한 자리 x and F", "x 그대로", "F", "0", "15 − x", "F = 1111이라 x의 비트를 하나도 지우지 않는다."],
+    [9, "16진 한 자리 x or F", "F", "x 그대로", "0", "15 − x", "한쪽이 모두 1이니 결과도 모두 1."],
+    [9, "16진 한 자리 x xor F", "15 − x", "x 그대로", "F", "16 − x", "모든 비트가 뒤집힌다."],
+    [9, "16진 한 자리 x and 0", "0", "x 그대로", "F", "15 − x", "한쪽이 0이면 둘 다 1이 될 수 없다."],
+    [9, "x xor x (같은 값끼리)", "0", "x", "2x", "모든 비트 1", "같은 비트끼리라 모두 0."],
+    [9, "6 and 3 (16진 한 자리)", "2", "3", "6", "0", "0110 and 0011 = 0010. 작은 쪽 고르기가 아니다."],
+    [9, "C and A", "8", "A", "E", "6", "1100 and 1010 = 1000."],
+    [9, "C or A", "E", "C", "8", "6", "1100 or 1010 = 1110."],
+    [9, "C xor A", "6", "E", "8", "2", "1100 xor 1010 = 0110."],
+    [9, "AND의 주된 용도", "마스크: 원하는 비트만 남기고 나머지는 0", "원하는 비트를 1로 켜기", "원하는 비트 뒤집기", "두 수 더하기", "마스크 1인 자리만 남는다."],
+    [9, "OR의 주된 용도", "원하는 비트를 1로 켜기", "원하는 비트만 남기기", "원하는 비트 뒤집기", "부호 바꾸기", "마스크 1인 자리를 켜고 나머지는 그대로."],
+    [9, "여러 비트를 모두 XOR한 결과가 1인 경우", "1의 개수가 홀수일 때", "1의 개수가 짝수일 때", "1이 하나라도 있을 때", "모두 1일 때", "1이 두 개 만날 때마다 지워진다."],
+    [9, "비트 연산(and·or·xor)에 자리올림이 있나?", "없다(그래서 16진 자리마다 따로 계산해도 된다)", "있다(덧셈처럼)", "and만 있다", "xor만 있다", "같은 번호 비트끼리만 계산한다."],
+    // 10 시프트
+    [10, "왼쪽 k칸 시프트는 값으로 보면", "× 2" + S("k"), "÷ 2" + S("k"), "+ k", "× k", "모든 1이 자릿값 두 배인 자리로 옮겨 간다(넘치지 않을 때)."],
+    [10, "srl(오른쪽 논리 시프트)의 왼쪽 빈칸", "0", "MSB", "1", "버려진 비트", "logical = 항상 0."],
+    [10, "sra(오른쪽 산술 시프트)의 왼쪽 빈칸", "MSB(부호 비트)", "0", "1", "버려진 비트", "arithmetic = 부호를 지킨다."],
+    [10, "sll(왼쪽 시프트)의 오른쪽 빈칸", "0", "MSB", "1", "LSB", "왼쪽 시프트는 오른쪽 빈칸이 항상 0."],
+    [10, "4칸 시프트를 16진으로 보면", "숫자 한 자리 이동", "숫자 두 자리 이동", "숫자 네 자리 이동", "값이 4배", "16진 한 자리 = 4비트."],
+    [10, "8칸 시프트를 16진으로 보면", "숫자 두 자리 이동", "숫자 한 자리 이동", "숫자 여덟 자리 이동", "값이 8배", "8 ÷ 4 = 2자리."],
+    [10, "<code>slli</code> 3칸은 값으로", "× 8", "× 3", "× 6", "× 9", "2" + S(3) + " = 8."],
+    [10, "int 배열 인덱스 i로 오프셋을 구하는 slli 칸 수", "2칸", "4칸", "1칸", "3칸", "int 4바이트 = 2" + S(2) + "."],
+    [10, "8바이트 원소(doubleword) 배열에서 오프셋을 구하는 slli 칸 수", "3칸", "8칸", "2칸", "4칸", "8 = 2" + S(3) + "."],
+    [10, "음수(MSB 1)를 srl하면", "왼쪽에 0이 들어와 큰 양수가 된다", "음수로 남는다", "0이 된다", "값이 그대로다", "부호를 지키는 것은 sra뿐."],
+    [10, "8비트 1100 0011을 sra 1칸", "1110 0001", "0110 0001", "1000 0110", "1110 0011", "오른쪽 끝 1 버리고, MSB 1을 왼쪽에 채운다."],
+    [10, "8비트 0110 0001을 sra 1칸", "0011 0000", "1011 0000", "0011 0001", "1100 0010", "MSB가 0이라 srl과 같다."],
+    [10, "0x80000120을 srai 4칸", "0xF8000012", "0x08000012", "0x00001200", "0x88000012", "맨 오른쪽 0 버리고, MSB(8 = 1000의 첫 비트) 1이 4개 → F."],
+    [10, "0x80000120을 srli 4칸", "0x08000012", "0xF8000012", "0x80000012", "0x00001200", "왼쪽 새 자리는 0."],
+    [10, "8비트 1100 0000을 sll 1칸", "1000 0000 (× 2가 성립하지 않음)", "1 1000 0000", "0110 0000", "1000 0001", "맨 왼쪽 1이 칸 밖으로 넘쳐 버려진다."],
+    // 11 비트 번호·레지스터
+    [11, "LSB의 비트 번호", "0번", "1번", "31번", "7번", "맨 오른쪽이 0번."],
+    [11, "32비트에서 MSB의 비트 번호", "31번", "32번", "0번", "30번", "0번부터 세므로 마지막은 31번."],
+    [11, "LSB의 뜻", "맨 오른쪽 비트", "맨 왼쪽 비트", "부호 비트", "가운데 비트", "Least Significant Bit = 자릿값이 가장 작은 비트."],
+    [11, "MSB의 뜻", "맨 왼쪽 비트", "맨 오른쪽 비트", "0번 비트", "가운데 비트", "Most Significant Bit."],
+    [11, "[19:15]는 비트 몇 개?", "5개", "4개", "19개", "15개", "19, 18, 17, 16, 15."],
+    [11, "[hi:lo] 표기의 뜻", "hi번부터 lo번까지의 비트", "hi개의 비트", "lo번 비트 하나", "hi를 lo로 나눈 값", "예 [11:7] = 11번~7번 비트 5개."],
+    [11, "기계어에서 레지스터 번호 칸은 몇 비트?", "5비트", "4비트", "8비트", "32비트", "번호 0~31 = 32가지 = 2" + S(5) + "."],
+    [11, "rs1 칸의 비트 위치", "[19:15]", "[24:20]", "[11:7]", "[6:0]", "rs1 = 첫 번째로 읽는 레지스터."],
+    [11, "rs2 칸의 비트 위치", "[24:20]", "[19:15]", "[11:7]", "[31:25]", "rs2 = 두 번째로 읽는 레지스터."],
+    [11, "rd 칸의 비트 위치", "[11:7]", "[19:15]", "[24:20]", "[6:0]", "rd = 결과를 넣는 레지스터."],
+    [11, "rd의 뜻", "결과를 받는 레지스터(destination)", "첫 번째로 읽는 레지스터", "메모리 주소", "즉시값", "어셈블리에서 맨 앞에 쓰는 레지스터."],
+    [11, "rs1, rs2의 뜻", "계산에 읽는 레지스터(source)", "결과를 받는 레지스터", "레지스터 번호의 합", "메모리 칸", "s = source."],
+    [11, "레지스터 칸의 5비트가 10100₂이면", "x20", "x10", "x14", "x5", "16 + 4 = 20."],
+    [11, "레지스터 칸의 5비트가 01001₂이면", "x9", "x18", "x4", "x1001", "8 + 1 = 9."],
+    [11, "imm[12:1]의 뜻", "즉시값의 12번~1번 비트", "명령어의 12번~1번 칸", "12개 레지스터", "12를 1로 나눈 값", "imm[…]는 상수 값의 비트 번호, 이름 없는 […]는 명령어 안의 칸 번호."],
+    [11, "16진 값의 맨 오른쪽 숫자가 덮는 비트 번호", "3 ~ 0번", "7 ~ 4번", "0번", "4 ~ 1번", "다음 자리는 7~4번, 11~8번 …"],
+    // 12 어셈블리 읽기
+    [12, "<code>add x9, x20, x21</code>에서 결과가 들어가는 레지스터", "x9", "x20", "x21", "x9와 x20 둘 다", "명령어 이름 바로 뒤(맨 앞 레지스터)가 결과 칸."],
+    [12, "<code>20(x23)</code>의 뜻", "x23에 든 값 + 20 (주소)", "x23 × 20", "20번 레지스터의 x23번 비트", "x23에서 20을 뺀 주소", "괄호 앞 숫자 = 오프셋."],
+    [12, "lw가 레지스터에 넣는 것", "계산한 주소에 들어 있는 값", "계산한 주소", "인덱스", "오프셋", "주소는 어느 사물함인지 정할 때만 쓴다."],
+    [12, "sw를 실행한 뒤 맨 앞 레지스터의 값은?", "그대로다(메모리에 쓰기만 함)", "0이 된다", "주소로 바뀐다", "메모리 값으로 바뀐다", "sw는 레지스터 → 메모리."],
+    [12, "int 배열 A[i]의 오프셋(시작 주소에서 떨어진 바이트 수)", "i × 4", "i", "i × 8", "i ÷ 4", "int 하나 = 4바이트."],
+    [12, "오프셋에서 인덱스를 구하는 법 (int 배열)", "오프셋 ÷ 4", "오프셋 × 4", "오프셋 − 4", "오프셋 그대로", "오프셋 = 인덱스 × 4를 거꾸로."],
+    [12, "시작 주소 0x200, 읽는 주소 0x214 (int 배열)", "A[5]", "A[20]", "A[14]", "A[4]", "0x214 − 0x200 = 0x14 = 20, 20 ÷ 4 = 5."],
+    [12, "원소의 주소", "시작 주소 + 오프셋", "시작 주소 × 오프셋", "오프셋 − 시작 주소", "인덱스 + 4", "예 0x1000 + 48 = 0x1030."],
+    [12, "즉시값(immediate)", "명령어 안에 직접 적힌 상수", "레지스터에 든 값", "메모리에 든 값", "바로 다음 명령어", "메모리·레지스터에서 읽어 올 필요가 없어 '즉시'."],
+    [12, "기본 즉시값(addi 등의 상수)의 비트 수", "12비트", "5비트", "16비트", "32비트", "범위 −2048 ~ 2047."],
+    [12, "어셈블리에서 <code>//</code> 뒤의 글", "주석(실행되지 않음)", "나눗셈", "주소", "레지스터 이름", "설명을 적는 곳."],
+    [12, "<code>Loop:</code> 같은 이름", "라벨: 명령어 위치의 이름(분기 목적지)", "레지스터 이름", "변수 값", "주석", "beq x5, x6, Loop처럼 건너뛸 곳으로 쓴다."],
+    [12, "레지스터 x8은 주소인가?", "아니다. CPU 안의 저장 칸이다(주소 값을 담을 수는 있다)", "그렇다. 메모리 8번지다", "그렇다. 0x8번지다", "아니다. 즉시값이다", "주소 = 메모리 칸의 번호."],
+    [12, "메모리 주소", "바이트마다 0부터 붙은 번호", "레지스터 번호", "명령어 번호", "비트마다 붙은 번호", "int 하나는 주소 4개를 차지한다."],
+    [12, "'C 문장으로 쓰시오'의 C", "프로그래밍 언어 C", "Code의 약자", "Computer의 약자", "Constant(상수)", "B 언어 다음이라 C."],
+    [12, "C에서 <code>=</code>의 뜻", "오른쪽 값을 계산해 왼쪽에 넣는다", "양쪽이 같은지 비교한다", "두 값을 더한다", "왼쪽 값을 오른쪽에 넣는다", "같은지 비교는 ==."],
+    [12, "어셈블리를 C로 쓸 때 레지스터 대신 쓰는 것", "문제가 알려 준 변수 이름", "레지스터 번호 그대로", "메모리 주소", "16진 값", "예 'h는 x21에 있다' → x21 대신 h."]
+  ];
+
+  var KEY = "cr_quiz_v1";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+  var data = load(); data.best = data.best || {}; data.hist = data.hist || []; data.sel = data.sel || [];
+  var $ = function (id) { return document.getElementById(id); };
+  var sel = data.sel.slice();
+  function modeKey(s) { return s.length && s.length < CATS.length ? s.slice().sort(function (a, b) { return a - b; }).join(",") : "all"; }
+  function modeName(s) { return s.length && s.length < CATS.length ? s.map(function (i) { return CATS[i]; }).join(", ") : "전체"; }
+  function fmt(ms) { var t = ms / 1000; return t >= 60 ? Math.floor(t / 60) + "분 " + (t % 60).toFixed(1) + "초" : t.toFixed(1) + "초"; }
+  function better(a, b) { return !b || a.score > b.score || (a.score === b.score && a.ms < b.ms); }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+  // 범위 버튼
+  var cats = $("qzCats");
+  CATS.forEach(function (name, i) {
+    var n = B.filter(function (q) { return q[0] === i; }).length;
+    var b = document.createElement("button"); b.type = "button"; b.dataset.i = i;
+    b.innerHTML = name + " <small>" + n + "</small>";
+    b.addEventListener("click", function () {
+      var k = sel.indexOf(i); if (k >= 0) sel.splice(k, 1); else sel.push(i);
+      data.sel = sel; save(data); paintSetup();
+    });
+    cats.appendChild(b);
+  });
+  function paintSetup() {
+    Array.prototype.forEach.call(cats.children, function (b) { b.setAttribute("aria-pressed", sel.indexOf(+b.dataset.i) >= 0 ? "true" : "false"); });
+    var bst = data.best[modeKey(sel)];
+    $("qzBest").innerHTML = "범위: <b>" + modeName(sel) + "</b> · 최고 기록: " + (bst ? "<b>" + bst.score + " / 20 · " + fmt(bst.ms) + "</b>" : "아직 없음");
+  }
+  function paintHist() {
+    var tb = $("qzHist");
+    if (!data.hist.length) { tb.innerHTML = '<tr><td colspan="4">아직 기록이 없습니다.</td></tr>'; return; }
+    tb.innerHTML = data.hist.slice(0, 10).map(function (h) {
+      return "<tr><td>" + h.date + "</td><td>" + h.mode + "</td><td>" + h.score + " / " + h.n + "</td><td>" + fmt(h.ms) + "</td></tr>";
+    }).join("");
+  }
+
+  // 한 판
+  var round = null, timer = 0;
+  function pool(s) { return B.filter(function (q) { return !s.length || s.indexOf(q[0]) >= 0; }); }
+  function start(list, retry) {
+    var qs = shuffle(list.slice()).slice(0, 20);
+    while (!retry && qs.length < 20 && list.length) qs = qs.concat(shuffle(list.slice()).slice(0, 20 - qs.length)); // 범위가 좁으면 반복 출제
+    round = { qs: qs, i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel), name: retry ? "틀린 문제 다시" : modeName(sel) };
+    $("qzSetup").hidden = true; $("qzEnd").hidden = true; $("qzPlay").hidden = false;
+    clearInterval(timer); timer = setInterval(tick, 100); tick(); show();
+  }
+  function tick() { if (round) $("qzTime").textContent = fmt(performance.now() - round.t0); }
+  function show() {
+    var q = round.qs[round.i], n = round.qs.length;
+    $("qzCount").textContent = (round.i + 1) + " / " + n;
+    $("qzScore").textContent = "맞힌 수 " + round.ok;
+    $("qzProg").style.width = (round.i / n * 100) + "%";
+    $("qzCat").textContent = CATS[q[0]];
+    $("qzQ").innerHTML = q[1];
+    var opts = shuffle([q[2], q[3], q[4], q[5]]);
+    var box = $("qzOpts"); box.innerHTML = "";
+    opts.forEach(function (o, k) {
+      var b = document.createElement("button"); b.type = "button";
+      b.innerHTML = '<span class="k">' + (k + 1) + "</span><span>" + o + "</span>";
+      b.dataset.right = o === q[2] ? "1" : "";
+      b.addEventListener("click", function () { pick(b); });
+      box.appendChild(b);
+    });
+    $("qzFb").hidden = true; $("qzNextRow").hidden = true;
+  }
+  function pick(b) {
+    if (!round || round.locked) return;
+    round.locked = true;
+    var q = round.qs[round.i], btns = $("qzOpts").querySelectorAll("button");
+    Array.prototype.forEach.call(btns, function (x) { x.disabled = true; if (x.dataset.right) x.classList.add("ok"); });
+    if (b.dataset.right) {
+      round.ok++; $("qzScore").textContent = "맞힌 수 " + round.ok;
+      setTimeout(next, 350);
+    } else {
+      b.classList.add("no"); round.wrong.push(q);
+      var fb = $("qzFb"); fb.className = "qz-fb"; fb.innerHTML = "정답: <b>" + q[2] + "</b><br>" + q[6]; fb.hidden = false;
+      $("qzNextRow").hidden = false; $("qzNext").focus({ preventScroll: true });
+    }
+  }
+  function next() {
+    if (!round) return;
+    round.locked = false; round.i++;
+    if (round.i >= round.qs.length) finish(); else show();
+  }
+  function finish() {
+    clearInterval(timer);
+    var ms = performance.now() - round.t0, n = round.qs.length, r = round; round = null;
+    var rec = { score: r.ok, n: n, ms: ms };
+    var html = '<p class="qz-res-big">' + r.ok + " / " + n + " · " + fmt(ms) + "</p>";
+    if (!r.retry && n === 20) {
+      var prev = data.best[r.mode];
+      if (better(rec, prev)) { data.best[r.mode] = { score: r.ok, ms: ms }; html += '<p class="qz-new">새 최고 기록!' + (prev ? " (이전 " + prev.score + " / 20 · " + fmt(prev.ms) + ")" : "") + "</p>"; }
+      else html += "<p>최고 기록: " + prev.score + " / 20 · " + fmt(prev.ms) + (prev.score === r.ok ? " (시간 " + fmt(ms - prev.ms) + " 차이)" : " (점수 " + (prev.score - r.ok) + "개 차이)") + "</p>";
+      var d = new Date();
+      data.hist.unshift({ date: (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + ("0" + d.getMinutes()).slice(-2), mode: r.name, score: r.ok, n: n, ms: ms });
+      data.hist = data.hist.slice(0, 30); save(data);
+    } else html += '<p class="note">틀린 문제 다시 풀기는 최고 기록에 넣지 않습니다.</p>';
+    if (r.wrong.length) {
+      html += "<h3>틀린 문제 " + r.wrong.length + "개</h3><ol class=\"qz-wrong\">" + r.wrong.map(function (q) {
+        return "<li>" + q[1] + "<br><span class=\"a\">" + q[2] + "</span> · " + q[6] + "</li>";
+      }).join("") + "</ol>";
+    }
+    html += '<div class="qz-row"><button type="button" class="qz-btn" id="qzAgain">다시 도전</button>' +
+      (r.wrong.length ? '<button type="button" class="qz-btn sub" id="qzRetry">틀린 문제만 다시</button>' : "") +
+      '<button type="button" class="qz-btn sub" id="qzHome">범위 바꾸기</button></div>';
+    var end = $("qzEnd"); end.innerHTML = html; end.hidden = false; $("qzPlay").hidden = true;
+    $("qzAgain").onclick = function () { start(pool(sel)); };
+    if ($("qzRetry")) $("qzRetry").onclick = function () { start(r.wrong, true); };
+    $("qzHome").onclick = function () { end.hidden = true; $("qzSetup").hidden = false; paintSetup(); };
+    paintSetup(); paintHist();
+    root.scrollIntoView({ block: "start" });
+  }
+
+  $("qzStart").addEventListener("click", function () { start(pool(sel)); });
+  $("qzNext").addEventListener("click", next);
+  $("qzQuit").addEventListener("click", function () { clearInterval(timer); round = null; $("qzPlay").hidden = true; $("qzSetup").hidden = false; paintSetup(); });
+  document.addEventListener("keydown", function (e) {
+    if (!round || $("qzPlay").hidden || e.target.closest && e.target.closest("input,textarea")) return;
+    if (round.locked && (e.key === "Enter" || e.key === " ")) { if (!$("qzNextRow").hidden) { e.preventDefault(); next(); } return; }
+    var k = +e.key; if (k >= 1 && k <= 4) { var b = $("qzOpts").children[k - 1]; if (b) { e.preventDefault(); pick(b); } }
+  });
+  // 다른 단원으로 가면 진행 중인 판은 멈춘다
+  document.addEventListener("lesson:shown", function (e) { if (e.detail !== "kb6" && round) { clearInterval(timer); round = null; $("qzPlay").hidden = true; $("qzSetup").hidden = false; paintSetup(); } });
+  paintSetup(); paintHist();
+})();
+}catch(e){console.error(e)}
 /* perfect-freehand 1.2.2 · MIT License · Copyright (c) 2021 Stephen Ruiz Ltd · https://github.com/steveruizok/perfect-freehand */
 var PF=(function(){
 function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[1]]}function l(e,t){return[e[0]+t[0],e[1]+t[1]]}function a(e,t){return[e[0]-t[0],e[1]-t[1]]}function b(e,t){return[e[0]*t,e[1]*t]}function he(e,t){return[e[0]/t,e[1]/t]}function R(e){return[e[1],-e[0]]}function B(e,t){return e[0]*t[0]+e[1]*t[1]}function ue(e,t){return e[0]===t[0]&&e[1]===t[1]}function ge(e){return Math.hypot(e[0],e[1])}function de(e){return e[0]*e[0]+e[1]*e[1]}function A(e,t){return de(a(e,t))}function G(e){return he(e,ge(e))}function ie(e,t){return Math.hypot(e[1]-t[1],e[0]-t[0])}function L(e,t,u){let x=Math.sin(u),h=Math.cos(u),y=e[0]-t[0],n=e[1]-t[1],f=y*h-n*x,d=y*x+n*h;return[f+t[0],d+t[1]]}function K(e,t,u){return l(e,b(a(t,e),u))}function ee(e,t,u){return l(e,b(t,u))}var{min:C,PI:xe}=Math,pe=.275,V=xe+1e-4;function ce(e,t={}){let{size:u=16,smoothing:x=.5,thinning:h=.5,simulatePressure:y=!0,easing:n=r=>r,start:f={},end:d={},last:D=!1}=t,{cap:S=!0,easing:j=r=>r*(2-r)}=f,{cap:q=!0,easing:c=r=>--r*r*r+1}=d;if(e.length===0||u<=0)return[];let p=e[e.length-1].runningLength,g=f.taper===!1?0:f.taper===!0?Math.max(u,p):f.taper,T=d.taper===!1?0:d.taper===!0?Math.max(u,p):d.taper,te=Math.pow(u*x,2),_=[],M=[],H=e.slice(0,10).reduce((r,i)=>{let o=i.pressure;if(y){let s=C(1,i.distance/u),W=C(1,1-s);o=C(1,r+(W-r)*(s*pe))}return(r+o)/2},e[0].pressure),m=$(u,h,e[e.length-1].pressure,n),U,X=e[0].vector,z=e[0].point,F=z,O=z,E=F,J=!1;for(let r=0;r<e.length;r++){let{pressure:i}=e[r],{point:o,vector:s,distance:W,runningLength:I}=e[r];if(r<e.length-1&&p-I<3)continue;if(h){if(y){let v=C(1,W/u),Z=C(1,1-v);i=C(1,H+(Z-H)*(v*pe))}m=$(u,h,i,n)}else m=u/2;U===void 0&&(U=m);let le=I<g?j(I/g):1,fe=p-I<T?c((p-I)/T):1;m=Math.max(.01,m*Math.min(le,fe));let re=(r<e.length-1?e[r+1]:e[r]).vector,Y=r<e.length-1?B(s,re):1,be=B(s,X)<0&&!J,ne=Y!==null&&Y<0;if(be||ne){let v=b(R(X),m);for(let Z=1/13,w=0;w<=1;w+=Z)O=L(a(o,v),o,V*w),_.push(O),E=L(l(o,v),o,V*-w),M.push(E);z=O,F=E,ne&&(J=!0);continue}if(J=!1,r===e.length-1){let v=b(R(s),m);_.push(a(o,v)),M.push(l(o,v));continue}let oe=b(R(K(re,s,Y)),m);O=a(o,oe),(r<=1||A(z,O)>te)&&(_.push(O),z=O),E=l(o,oe),(r<=1||A(F,E)>te)&&(M.push(E),F=E),H=i,X=s}let P=e[0].point.slice(0,2),k=e.length>1?e[e.length-1].point.slice(0,2):l(e[0].point,[1,1]),Q=[],N=[];if(e.length===1){if(!(g||T)||D){let r=ee(P,G(R(a(P,k))),-(U||m)),i=[];for(let o=1/13,s=o;s<=1;s+=o)i.push(L(r,P,V*2*s));return i}}else{if(!(g||T&&e.length===1))if(S)for(let i=1/13,o=i;o<=1;o+=i){let s=L(M[0],P,V*o);Q.push(s)}else{let i=a(_[0],M[0]),o=b(i,.5),s=b(i,.51);Q.push(a(P,o),a(P,s),l(P,s),l(P,o))}let r=R(se(e[e.length-1].vector));if(T||g&&e.length===1)N.push(k);else if(q){let i=ee(k,r,m);for(let o=1/29,s=o;s<1;s+=o)N.push(L(i,k,V*3*s))}else N.push(l(k,b(r,m)),l(k,b(r,m*.99)),a(k,b(r,m*.99)),a(k,b(r,m)))}return _.concat(N,M.reverse(),Q)}function me(e,t={}){var q;let{streamline:u=.5,size:x=16,last:h=!1}=t;if(e.length===0)return[];let y=.15+(1-u)*.85,n=Array.isArray(e[0])?e:e.map(({x:c,y:p,pressure:g=.5})=>[c,p,g]);if(n.length===2){let c=n[1];n=n.slice(0,-1);for(let p=1;p<5;p++)n.push(K(n[0],c,p/4))}n.length===1&&(n=[...n,[...l(n[0],[1,1]),...n[0].slice(2)]]);let f=[{point:[n[0][0],n[0][1]],pressure:n[0][2]>=0?n[0][2]:.25,vector:[1,1],distance:0,runningLength:0}],d=!1,D=0,S=f[0],j=n.length-1;for(let c=1;c<n.length;c++){let p=h&&c===j?n[c].slice(0,2):K(S.point,n[c],y);if(ue(S.point,p))continue;let g=ie(p,S.point);if(D+=g,c<j&&!d){if(D<x)continue;d=!0}S={point:p,pressure:n[c][2]>=0?n[c][2]:.5,vector:G(a(S.point,p)),distance:g,runningLength:D},f.push(S)}return f[0].vector=((q=f[1])==null?void 0:q.vector)||[0,0],f}function ae(e,t={}){return ce(me(e,t),t)}var _e=ae;return{getStroke:ae};
