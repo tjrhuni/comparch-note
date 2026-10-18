@@ -120,6 +120,7 @@ details.cats[open]>summary::after{content:"접기"}
       <p class="best-k">최고 기록 <span id="qzMode"></span></p>
       <p class="best-v" id="qzBestV">아직 없음</p>
       <p class="best-s" id="qzBest"></p>
+      <p class="best-s" id="qzDeck"></p>
     </div>
     <details class="cats card"><summary><span>범위 고르기 <span id="qzSelN"></span></span></summary>
       <div class="qz-cats" id="qzCats"></div>
@@ -359,7 +360,7 @@ Object.assign(window.QZN, {
   var root = document.getElementById("qz");
   if (!root) return;
   var S = function (n) { return "<sup>" + n + "</sup>"; };
-  var CATS = ["명령어 뜻", "클럭·시간 공식", "크기 단위", "큰 수(만·억)", "단위 접두어", "2의 거듭제곱", "16진·2진", "진법 규칙", "2의 보수", "비트 연산", "시프트", "비트 번호·레지스터", "어셈블리 읽기"];
+  var CATS = ["명령어 뜻", "클럭·시간 공식", "크기 단위", "큰 수(만·억)", "단위 접두어", "2의 거듭제곱", "16진·2진", "진법 규칙", "2의 보수", "비트 연산", "시프트", "비트 번호·레지스터", "어셈블리 읽기", "명령어 이름 풀이", "용어 풀이"];
   var B = [
     // 0 명령어 뜻 (기초 · 3, 4)
     [0, "<code>add x5, x6, x7</code>", "x5 = x6 + x7", "x7 = x5 + x6", "x5 = x6 − x7", "x6 = x5 + x7", "맨 앞(x5)이 결과를 넣을 칸, 뒤의 둘을 더한다."],
@@ -575,13 +576,66 @@ Object.assign(window.QZN, {
     [12, "어셈블리를 C로 쓸 때 레지스터 대신 쓰는 것", "문제가 알려 준 변수 이름", "레지스터 번호 그대로", "메모리 주소", "16진 값", "예 'h는 x21에 있다' → x21 대신 h."]
   ];
 
+  // 이름 풀이 문제는 표에서 만든다. 문제 번호가 기존 문제 뒤에 붙으므로 기존 오답 설명 번호는 그대로다.
+  // [이름, 영어 풀이, 한국어 뜻, 헷갈리는 짝 그룹]
+  var INS = [
+    ["add", "add", "더하기", "a"], ["sub", "subtract", "빼기", "a"], ["addi", "add immediate", "상수 더하기", "a"],
+    ["and", "and", "비트별 AND(둘 다 1이면 1)", "l"], ["or", "or", "비트별 OR(하나라도 1이면 1)", "l"], ["xor", "exclusive or", "비트별 XOR(다르면 1)", "l"],
+    ["andi", "and immediate", "상수와 비트별 AND", "l"], ["ori", "or immediate", "상수와 비트별 OR", "l"], ["xori", "exclusive or immediate", "상수와 비트별 XOR", "l"],
+    ["lw", "load word", "메모리에서 워드(4바이트) 읽기", "m"], ["sw", "store word", "메모리에 워드(4바이트) 쓰기", "m"],
+    ["sll", "shift left logical", "왼쪽 논리 시프트(빈칸 0)", "s"], ["srl", "shift right logical", "오른쪽 논리 시프트(빈칸 0)", "s"], ["sra", "shift right arithmetic", "오른쪽 산술 시프트(빈칸 MSB)", "s"],
+    ["slli", "shift left logical immediate", "상수 칸만큼 왼쪽 논리 시프트", "s"], ["srli", "shift right logical immediate", "상수 칸만큼 오른쪽 논리 시프트", "s"], ["srai", "shift right arithmetic immediate", "상수 칸만큼 오른쪽 산술 시프트", "s"],
+    ["beq", "branch if equal", "같으면 분기", "b"], ["bne", "branch if not equal", "다르면 분기", "b"], ["blt", "branch if less than", "작으면 분기(부호 있게)", "b"],
+    ["bge", "branch if greater than or equal", "크거나 같으면 분기(부호 있게)", "b"], ["bltu", "branch if less than, unsigned", "작으면 분기(무부호)", "b"], ["bgeu", "branch if greater than or equal, unsigned", "크거나 같으면 분기(무부호)", "b"]
+  ];
+  // [용어, 영어(원래 말), 뜻, 그룹]
+  var TERMS = [
+    ["MSB", "Most Significant Bit", "맨 왼쪽 비트(자릿값이 가장 큼, 부호 비트)", "bit"], ["LSB", "Least Significant Bit", "맨 오른쪽 비트(0번, 자릿값이 가장 작음)", "bit"],
+    ["비트", "bit (binary digit)", "2진수 한 자리(0 또는 1)", "bit"], ["바이트", "byte", "8비트 묶음, 주소 하나의 크기", "bit"],
+    ["워드", "word", "4바이트(32비트) 묶음", "bit"], ["더블워드", "doubleword", "8바이트(64비트) 묶음", "bit"], ["KiB", "kibibyte", "1024바이트", "bit"],
+    ["rd", "destination register", "결과를 받는 레지스터", "reg"], ["rs1", "source register 1", "첫 번째로 읽는 레지스터", "reg"], ["rs2", "source register 2", "두 번째로 읽는 레지스터", "reg"],
+    ["imm", "immediate", "명령어 안에 적힌 상수(즉시값)", "reg"], ["레지스터", "register", "CPU 안의 저장 칸 x0~x31(각 32비트)", "reg"],
+    ["오프셋", "offset", "시작 주소에서 떨어진 바이트 수", "mem"], ["주소", "address", "메모리 칸(바이트)마다 붙은 번호", "mem"], ["인덱스", "index", "배열에서 몇 번째 원소인지(0부터)", "mem"],
+    ["라벨", "label", "명령어 위치의 이름(분기 목적지)", "mem"], ["주석", "comment", "// 뒤의 설명, 실행되지 않음", "mem"], ["배열", "array", "같은 종류 값을 메모리에 차례로 붙여 놓은 것", "mem"],
+    ["부호 있는", "signed", "음수도 있는 수로 읽기(2의 보수)", "sign"], ["부호 없는", "unsigned", "0 이상의 수로만 읽기", "sign"], ["2의 보수", "two's complement", "뒤집고 +1 해서 음수를 나타내는 방식", "sign"],
+    ["부호 확장", "sign extension", "칸을 늘릴 때 늘어난 칸을 MSB로 채우기", "sign"], ["논리 시프트", "logical shift", "빈칸을 0으로 채우는 시프트", "sign"], ["산술 시프트", "arithmetic shift", "빈칸을 MSB로 채우는 시프트", "sign"],
+    ["마스크", "mask", "원하는 비트만 남기거나 켜도록 고르는 값", "sign"],
+    ["분기", "branch", "조건에 따라 다른 줄로 건너뛰기", "code"], ["기계어", "machine code", "CPU가 실제로 읽는 0과 1(명령어 하나 32비트)", "code"], ["어셈블리어", "assembly language", "기계어를 사람이 읽게 글자로 쓴 것", "code"],
+    ["명령어", "instruction", "CPU에게 시키는 일 하나", "code"],
+    ["클럭 사이클", "clock cycle", "클럭이 한 번 똑딱이는 것", "clk"], ["클럭 주기", "clock period", "한 사이클에 걸리는 시간(예 250 ps)", "clk"], ["클럭 속도", "clock rate", "1초에 지나가는 사이클 수(예 4 GHz)", "clk"], ["헤르츠", "Hz (hertz)", "1초에 몇 번인가의 단위", "clk"]
+  ];
+  var GEN_NOTES = {};
+  function pick3(list, i, label) { // 같은 그룹을 먼저, 모자라면 전체에서. 문제마다 늘 같은 보기가 나오게 순서를 고정한다.
+    var same = [], other = [];
+    list.forEach(function (x, j) { if (j !== i) (x[3] === list[i][3] ? same : other).push(j); });
+    var rot = function (a) { return a.slice(i % (a.length || 1)).concat(a.slice(0, i % (a.length || 1))); };
+    var out = rot(same).concat(rot(other)).slice(0, 3);
+    return out;
+  }
+  INS.forEach(function (x, i) {
+    var d = pick3(INS, i), ans = function (k) { return INS[k][1] + " · " + INS[k][2]; };
+    GEN_NOTES[B.length] = d.map(function (k) { return "그건 " + INS[k][0] + "의 풀이."; });
+    B.push([13, "<code>" + x[0] + "</code>의 영어 풀이와 뜻", ans(i), ans(d[0]), ans(d[1]), ans(d[2]), x[0] + " = " + x[1] + ". " + x[2] + "."]);
+    GEN_NOTES[B.length] = d.map(function (k) { return INS[k][0] + "는 " + INS[k][1] + "(" + INS[k][2] + ")."; });
+    B.push([13, "'" + x[1] + "'(" + x[2] + ")인 명령어", "<code>" + x[0] + "</code>", "<code>" + INS[d[0]][0] + "</code>", "<code>" + INS[d[1]][0] + "</code>", "<code>" + INS[d[2]][0] + "</code>", "이름의 글자가 영어 풀이의 첫 글자들이다."]);
+  });
+  TERMS.forEach(function (x, i) {
+    var d = pick3(TERMS, i), ans = function (k) { return TERMS[k][1] + " · " + TERMS[k][2]; };
+    GEN_NOTES[B.length] = d.map(function (k) { return "그건 " + TERMS[k][0] + "의 풀이."; });
+    B.push([14, "<b>" + x[0] + "</b>의 영어(원래 말)와 뜻", ans(i), ans(d[0]), ans(d[1]), ans(d[2]), x[0] + " = " + x[1] + ". " + x[2] + "."]);
+  });
+
   B.forEach(function (q, i) { q.idx = i; });
+  root.qzBank = B; // 점검용(읽기만)
   var NOTES = window.QZN || {}; // 오답 보기 설명: { 문제번호: [오답1 설명, 오답2 설명, 오답3 설명] }
+  Object.keys(GEN_NOTES).forEach(function (k) { if (!NOTES[k]) NOTES[k] = GEN_NOTES[k]; });
   function noteOf(q, opt) { var k = [q[3], q[4], q[5]].indexOf(opt), n = NOTES[q.idx]; return k >= 0 && n && n[k] ? n[k] : ""; }
   var KEY = "cr_quiz_v1";
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
   function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
   var data = load(); data.best = data.best || {}; data.hist = data.hist || []; data.sel = data.sel || [];
+  data.deck = data.deck || {}; data.review = data.review || {}; data.lap = data.lap || {}; // 범위별 남은 덱, 복습 대기, 바퀴 수
+  var REVIEW_MAX = 5; // 한 판에 섞는 복습 문제 최대 수
   var $ = function (id) { return document.getElementById(id); };
   var sel = data.sel.slice();
   function modeKey(s) { return s.length && s.length < CATS.length ? s.slice().sort(function (a, b) { return a - b; }).join(",") : "all"; }
@@ -610,6 +664,10 @@ Object.assign(window.QZN, {
       $("qzBestV").textContent = bst ? bst.score + " / 20 · " + fmt(bst.ms) : "아직 없음";
       $("qzBest").textContent = bst ? "이 기록을 넘어 보세요. 점수가 같으면 시간이 짧은 쪽이 이깁니다." : "첫 판을 풀면 여기에 목표가 생깁니다.";
       $("qzSelN").textContent = sel.length && sel.length < CATS.length ? "(" + sel.length + "개)" : "(전체)";
+      var m = modeKey(sel), total = pool(sel).length, left = (data.deck[m] || []).length, rv = (data.review[m] || []).length;
+      if (data.deck[m]) { var kn = {}; ((data.known || {})[m] || pool(sel).map(function (q) { return q.idx; }).filter(function (i) { return i < 199; })).forEach(function (i) { kn[i] = 1; }); left += pool(sel).filter(function (q) { return !kn[q.idx]; }).length; }
+      var seen = data.deck[m] ? total - left : 0, lap = data.lap[m] || 1;
+      if ($("qzDeck")) $("qzDeck").textContent = lap + "바퀴째 " + seen + " / " + total + "문제 봄" + (rv ? " · 복습 대기 " + rv + "개" : "");
     } else $("qzBest").innerHTML = "범위: <b>" + modeName(sel) + "</b> · 최고 기록: " + (bst ? "<b>" + bst.score + " / 20 · " + fmt(bst.ms) + "</b>" : "아직 없음");
   }
   function paintHist() {
@@ -623,9 +681,33 @@ Object.assign(window.QZN, {
   // 한 판
   var round = null, timer = 0;
   function pool(s) { return B.filter(function (q) { return !s.length || s.indexOf(q[0]) >= 0; }); }
+  // 덱 방식: 범위의 문제를 한 번 섞어 줄 세우고 판마다 앞에서 꺼낸다. 다 쓰면 다시 섞어 다음 바퀴.
+  // 틀린 문제는 복습 대기에 넣어 다음 판에 최대 REVIEW_MAX개 섞는다(맞히면 빠짐).
+  function draw(list) {
+    var m = modeKey(sel), ids = list.map(function (q) { return q.idx; });
+    var has = {}; ids.forEach(function (i) { has[i] = 1; });
+    var deck = (data.deck[m] || []).filter(function (i) { return has[i]; });
+    // 바퀴 도중에 새 문제가 추가됐으면 남은 덱의 무작위 자리에 끼워 이번 바퀴에 나오게 한다
+    data.known = data.known || {};
+    var known = {}; (data.known[m] || (data.deck[m] ? ids.filter(function (i) { return i < 199; }) : [])).forEach(function (i) { known[i] = 1; });
+    if (data.deck[m]) ids.forEach(function (i) { if (!known[i]) deck.splice(Math.floor(Math.random() * (deck.length + 1)), 0, i); });
+    data.known[m] = ids.slice();
+    var review = (data.review[m] || []).filter(function (i) { return has[i]; });
+    var take = review.slice(0, REVIEW_MAX), inRound = {};
+    take.forEach(function (i) { inRound[i] = 1; });
+    var guard = 0;
+    while (take.length < 20 && guard++ < 50) {
+      if (!deck.length) { deck = shuffle(ids.slice()); data.lap[m] = (data.lap[m] || 0) + 1; }
+      var i = deck.shift();
+      if (inRound[i] && ids.length > 20) continue; // 이번 판에 이미 있으면 건너뜀(범위가 20개 이하면 중복 허용)
+      take.push(i); inRound[i] = 1;
+    }
+    if (!data.lap[m]) data.lap[m] = 1;
+    data.deck[m] = deck; data.review[m] = review; save(data);
+    return shuffle(take.map(function (i) { return B[i]; }));
+  }
   function start(list, retry) {
-    var qs = shuffle(list.slice()).slice(0, 20);
-    while (!retry && qs.length < 20 && list.length) qs = qs.concat(shuffle(list.slice()).slice(0, 20 - qs.length)); // 범위가 좁으면 반복 출제
+    var qs = retry ? shuffle(list.slice()) : draw(list);
     round = { qs: qs, i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel), name: retry ? "틀린 문제 다시" : modeName(sel) };
     $("qzSetup").hidden = true; $("qzEnd").hidden = true; $("qzPlay").hidden = false; setTop(true); window.scrollTo(0, 0);
     clearInterval(timer); timer = setInterval(tick, 100); tick(); show();
@@ -654,6 +736,9 @@ Object.assign(window.QZN, {
     round.locked = true;
     var q = round.qs[round.i], btns = $("qzOpts").querySelectorAll("button");
     Array.prototype.forEach.call(btns, function (x) { x.disabled = true; if (x.dataset.right) x.classList.add("ok"); });
+    var rv = data.review[round.mode] = data.review[round.mode] || [], at = rv.indexOf(q.idx);
+    if (b.dataset.right) { if (at >= 0) rv.splice(at, 1); } else if (at < 0) rv.push(q.idx);
+    save(data);
     if (b.dataset.right) {
       round.ok++; $("qzScore").textContent = "맞힌 수 " + round.ok;
       setTimeout(next, 350);
