@@ -70,6 +70,9 @@ details.cats[open]>summary::after{content:"접기"}
 .hist td:nth-child(3),.hist td:nth-child(4){text-align:right;white-space:nowrap}
 .hist td:nth-child(2){color:var(--fg2);font-size:13px}
 .spacer{flex:1}
+.deckrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.deckrow .best-s{margin:0}
+.deckrow .ghost{flex:none;min-height:36px;font-size:13px}
 .qz-btn{display:block;width:100%;min-height:58px;border-radius:16px;border:0;background:var(--accent);color:var(--accent-fg);font-size:18px;font-weight:700;cursor:pointer}
 .qz-btn.sub{background:var(--surface);color:var(--fg);border:1px solid var(--line);font-weight:600;font-size:16px;min-height:52px}
 .note{font-size:13px;color:var(--fg2);margin:0}
@@ -120,7 +123,7 @@ details.cats[open]>summary::after{content:"접기"}
       <p class="best-k">최고 기록 <span id="qzMode"></span></p>
       <p class="best-v" id="qzBestV">아직 없음</p>
       <p class="best-s" id="qzBest"></p>
-      <p class="best-s" id="qzDeck"></p>
+      <div class="deckrow"><p class="best-s" id="qzDeck"></p><button type="button" class="ghost" id="qzReset">진행 초기화</button></div>
     </div>
     <details class="cats card"><summary><span>범위 고르기 <span id="qzSelN"></span></span></summary>
       <div class="qz-cats" id="qzCats"></div>
@@ -573,7 +576,37 @@ Object.assign(window.QZN, {
     [12, "메모리 주소", "바이트마다 0부터 붙은 번호", "레지스터 번호", "명령어 번호", "비트마다 붙은 번호", "int 하나는 주소 4개를 차지한다."],
     [12, "'C 문장으로 쓰시오'의 C", "프로그래밍 언어 C", "Code의 약자", "Computer의 약자", "Constant(상수)", "B 언어 다음이라 C."],
     [12, "C에서 <code>=</code>의 뜻", "오른쪽 값을 계산해 왼쪽에 넣는다", "양쪽이 같은지 비교한다", "두 값을 더한다", "왼쪽 값을 오른쪽에 넣는다", "같은지 비교는 ==."],
-    [12, "어셈블리를 C로 쓸 때 레지스터 대신 쓰는 것", "문제가 알려 준 변수 이름", "레지스터 번호 그대로", "메모리 주소", "16진 값", "예 'h는 x21에 있다' → x21 대신 h."]
+    [12, "어셈블리를 C로 쓸 때 레지스터 대신 쓰는 것", "문제가 알려 준 변수 이름", "레지스터 번호 그대로", "메모리 주소", "16진 값", "예 'h는 x21에 있다' → x21 대신 h."],
+    // 199번부터: 추가 문제. 8번째 칸 = 오답 설명 [오답1, 오답2, 오답3]. 기존 번호를 밀지 않도록 항상 맨 뒤에 붙인다.
+    [12, "<code>sw x5, 4(x6)</code>을 실행한 뒤 값이 바뀌는 레지스터", "없다(x5, x6 모두 그대로, 메모리만 바뀐다)", "x5만 바뀐다", "x6만 바뀐다", "x5와 x6 둘 다 바뀐다", "sw는 레지스터 값을 메모리에 쓰기만 한다.", ["x5가 바뀌는 것은 lw x5, 4(x6) 같은 읽기.", "x6은 주소 계산에 읽기만 한다.", "sw는 어느 레지스터도 바꾸지 않는다."]],
+    [12, "<code>add x5, x5, x5</code>를 실행한 뒤 x5", "원래 값의 2배", "원래 값 그대로", "0", "원래 값 + 5", "x5 ← x5 + x5.", ["그대로가 되는 것은 and x5, x5, x5 또는 or x5, x5, x5.", "0이 되는 것은 sub x5, x5, x5 또는 xor x5, x5, x5.", "+5는 addi x5, x5, 5. 여기서 5는 레지스터 번호일 뿐."]],
+    [12, "x6 = 0x00002000일 때 <code>lw x5, 8(x6)</code>이 읽는 주소", "0x00002008", "0x00002020", "0x00002002", "0x00001FF8", "주소 = x6 + 8. 괄호 앞 숫자는 이미 바이트 수다.", ["8 × 4 = 32 = 0x20을 더한 값. 오프셋에 4를 또 곱하면 안 된다.", "8 ÷ 4 = 2는 인덱스(A[2]). 주소에는 바이트 수 8을 더한다.", "0x2000 − 8. 오프셋은 더한다."]],
+    [12, "int 배열 A의 시작 주소가 0x1000일 때 A[3]의 주소", "0x100C", "0x1003", "0x1012", "0x1030", "3 × 4 = 12 = 0xC, 0x1000 + 0xC.", ["인덱스 3을 그대로 더한 값(× 4를 빠뜨림).", "12를 16진 0x12로 잘못 쓴 값. 10진 12 = 0xC.", "0x30 = 48 = A[12]의 오프셋."]],
+    [6, "10진 13을 2진으로", "1101", "1011", "1110", "1001", "13 = 8 + 4 + 1.", ["1011₂ = 11.", "1110₂ = 14.", "1001₂ = 9."]],
+    [6, "10진 100을 16진으로", "0x64", "0x100", "0x46", "0xA0", "100 ÷ 16 = 6 나머지 4.", ["0x100 = 256.", "0x46 = 70(나머지를 위 → 아래로 읽은 실수).", "0xA0 = 160."]],
+    [6, "0x2A를 10진으로", "42", "24", "32", "210", "2 × 16 + 10 = 42.", ["24 = 0x18.", "32 = 0x20.", "2와 A(10)를 10진처럼 이어 붙인 값."]],
+    [7, "2진 0.101₂를 10진으로", "0.625", "0.5", "0.101", "0.75", "0.5 + 0.125 = 0.625.", ["0.5 = 0.1₂.", "자릿값을 10진처럼 읽은 실수.", "0.75 = 0.11₂."]],
+    [7, "10진 0.375를 2진으로", "0.011₂", "0.11₂", "0.0011₂", "0.101₂", "0.375 × 2 = 0.75 → 0, 0.75 × 2 = 1.5 → 1, 0.5 × 2 = 1.0 → 1. 위 → 아래로 0.011.", ["0.11₂ = 0.75.", "0.0011₂ = 0.1875.", "0.101₂ = 0.625(아래 → 위로 읽은 실수)."]],
+    [7, "16진 0x9 + 0x8", "0x11", "0x17", "0x12", "0x10", "9 + 8 = 17 → 16을 빼고 1을 쓰고 1 올림.", ["10진 합 17을 그대로 0x로 쓴 실수.", "16 대신 15를 뺀 실수(17 − 15 = 2).", "0x10 = 16. 실제 합은 17."]],
+    [7, "16진 0x30 − 0x1", "0x2F", "0x29", "0x2E", "0x31", "0에서 빌려 16 − 1 = 15 = F, 앞자리 3 → 2.", ["빌린 값을 10으로 한 실수(10 − 1 = 9).", "빌린 값을 15로 한 실수(15 − 1 = 14).", "0x31은 더한 값."]],
+    [8, "8비트 2의 보수로 −1", "0xFF", "0x81", "0x01", "0xFE", "1 = 0000 0001 → 뒤집기 1111 1110 → +1 → 1111 1111.", ["0x81은 부호-크기 방식의 −1.", "0x01 = +1.", "0xFE = −2(뒤집기만 한 1의 보수)."]],
+    [8, "8비트 2의 보수로 −128", "1000 0000", "1111 1111", "0111 1111", "1000 0001", "맨 앞 자릿값 −128만 1.", ["1111 1111 = −1.", "0111 1111 = 127.", "1000 0001 = −127."]],
+    [8, "4비트 2의 보수로 −5", "1011", "1101", "0101", "1010", "5 = 0101 → 뒤집기 1010 → +1 → 1011.", ["1101 = −3.", "0101 = +5.", "1010 = −6(뒤집기만 한 1의 보수)."]],
+    [8, "0xFFFFFFE0 (부호 있게)", "−32", "−31", "−224", "−16", "꼬리 E0: 0x100 − 0xE0 = 0x20 = 32.", ["−31 = 0xFFFFFFE1.", "−224 = 0xFFFFFF20.", "−16 = 0xFFFFFFF0."]],
+    [8, "8비트 0x80을 32비트로 부호 확장", "0xFFFFFF80", "0x00000080", "0x80000000", "0xFFFFFF7F", "8 = 1000이라 MSB 1 → 앞을 F로, 원래 80은 그대로.", ["0으로 채운 것. MSB가 0일 때의 확장.", "0x80을 왼쪽으로 민 값.", "−129. 원래 숫자를 바꾸면 안 된다."]],
+    [9, "0xF0 and 0x3C", "0x30", "0xFC", "0xCC", "0x3C", "1111 0000 and 0011 1100 = 0011 0000.", ["0xFC는 or 결과.", "0xCC는 xor 결과.", "0x3C는 0xFF와 and했을 때."]],
+    [9, "0x0F or 0x3C", "0x3F", "0x0C", "0x33", "0x4B", "0000 1111 or 0011 1100 = 0011 1111.", ["0x0C는 and 결과.", "0x33은 xor 결과.", "0x4B는 덧셈 결과. or에는 올림이 없다."]],
+    [9, "0xAA xor 0xFF", "0x55", "0xFF", "0xAA", "0x00", "1010 1010을 모두 뒤집으면 0101 0101.", ["0xFF는 or 결과.", "0xAA는 and 결과.", "0x00은 같은 값끼리 xor할 때."]],
+    [10, "0x00000003을 <code>slli</code> 4칸", "0x00000030", "0x00000300", "0x0000000C", "0x00000007", "4칸 = 16진 한 자리 왼쪽.", ["0x300은 8칸(두 자리) 민 값.", "0xC = 3 × 4, 2칸 민 값.", "3 + 4. 시프트는 더하기가 아니다."]],
+    [10, "0x00000100을 <code>srli</code> 8칸", "0x00000001", "0x00010000", "0x00000010", "0x000000FF", "8칸 = 16진 두 자리 오른쪽.", ["0x10000은 왼쪽으로 8칸 민 값.", "0x10은 4칸(한 자리)만 민 값.", "0xFF = 0x100 − 1."]],
+    [10, "0xFFFFFF00을 <code>srai</code> 4칸", "0xFFFFFFF0", "0x0FFFFFF0", "0xFFFFF000", "0xFFFFFF00", "MSB 1이라 새 자리를 F로 채운다.", ["0x0FFFFFF0은 srli 결과(빈칸 0).", "0xFFFFF000은 slli 4칸 결과.", "원래 값 그대로. 시프트하면 바뀐다."]],
+    [10, "3을 왼쪽으로 3칸 시프트한 값", "24", "9", "6", "12", "3 × 2" + S(3) + " = 24.", ["3 × 3. 칸 수를 곱하면 안 된다.", "3 + 3.", "12 = 왼쪽 2칸(× 4)."]],
+    [1, "3 GHz 클럭에서 1 ns 동안 지나가는 사이클 수", "3", "3000", "0.33", "3 × 10" + S(9), "3 × 10" + S(9) + " × 10" + S("−9") + " = 3.", ["3000은 1 µs 동안.", "0.33 ns는 3 GHz의 클럭 주기.", "3 × 10" + S(9) + "은 1 s 동안."]],
+    [1, "클럭 주기 0.5 ns의 클럭 속도", "2 GHz", "500 MHz", "5 GHz", "200 MHz", "1 ÷ (0.5 × 10" + S("−9") + ") = 2 × 10" + S(9) + " Hz.", ["500 MHz의 주기는 2 ns.", "5 GHz의 주기는 0.2 ns.", "200 MHz의 주기는 5 ns."]],
+    [1, "1.25 GHz의 클럭 주기", "800 ps", "1.25 ns", "125 ps", "8 ns", "1000 ÷ 1.25 = 800 ps.", ["1.25 ns는 800 MHz의 주기.", "125 ps는 8 GHz의 주기.", "8 ns는 125 MHz의 주기."]],
+    [1, "2 × 10" + S(9) + " 사이클을 4 GHz로 실행하는 시간", "0.5 s", "2 s", "8 s", "0.5 ns", "시간 = 사이클 수 ÷ 클럭 속도 = 2 × 10" + S(9) + " ÷ (4 × 10" + S(9) + ").", ["2 s는 1 GHz일 때.", "8은 2와 4를 곱한 값. 나눠야 한다.", "단위 착각. 10" + S(9) + "끼리 지워져 s가 남는다."]],
+    [2, "0x0000FFFF에서 1인 비트의 개수", "16개", "4개", "8개", "15개", "F 하나 = 1111(1이 4개), F가 4개.", ["4는 F의 개수.", "8은 0xFF일 때.", "15는 F의 값."]],
+    [5, "2" + S(6), "64", "32", "128", "36", "2" + S(5) + " × 2 = 64.", ["32 = 2" + S(5) + ".", "128 = 2" + S(7) + ".", "6 × 6. 거듭제곱은 2를 6번 곱하는 것."]]
   ];
 
   // 이름 풀이 문제는 표에서 만든다. 문제 번호가 기존 문제 뒤에 붙으므로 기존 오답 설명 번호는 그대로다.
@@ -613,28 +646,36 @@ Object.assign(window.QZN, {
     return out;
   }
   INS.forEach(function (x, i) {
+    if (x[0] === x[1]) return; // add·and·or 처럼 이름이 곧 영어인 것은 답이 문제에 드러나서 뺀다
     var d = pick3(INS, i), ans = function (k) { return INS[k][1] + " · " + INS[k][2]; };
     GEN_NOTES[B.length] = d.map(function (k) { return "그건 " + INS[k][0] + "의 풀이."; });
     B.push([13, "<code>" + x[0] + "</code>의 영어 풀이와 뜻", ans(i), ans(d[0]), ans(d[1]), ans(d[2]), x[0] + " = " + x[1] + ". " + x[2] + "."]);
+    if (x[1].indexOf(x[0]) === 0) return; // subtract → sub 처럼 영어가 이름으로 시작하면 역방향 문제는 답이 드러나서 뺀다
     GEN_NOTES[B.length] = d.map(function (k) { return INS[k][0] + "는 " + INS[k][1] + "(" + INS[k][2] + ")."; });
     B.push([13, "'" + x[1] + "'(" + x[2] + ")인 명령어", "<code>" + x[0] + "</code>", "<code>" + INS[d[0]][0] + "</code>", "<code>" + INS[d[1]][0] + "</code>", "<code>" + INS[d[2]][0] + "</code>", "이름의 글자가 영어 풀이의 첫 글자들이다."]);
   });
+  // 약자(MSB, rd …)는 "영어 풀이 · 뜻"을 묻고, 한글로 소리만 옮긴 말(더블워드, 오프셋 …)은 영어가 답을 드러내므로 뜻만 묻는다
+  var ABBR = { "MSB": 1, "LSB": 1, "KiB": 1, "rd": 1, "rs1": 1, "rs2": 1, "imm": 1 };
   TERMS.forEach(function (x, i) {
-    var d = pick3(TERMS, i), ans = function (k) { return TERMS[k][1] + " · " + TERMS[k][2]; };
-    GEN_NOTES[B.length] = d.map(function (k) { return "그건 " + TERMS[k][0] + "의 풀이."; });
-    B.push([14, "<b>" + x[0] + "</b>의 영어(원래 말)와 뜻", ans(i), ans(d[0]), ans(d[1]), ans(d[2]), x[0] + " = " + x[1] + ". " + x[2] + "."]);
+    var d = pick3(TERMS, i), ab = ABBR[x[0]];
+    var ans = function (k) { return ab ? TERMS[k][1] + " · " + TERMS[k][2] : TERMS[k][2]; };
+    GEN_NOTES[B.length] = d.map(function (k) { return "그건 " + TERMS[k][0] + "(" + TERMS[k][1] + ")의 뜻."; });
+    B.push([14, ab ? "<b>" + x[0] + "</b>의 영어 풀이와 뜻" : "<b>" + x[0] + "</b>의 뜻", ans(i), ans(d[0]), ans(d[1]), ans(d[2]), x[0] + " = " + x[1] + ". " + x[2] + "."]);
   });
 
   B.forEach(function (q, i) { q.idx = i; });
   root.qzBank = B; // 점검용(읽기만)
   var NOTES = window.QZN || {}; // 오답 보기 설명: { 문제번호: [오답1 설명, 오답2 설명, 오답3 설명] }
   Object.keys(GEN_NOTES).forEach(function (k) { if (!NOTES[k]) NOTES[k] = GEN_NOTES[k]; });
-  function noteOf(q, opt) { var k = [q[3], q[4], q[5]].indexOf(opt), n = NOTES[q.idx]; return k >= 0 && n && n[k] ? n[k] : ""; }
+  function noteOf(q, opt) { var k = [q[3], q[4], q[5]].indexOf(opt), n = q[7] || NOTES[q.idx]; return k >= 0 && n && n[k] ? n[k] : ""; }
   var KEY = "cr_quiz_v1";
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
   function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
   var data = load(); data.best = data.best || {}; data.hist = data.hist || []; data.sel = data.sel || [];
   data.deck = data.deck || {}; data.review = data.review || {}; data.lap = data.lap || {}; // 범위별 남은 덱, 복습 대기, 바퀴 수
+  var BANK_V = 300; // 문제 번호 체계가 바뀌면 올린다. 바뀌면 덱·복습만 새로 시작(최고 기록은 유지)
+  if (data.bankV !== BANK_V) { data.deck = {}; data.review = {}; data.lap = {}; data.known = {}; data.bankV = BANK_V; save(data); }
+  function resetProgress(m) { delete data.deck[m]; delete data.review[m]; delete data.lap[m]; if (data.known) delete data.known[m]; save(data); }
   var REVIEW_MAX = 5; // 한 판에 섞는 복습 문제 최대 수
   var $ = function (id) { return document.getElementById(id); };
   var sel = data.sel.slice();
@@ -665,7 +706,7 @@ Object.assign(window.QZN, {
       $("qzBest").textContent = bst ? "이 기록을 넘어 보세요. 점수가 같으면 시간이 짧은 쪽이 이깁니다." : "첫 판을 풀면 여기에 목표가 생깁니다.";
       $("qzSelN").textContent = sel.length && sel.length < CATS.length ? "(" + sel.length + "개)" : "(전체)";
       var m = modeKey(sel), total = pool(sel).length, left = (data.deck[m] || []).length, rv = (data.review[m] || []).length;
-      if (data.deck[m]) { var kn = {}; ((data.known || {})[m] || pool(sel).map(function (q) { return q.idx; }).filter(function (i) { return i < 199; })).forEach(function (i) { kn[i] = 1; }); left += pool(sel).filter(function (q) { return !kn[q.idx]; }).length; }
+      if (data.deck[m]) { var kn = {}; ((data.known || {})[m] || []).forEach(function (i) { kn[i] = 1; }); left += pool(sel).filter(function (q) { return !kn[q.idx]; }).length; }
       var seen = data.deck[m] ? total - left : 0, lap = data.lap[m] || 1;
       if ($("qzDeck")) $("qzDeck").textContent = lap + "바퀴째 " + seen + " / " + total + "문제 봄" + (rv ? " · 복습 대기 " + rv + "개" : "");
     } else $("qzBest").innerHTML = "범위: <b>" + modeName(sel) + "</b> · 최고 기록: " + (bst ? "<b>" + bst.score + " / 20 · " + fmt(bst.ms) + "</b>" : "아직 없음");
@@ -689,7 +730,7 @@ Object.assign(window.QZN, {
     var deck = (data.deck[m] || []).filter(function (i) { return has[i]; });
     // 바퀴 도중에 새 문제가 추가됐으면 남은 덱의 무작위 자리에 끼워 이번 바퀴에 나오게 한다
     data.known = data.known || {};
-    var known = {}; (data.known[m] || (data.deck[m] ? ids.filter(function (i) { return i < 199; }) : [])).forEach(function (i) { known[i] = 1; });
+    var known = {}; (data.known[m] || []).forEach(function (i) { known[i] = 1; });
     if (data.deck[m]) ids.forEach(function (i) { if (!known[i]) deck.splice(Math.floor(Math.random() * (deck.length + 1)), 0, i); });
     data.known[m] = ids.slice();
     var review = (data.review[m] || []).filter(function (i) { return has[i]; });
@@ -789,6 +830,10 @@ Object.assign(window.QZN, {
   }
 
   $("qzStart").addEventListener("click", function () { start(pool(sel)); });
+  if ($("qzReset")) $("qzReset").addEventListener("click", function () {
+    if (!confirm("범위 「" + modeName(sel) + "」의 바퀴 진행과 복습 대기를 처음부터 다시 시작할까요? (최고 기록과 최근 기록은 그대로입니다.)")) return;
+    resetProgress(modeKey(sel)); paintSetup();
+  });
   $("qzNext").addEventListener("click", next);
   $("qzQuit").addEventListener("click", function () { clearInterval(timer); round = null; $("qzPlay").hidden = true; $("qzSetup").hidden = false; paintSetup(); setTop(false); });
   document.addEventListener("keydown", function (e) {
