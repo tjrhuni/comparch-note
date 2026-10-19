@@ -7,8 +7,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="컴구 노트">
-<meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F6F5F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
 <meta name="robots" content="noindex, nofollow">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -19,29 +19,29 @@
 
 /* 레이아웃: 왼쪽 목차(넓은 화면) + 한 번에 한 단원만 보여 주는 읽기 칸. 아이패드 세로·폰에서는 목차가 위에서 내려오는 시트 */
 :root{
-  --bg:#f5f6f8; --surface:#ffffff; --fg:#1b2130; --fg2:#566074; --line:#dfe3ea;
-  --accent:#2b5f8e; --accent-soft:#e7eef6;
-  --easy:#2f6a52; --easy-soft:#e8f3ee;
-  --trap:#a2412f; --trap-soft:#fbede9;
-  --exam:#86621a; --exam-soft:#f8f1df;
-  --code-bg:#eef1f5;
+  --bg:#F6F5F1; --surface:#FFFFFF; --fg:#1F2328; --fg2:#57606A; --line:#DCDAD3;
+  --accent:#0B5CAD; --accent-soft:#E6EEF8;
+  --easy:#00704F; --easy-soft:#E3F3EC;
+  --trap:#B3401A; --trap-soft:#FBEAE3;
+  --exam:#7A5200; --exam-soft:#FFF4D6;
+  --code-bg:#EFEEE9; --hl:#FFE9A8; --hl-edge:#D9A400;
   --sans:"Pretendard Variable","Pretendard",-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --fs:18px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#14171c; --surface:#1c2027; --fg:#e4e7ec; --fg2:#9aa3b2; --line:#2c323c;
-    --accent:#8fb6dd; --accent-soft:#1f2c3a;
-    --easy:#8fcfb0; --easy-soft:#1a2a23; --trap:#efa08f; --trap-soft:#33201c;
-    --exam:#e0c072; --exam-soft:#2e2715; --code-bg:#232832; color-scheme:dark;
+    --bg:#15171A; --surface:#1D2024; --fg:#E6E8EB; --fg2:#A4ACB7; --line:#2E333A;
+    --accent:#7DB3EC; --accent-soft:#1E2B3A;
+    --easy:#5CC9A0; --easy-soft:#17291F; --trap:#F09A76; --trap-soft:#33211A;
+    --exam:#E8C170; --exam-soft:#2C2616; --code-bg:#24282D; --hl:#4A3D17; --hl-edge:#C9A24A; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#14171c; --surface:#1c2027; --fg:#e4e7ec; --fg2:#9aa3b2; --line:#2c323c;
-  --accent:#8fb6dd; --accent-soft:#1f2c3a;
-  --easy:#8fcfb0; --easy-soft:#1a2a23; --trap:#efa08f; --trap-soft:#33201c;
-  --exam:#e0c072; --exam-soft:#2e2715; --code-bg:#232832; color-scheme:dark;
+  --bg:#15171A; --surface:#1D2024; --fg:#E6E8EB; --fg2:#A4ACB7; --line:#2E333A;
+  --accent:#7DB3EC; --accent-soft:#1E2B3A;
+  --easy:#5CC9A0; --easy-soft:#17291F; --trap:#F09A76; --trap-soft:#33211A;
+  --exam:#E8C170; --exam-soft:#2C2616; --code-bg:#24282D; --hl:#4A3D17; --hl-edge:#C9A24A; color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
