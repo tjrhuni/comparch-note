@@ -7,32 +7,35 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="암기 퀴즈">
-<meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#101318" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F6F5F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
 <meta name="robots" content="noindex, nofollow">
 <title>컴구 암기 퀴즈</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="../icon-180.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{
-  --bg:#f5f6f8; --surface:#ffffff; --fg:#1b2130; --fg2:#566074; --line:#dfe3ea;
-  --accent:#2b5f8e; --accent-fg:#ffffff; --accent-soft:#e7eef6;
-  --easy:#2f6a52; --easy-soft:#e8f3ee; --trap:#a2412f; --trap-soft:#fbede9;
+  --bg:#F6F5F1; --surface:#FFFFFF; --fg:#1F2328; --fg2:#57606A; --line:#DCDAD3;
+  --accent:#0B5CAD; --accent-fg:#FFFFFF; --accent-soft:#E6EEF8;
+  --easy:#00704F; --easy-soft:#E3F3EC; --trap:#B3401A; --trap-soft:#FBEAE3; --hook:#7A5200; --hook-soft:#FFF4D6;
+  --hl:#FFE9A8; --hl-edge:#D9A400;
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#101318; --surface:#181c22; --fg:#e4e7ec; --fg2:#98a1b0; --line:#2a3039;
-    --accent:#8fb6dd; --accent-fg:#101318; --accent-soft:#1d2a38;
-    --easy:#8fcfb0; --easy-soft:#16261f; --trap:#efa08f; --trap-soft:#301d19;
+    --bg:#15171A; --surface:#1D2024; --fg:#E6E8EB; --fg2:#A4ACB7; --line:#2E333A;
+    --accent:#7DB3EC; --accent-fg:#10161D; --accent-soft:#1E2B3A;
+    --easy:#5CC9A0; --easy-soft:#17291F; --trap:#F09A76; --trap-soft:#33211A; --hook:#E8C170; --hook-soft:#2C2616;
+    --hl:#4A3D17; --hl-edge:#C9A24A;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#101318; --surface:#181c22; --fg:#e4e7ec; --fg2:#98a1b0; --line:#2a3039;
-  --accent:#8fb6dd; --accent-fg:#101318; --accent-soft:#1d2a38;
-  --easy:#8fcfb0; --easy-soft:#16261f; --trap:#efa08f; --trap-soft:#301d19;
+  --bg:#15171A; --surface:#1D2024; --fg:#E6E8EB; --fg2:#A4ACB7; --line:#2E333A;
+    --accent:#7DB3EC; --accent-fg:#10161D; --accent-soft:#1E2B3A;
+    --easy:#5CC9A0; --easy-soft:#17291F; --trap:#F09A76; --trap-soft:#33211A; --hook:#E8C170; --hook-soft:#2C2616;
+    --hl:#4A3D17; --hl-edge:#C9A24A;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
