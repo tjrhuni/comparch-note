@@ -375,6 +375,12 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
 .dr-sol ol{margin:0;padding-left:1.3em}
 .dr-sol li{margin:.5em 0;line-height:1.7}
 .dr-score{font-size:13px;color:var(--fg2)}
+.dr-pad{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.dr-p{font:inherit;font-size:13px;font-weight:600;min-height:38px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg2);cursor:pointer}
+.dr-p[data-p="toggle"]{color:var(--accent);border-color:var(--accent)}
+.dr-p[data-p="clear"]{margin-left:auto;color:var(--trap)}
+.dr-scr{margin:0 0 12px;border-radius:12px}
+.dr-p[hidden],.dr-scr[hidden]{display:none!important}
 </style>
 <section class="lesson" id="home" data-ch="0" data-title="시작하기">
   <p class="eyebrow">COMP0411 중간고사 · 10월 21일(수) 10:30</p>
@@ -3284,6 +3290,167 @@ sw   x9, (나)(x22)</pre>
   document.addEventListener("lesson:shown", function (e) { if (e.detail === "wrongs") renderWrongs(); });
 })();
 
+/* 기초 · 6 무한 연습기: 유형별로 새 숫자 문제를 만들고, 규칙 1~4 하나로 단계 풀이를 보여 준다 */
+(function () {
+  var box = document.getElementById("dr");
+  if (!box) return;
+  var R = function (a, b) { return a + Math.floor(Math.random() * (b - a + 1)); };
+  var H = "0123456789ABCDEF";
+  function hx(v, d) { var s = v.toString(16).toUpperCase(); while (s.length < (d || 1)) s = "0" + s; return s; }
+  function bn(v, bits) { var s = v.toString(2); while (s.length < bits) s = "0" + s; return s.replace(/(.{4})(?=.)/g, "$1 ").replace(/^(.*)$/, "$1"); }
+  function grp(s) { return s.replace(/\B(?=(\d{4})+$)/g, " "); }
+  function sub2(s) { return s + "<sub>2</sub>"; }
+  function sup(n) { return "<sup>" + n + "</sup>"; }
+  function num(v) { return v.toLocaleString("en-US"); }
+  function tbl(head, rows) { return '<div class="tbl"><table><thead><tr>' + head.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (x) { return "<td>" + x + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>"; }
+  // 숫자 뒤 조사: 끝 글자 읽는 소리에 받침이 있으면 을, 없으면 를 (0 영, 1 일, 3 삼, 6 육, 7 칠, 8 팔 = 받침)
+  function eul(s) { var c = String(s).replace(/<[^>]+>/g, "").slice(-1); return "013678".indexOf(c) >= 0 ? "을" : "를"; }
+  function lap(n) { return "0x1" + new Array(n / 4 + 1).join("0"); }
+  // 꼬리: 앞의 F를 떼고(최소 1자리 남김) 남은 자리 수 d, 꼬리 값
+  function tail(hexs) { var t = hexs.replace(/^F+/, ""); if (!t.length) t = "F"; return { s: t, d: t.length, v: parseInt(t, 16) }; }
+
+  var T = [
+    { id: "d2b", name: "10진 → 2진", make: function () {
+      var x = R(20, 255), rows = [], q = x;
+      while (q > 0) { rows.push([q + " ÷ 2", Math.floor(q / 2), q % 2]); q = Math.floor(q / 2); }
+      var b = x.toString(2), b8 = bn(x, 8);
+      var parts = [], rest = x; [128, 64, 32, 16, 8, 4, 2, 1].forEach(function (p) { if (rest >= p) { parts.push(p); rest -= p; } });
+      return { q: "10진수 <b>" + x + "</b>" + eul(x) + " 8비트 2진으로 쓰시오.", a: sub2(b8),
+        steps: ["몫이 <b>0</b>이 될 때까지 2로 나눈다." + tbl(["나눗셈", "몫", "나머지"], rows),
+          "나머지를 <b>아래 → 위</b>로 읽는다(처음 나머지 = 소수점 바로 왼쪽 1의 자리): " + sub2(b) + ".",
+          "8비트로 맞추려 앞을 0으로 채운다: " + sub2(b8) + ".",
+          "방향 없는 방법(자릿값 빼기): " + x + " = " + parts.join(" + ") + " → 그 자리에 1, 나머지 0 → " + sub2(b8) + "."] }; } },
+    { id: "d2h", name: "10진 → 16진", make: function () {
+      var x = R(100, 4095), rows = [], q = x;
+      while (q > 0) { var r = q % 16; rows.push([q + " ÷ 16", Math.floor(q / 16), r + (r > 9 ? " (" + H[r] + ")" : "")]); q = Math.floor(q / 16); }
+      var h = hx(x), h8 = hx(x, 8), ds = h.split("").reverse();
+      var chk = h.split("").map(function (c, i) { var p = Math.pow(16, h.length - 1 - i); return parseInt(c, 16) + " × " + p; }).join(" + ");
+      return { q: "10진수 <b>" + x + "</b>" + eul(x) + " 32비트 값으로 보고 16진 8자리로 쓰시오.", a: "0x" + h8,
+        steps: ["몫이 <b>0</b>이 될 때까지 16으로 나눈다. 나머지 10~15는 A~F." + tbl(["나눗셈", "몫", "나머지"], rows),
+          "나머지를 <b>아래 → 위</b>로 읽는다: 0x" + h + ".",
+          "32비트 = 16진 8자리라 앞을 0으로 채운다: 0x" + h8 + ".",
+          "검산: " + chk + " = " + x + "."] }; } },
+    { id: "f2b", name: "소수 → 2진", make: function () {
+      var den = [8, 16, 32, 64][R(0, 3)], k = R(1, den - 1); if (k % 2 === 0) k += 1; var x = k / den, rows = [], f = x, bits = "";
+      while (f > 0 && rows.length < 8) { var y = f * 2, ip = y >= 1 ? 1 : 0; rows.push([String(f) + " × 2", String(y), ip, String(y - ip)]); bits += ip; f = y - ip; }
+      var chk = bits.split("").map(function (c, i) { return c === "1" ? String(Math.pow(2, -(i + 1))) : null; }).filter(Boolean).join(" + ");
+      return { q: "10진 소수 <b>" + x + "</b>" + eul(x) + " 2진으로 쓰시오.", a: sub2("0." + bits),
+        steps: ["2를 곱하고 <b>정수 부분</b>을 적은 뒤, <b>소수 부분만</b> 다시 곱한다. 소수 부분이 0이면 멈춤." + tbl(["곱하기", "결과", "정수 부분", "남은 소수"], rows),
+          "정수 부분을 <b>위 → 아래</b>로 읽는다(처음 = 소수점 바로 오른쪽 0.5의 자리): " + sub2("0." + bits) + ".",
+          "검산: " + chk + " = " + x + "."] }; } },
+    { id: "neg", name: "음수 → 2의 보수", make: function () {
+      var n = [8, 12, 16, 32][R(0, 3)], lim = Math.min(Math.pow(2, n - 1), 3000), x = R(2, lim), xh = hx(x), d = xh.length;
+      var t = Math.pow(16, d) - x, th = hx(t, d), w = n / 4, ans = (new Array(w - d + 1).join("F")) + th;
+      return { q: "<b>−" + x + "</b>" + eul(x) + " " + n + "비트 2의 보수로 나타내 16진 " + w + "자리로 쓰시오.", a: "0x" + ans,
+        steps: ["범위 확인: " + n + "비트는 −2" + sup(n - 1) + " ~ 2" + sup(n - 1) + " − 1이라 −" + x + "은 들어간다.",
+          "크기를 16진으로: " + x + " = 0x" + xh + " (" + d + "자리).",
+          "규칙 1: −x 모양 = 한 바퀴 − x. 꼬리 " + d + "자리만 보면 <b>0x1" + new Array(d + 1).join("0") + " − 0x" + xh + " = 0x" + th + "</b> (10진으로 " + num(Math.pow(16, d)) + " − " + x + " = " + t + ").",
+          (w > d ? "나머지 앞 " + (w - d) + "자리는 F로 채운다(음수라 위쪽은 전부 1): 0x" + ans + "." : "자리 수가 딱 맞아 그대로: 0x" + ans + "."),
+          "검산: 0x" + ans + " + 0x" + hx(x, w) + " = " + lap(n) + " → " + n + "비트를 넘친 1을 버리면 0. 더해서 0이니 −" + x + "."] }; } },
+    { id: "read", name: "2의 보수 → 10진", make: function () {
+      var n = [8, 12, 16, 32][R(0, 3)], w = n / 4, half = Math.pow(2, n - 1), v = Math.random() < 0.75 ? -R(1, Math.min(half, 3000)) : R(1, Math.min(half - 1, 3000));
+      var pat = v < 0 ? Math.pow(2, n) + v : v, ph = hx(pat, w), lead = parseInt(ph[0], 16);
+      var steps = ["맨 앞 16진 숫자 " + ph[0] + " = " + bn(lead, 4) + " → MSB가 " + (lead >= 8 ? "<b>1</b>이라 음수" : "<b>0</b>이라 양수") + "."];
+      if (v < 0) { var tl = tail(ph), m = Math.pow(16, tl.d) - tl.v;
+        steps.push("규칙 1: 값 = 모양 − 한 바퀴 = −(한 바퀴까지 남은 양). 앞의 F를 떼고 꼬리 0x" + tl.s + "만 본다.");
+        steps.push("남은 양 = 0x1" + new Array(tl.d + 1).join("0") + " − 0x" + tl.s + " = " + num(Math.pow(16, tl.d)) + " − " + tl.v + " = <b>" + m + "</b>.");
+        steps.push("음수이므로 <b>" + v + "</b>. (무부호로 읽으면 " + num(pat) + "이고, 그 값 − 2" + sup(n) + " = " + v + ".)");
+      } else steps.push("양수라 그대로 읽는다: " + ph.replace(/^0+/, "").split("").map(function (c, i, a) { return parseInt(c, 16) + " × " + Math.pow(16, a.length - 1 - i); }).join(" + ") + " = <b>" + v + "</b>.");
+      return { q: n + "비트 2의 보수 <b>0x" + ph + "</b>" + eul(ph) + " 10진으로 쓰시오.", a: String(v).replace("-", "−"), steps: steps.map(function (s) { return s.replace(/(^|[^0-9A-Za-z_])-(\d)/g, "$1−$2"); }) }; } },
+    { id: "ext", name: "부호 확장 12 → 32", make: function () {
+      var p = Math.random() < 0.65 ? R(0x800, 0xFFF) : R(0x010, 0x7FF), ph = hx(p, 3), neg = p >= 0x800, fill = neg ? "FFFFF" : "00000", v = neg ? p - 4096 : p;
+      var steps = ["맨 앞 숫자 " + ph[0] + " = " + bn(parseInt(ph[0], 16), 4) + " → MSB " + (neg ? "1" : "0") + ".",
+        "규칙 4: 원래 " + ph + "는 그대로 두고, 늘어난 왼쪽 5자리를 MSB로 채운다(" + (neg ? "1이면 F" : "0이면 0") + "): <b>0x" + fill + ph + "</b>. +1은 없다(값이 그대로여야 하므로)."];
+      if (neg) { var tl = tail(ph), m = Math.pow(16, tl.d) - tl.v; steps.push("값: 꼬리 0x" + tl.s + " → 0x1" + new Array(tl.d + 1).join("0") + " − 0x" + tl.s + " = " + m + " → <b>−" + m + "</b>."); }
+      else steps.push("값: 양수라 그대로 " + v + ".");
+      return { q: "12비트 즉시값 <b>0x" + ph + "</b>" + eul(ph) + " 32비트로 부호 확장해 16진 8자리로 쓰고, 10진 값을 쓰시오.", a: "0x" + fill + ph + " = " + String(v).replace("-", "−"), steps: steps }; } },
+    { id: "uns", name: "무부호로 읽기", make: function () {
+      var d = R(2, 3), tv = R(Math.pow(16, d - 1), Math.pow(16, d) - 1), th = hx(tv, d), ph = new Array(8 - d + 1).join("F") + th, k = Math.pow(16, d) - tv;
+      return { q: "32비트 값 <b>0x" + ph + "</b>" + eul(ph) + " (가) 무부호 수로, (나) 부호 있는 수로 읽으시오.", a: "(가) 2" + sup(32) + " − " + k + " = " + num(4294967296 - k) + ", (나) −" + k,
+        steps: ["규칙 1: 앞의 F를 떼고 꼬리 0x" + th + "만 본다. 한 바퀴(0x1 0000 0000)까지 남은 양 = 0x1" + new Array(d + 1).join("0") + " − 0x" + th + " = " + num(Math.pow(16, d)) + " − " + tv + " = <b>" + k + "</b>.",
+          "(가) 무부호: 모양 그대로 = 한 바퀴 − 남은 양 = 2" + sup(32) + " − " + k + " = 4,294,967,296 − " + k + " = <b>" + num(4294967296 - k) + "</b>. (최댓값 2" + sup(32) + " − 1을 기준으로 쓰지 말 것: 거기서는 " + (k - 1) + "을 빼야 해 ±1이 헷갈린다.)",
+          "(나) 부호 있게: 맨 앞 F라 음수, 값 = −(남은 양) = <b>−" + k + "</b>."] }; } },
+    { id: "add", name: "16진 덧셈", make: function () {
+      var a = R(0x100, 0x8FF), b = R(0x100, 0x7FF), s = a + b, ah = hx(a, 3), bh = hx(b, 3), rows = [], c = 0;
+      for (var i = 2; i >= 0; i--) { var x = parseInt(ah[i], 16), y = parseInt(bh[i], 16), t = x + y + c, over = t >= 16;
+        rows.push([["1의 자리", "16의 자리", "256의 자리"][2 - i], ah[i] + " + " + bh[i] + (c ? " + 올림 1" : "") + " = " + t, over ? t + " − 16 = " + (t - 16) + " → " + H[t - 16] : H[t], over ? 1 : 0]); c = over ? 1 : 0; }
+      if (c) rows.push(["4096의 자리", "올림 1", "1", 0]);
+      return { q: "16진 <b>0x" + ah + " + 0x" + bh + "</b>" + eul(bh) + " 계산하시오.", a: "0x" + hx(s),
+        steps: ["오른쪽 자리부터 10진으로 더한다. <b>16 이상이면 16을 빼서 쓰고 1을 올린다</b>(규칙 2: 한 바퀴 = 16, 15 아님)." + tbl(["자리", "더하기", "쓸 숫자", "올림"], rows),
+          "왼쪽부터 이어 읽으면 0x" + hx(s) + ".", "검산: " + a + " + " + b + " = " + s + " = 0x" + hx(s) + "."] }; } },
+    { id: "sub", name: "16진 뺄셈", make: function () {
+      var a = R(0x400, 0xFFF), b = R(0x100, a - 0x50), s = a - b, ah = hx(a, 3), bh = hx(b, 3), rows = [], br = 0;
+      for (var i = 2; i >= 0; i--) { var x = parseInt(ah[i], 16) - br, y = parseInt(bh[i], 16), need = x < y;
+        rows.push([["1의 자리", "16의 자리", "256의 자리"][2 - i], ah[i] + (br ? " − 빌려 준 1 = " + x : ""), need ? "빌림: " + x + " + 16 = " + (x + 16) : "빌림 없음", (need ? x + 16 : x) + " − " + y + " = " + ((need ? x + 16 : x) - y) + " → " + H[(need ? x + 16 : x) - y]]); br = need ? 1 : 0; }
+      return { q: "16진 <b>0x" + ah + " − 0x" + bh + "</b>" + eul(bh) + " 계산하시오.", a: "0x" + hx(s),
+        steps: ["오른쪽 자리부터 뺀다. 위 숫자가 작으면 앞자리에서 1을 빌려 <b>16을 더한다</b>(규칙 2: 앞자리 1 = 0x10 = 16, 15 아님). 빌려 준 자리는 1 줄어든다." + tbl(["자리", "위 숫자", "빌림", "빼기"], rows),
+          "왼쪽부터 이어 읽으면 0x" + hx(s) + ".", "검산: " + a + " − " + b + " = " + s + " = 0x" + hx(s) + ". 거꾸로 0x" + hx(s) + " + 0x" + bh + " = 0x" + ah + "."] }; } }
+  ];
+
+  var KEY = "cr_drill_v1", st;
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  st.sc = st.sc || {}; st.sel = st.sel || "mix";
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var cur = null;
+
+  box.innerHTML = '<div class="dr-types"></div><div class="dr-card"><p class="dr-type"></p><p class="dr-q"></p>' +
+    '<div class="dr-pad"><button type="button" class="dr-p" data-p="toggle"></button><button type="button" class="dr-p" data-p="more">늘리기</button><button type="button" class="dr-p" data-p="less">줄이기</button><button type="button" class="dr-p" data-p="clear">초기화</button></div>' +
+    '<div class="scratch dr-scr" data-sig="scr:kb6:drill" aria-label="연습기 연습장"></div>' +
+    '<div class="dr-btns"><button type="button" class="dr-b" data-a="new">새 문제</button><button type="button" class="dr-b" data-a="sol">풀이 보기</button></div>' +
+    '<div class="dr-sol" hidden></div><div class="dr-mark" hidden><button type="button" class="dr-b ok" data-a="o">맞음</button><button type="button" class="dr-b no" data-a="x">틀림</button></div></div>' +
+    '<p class="dr-score"></p>';
+  var types = box.querySelector(".dr-types");
+  function paintTypes() {
+    types.innerHTML = [{ id: "mix", name: "섞어서" }].concat(T).map(function (t) {
+      var s = st.sc[t.id], sc = s ? ' <small>' + s.o + "/" + (s.o + s.x) + "</small>" : "";
+      return '<button type="button" class="dr-t" data-t="' + t.id + '" aria-pressed="' + (st.sel === t.id) + '">' + t.name + sc + "</button>";
+    }).join("");
+    var all = T.reduce(function (a, t) { var s = st.sc[t.id] || { o: 0, x: 0 }; return { o: a.o + s.o, x: a.x + s.x }; }, { o: 0, x: 0 });
+    box.querySelector(".dr-score").textContent = "지금까지 맞음 " + all.o + " · 틀림 " + all.x + " (유형 버튼의 숫자 = 맞음/푼 수)";
+  }
+  function next() {
+    var t = st.sel === "mix" ? T[R(0, T.length - 1)] : T.filter(function (x) { return x.id === st.sel; })[0];
+    var p = t.make(); cur = { t: t, p: p };
+    box.querySelector(".dr-type").textContent = t.name;
+    box.querySelector(".dr-q").innerHTML = p.q;
+    var sol = box.querySelector(".dr-sol");
+    sol.innerHTML = '<p class="dr-a">답: <b>' + p.a + "</b></p><ol>" + p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + "</ol>";
+    sol.hidden = true; box.querySelector(".dr-mark").hidden = true;
+  }
+  // 연습장: 펼치기/닫기, 늘리기/줄이기(높이 기억), 초기화(이 연습장의 필기만 지움, 되돌리기 가능)
+  var PAD_MIN = 220, PAD_STEP = 200, PAD_MAX = 1600;
+  if (st.pad === undefined) st.pad = 360;
+  function paintPad() {
+    var pad = box.querySelector(".dr-scr"), open = st.pad > 0;
+    pad.hidden = !open; if (open) pad.style.height = st.pad + "px";
+    box.querySelector('[data-p="toggle"]').textContent = open ? "연습장 닫기" : "연습장 펼치기";
+    Array.prototype.forEach.call(box.querySelectorAll('[data-p="more"],[data-p="less"],[data-p="clear"]'), function (x) { x.hidden = !open; });
+  }
+  function padAct(a) {
+    if (a === "toggle") st.pad = st.pad > 0 ? -Math.abs(st.pad) : Math.max(PAD_MIN, Math.abs(st.pad) || 360);
+    else if (a === "more") st.pad = Math.min(PAD_MAX, st.pad + PAD_STEP);
+    else if (a === "less") st.pad = Math.max(PAD_MIN, st.pad - PAD_STEP);
+    else if (a === "clear") {
+      if (!window.caInkClearSig) return;
+      if (!confirm("연습장에 쓴 필기를 모두 지울까요? (필기 도구의 되돌리기로 복구할 수 있습니다)")) return;
+      window.caInkClearSig("scr:kb6:drill");
+      return;
+    }
+    save(); paintPad();
+  }
+  box.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.p) { padAct(b.dataset.p); return; }
+    if (b.dataset.t) { st.sel = b.dataset.t; save(); paintTypes(); next(); return; }
+    if (b.dataset.a === "new") next();
+    else if (b.dataset.a === "sol") { box.querySelector(".dr-sol").hidden = false; box.querySelector(".dr-mark").hidden = false; }
+    else if (b.dataset.a === "o" || b.dataset.a === "x") {
+      var s = st.sc[cur.t.id] = st.sc[cur.t.id] || { o: 0, x: 0 }; s[b.dataset.a]++; save(); paintTypes(); next();
+    }
+  });
+  paintTypes(); paintPad(); next();
+})();
+
 /* perfect-freehand 1.2.2 · MIT License · Copyright (c) 2021 Stephen Ruiz Ltd · https://github.com/steveruizok/perfect-freehand */
 var PF=(function(){
 function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[1]]}function l(e,t){return[e[0]+t[0],e[1]+t[1]]}function a(e,t){return[e[0]-t[0],e[1]-t[1]]}function b(e,t){return[e[0]*t,e[1]*t]}function he(e,t){return[e[0]/t,e[1]/t]}function R(e){return[e[1],-e[0]]}function B(e,t){return e[0]*t[0]+e[1]*t[1]}function ue(e,t){return e[0]===t[0]&&e[1]===t[1]}function ge(e){return Math.hypot(e[0],e[1])}function de(e){return e[0]*e[0]+e[1]*e[1]}function A(e,t){return de(a(e,t))}function G(e){return he(e,ge(e))}function ie(e,t){return Math.hypot(e[1]-t[1],e[0]-t[0])}function L(e,t,u){let x=Math.sin(u),h=Math.cos(u),y=e[0]-t[0],n=e[1]-t[1],f=y*h-n*x,d=y*x+n*h;return[f+t[0],d+t[1]]}function K(e,t,u){return l(e,b(a(t,e),u))}function ee(e,t,u){return l(e,b(t,u))}var{min:C,PI:xe}=Math,pe=.275,V=xe+1e-4;function ce(e,t={}){let{size:u=16,smoothing:x=.5,thinning:h=.5,simulatePressure:y=!0,easing:n=r=>r,start:f={},end:d={},last:D=!1}=t,{cap:S=!0,easing:j=r=>r*(2-r)}=f,{cap:q=!0,easing:c=r=>--r*r*r+1}=d;if(e.length===0||u<=0)return[];let p=e[e.length-1].runningLength,g=f.taper===!1?0:f.taper===!0?Math.max(u,p):f.taper,T=d.taper===!1?0:d.taper===!0?Math.max(u,p):d.taper,te=Math.pow(u*x,2),_=[],M=[],H=e.slice(0,10).reduce((r,i)=>{let o=i.pressure;if(y){let s=C(1,i.distance/u),W=C(1,1-s);o=C(1,r+(W-r)*(s*pe))}return(r+o)/2},e[0].pressure),m=$(u,h,e[e.length-1].pressure,n),U,X=e[0].vector,z=e[0].point,F=z,O=z,E=F,J=!1;for(let r=0;r<e.length;r++){let{pressure:i}=e[r],{point:o,vector:s,distance:W,runningLength:I}=e[r];if(r<e.length-1&&p-I<3)continue;if(h){if(y){let v=C(1,W/u),Z=C(1,1-v);i=C(1,H+(Z-H)*(v*pe))}m=$(u,h,i,n)}else m=u/2;U===void 0&&(U=m);let le=I<g?j(I/g):1,fe=p-I<T?c((p-I)/T):1;m=Math.max(.01,m*Math.min(le,fe));let re=(r<e.length-1?e[r+1]:e[r]).vector,Y=r<e.length-1?B(s,re):1,be=B(s,X)<0&&!J,ne=Y!==null&&Y<0;if(be||ne){let v=b(R(X),m);for(let Z=1/13,w=0;w<=1;w+=Z)O=L(a(o,v),o,V*w),_.push(O),E=L(l(o,v),o,V*-w),M.push(E);z=O,F=E,ne&&(J=!0);continue}if(J=!1,r===e.length-1){let v=b(R(s),m);_.push(a(o,v)),M.push(l(o,v));continue}let oe=b(R(K(re,s,Y)),m);O=a(o,oe),(r<=1||A(z,O)>te)&&(_.push(O),z=O),E=l(o,oe),(r<=1||A(F,E)>te)&&(M.push(E),F=E),H=i,X=s}let P=e[0].point.slice(0,2),k=e.length>1?e[e.length-1].point.slice(0,2):l(e[0].point,[1,1]),Q=[],N=[];if(e.length===1){if(!(g||T)||D){let r=ee(P,G(R(a(P,k))),-(U||m)),i=[];for(let o=1/13,s=o;s<=1;s+=o)i.push(L(r,P,V*2*s));return i}}else{if(!(g||T&&e.length===1))if(S)for(let i=1/13,o=i;o<=1;o+=i){let s=L(M[0],P,V*o);Q.push(s)}else{let i=a(_[0],M[0]),o=b(i,.5),s=b(i,.51);Q.push(a(P,o),a(P,s),l(P,s),l(P,o))}let r=R(se(e[e.length-1].vector));if(T||g&&e.length===1)N.push(k);else if(q){let i=ee(k,r,m);for(let o=1/29,s=o;s<1;s+=o)N.push(L(i,k,V*3*s))}else N.push(l(k,b(r,m)),l(k,b(r,m*.99)),a(k,b(r,m*.99)),a(k,b(r,m)))}return _.concat(N,M.reverse(),Q)}function me(e,t={}){var q;let{streamline:u=.5,size:x=16,last:h=!1}=t;if(e.length===0)return[];let y=.15+(1-u)*.85,n=Array.isArray(e[0])?e:e.map(({x:c,y:p,pressure:g=.5})=>[c,p,g]);if(n.length===2){let c=n[1];n=n.slice(0,-1);for(let p=1;p<5;p++)n.push(K(n[0],c,p/4))}n.length===1&&(n=[...n,[...l(n[0],[1,1]),...n[0].slice(2)]]);let f=[{point:[n[0][0],n[0][1]],pressure:n[0][2]>=0?n[0][2]:.25,vector:[1,1],distance:0,runningLength:0}],d=!1,D=0,S=f[0],j=n.length-1;for(let c=1;c<n.length;c++){let p=h&&c===j?n[c].slice(0,2):K(S.point,n[c],y);if(ue(S.point,p))continue;let g=ie(p,S.point);if(D+=g,c<j&&!d){if(D<x)continue;d=!0}S={point:p,pressure:n[c][2]>=0?n[c][2]:.5,vector:G(a(S.point,p)),distance:g,runningLength:D},f.push(S)}return f[0].vector=((q=f[1])==null?void 0:q.vector)||[0,0],f}function ae(e,t={}){return ce(me(e,t),t)}var _e=ae;return{getStroke:ae};
@@ -4110,6 +4277,13 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     try { navigator.storage.persisted().then(function (p) { if (!p) return navigator.storage.persist(); }).catch(function () {}); } catch (e) {}
   }
 
+  // 연습장 하나(data-sig)의 필기만 지운다. 되돌리기(↶)로 복구 가능. 지운 획 수를 돌려준다
+  window.caInkClearSig = function (sig) {
+    if (!cur || !loaded) return 0;
+    var list = pages[cur.id] || [], keep = list.filter(function (s) { return s.g !== sig; }), n = list.length - keep.length;
+    if (n) { snapshot(cur.id); pages[cur.id] = keep; touch(cur.id); clearSel(); render(); }
+    return n;
+  };
   window.__inkDebug = function () { return { sel: sel.length, placed: placed.filter(Boolean).length, strokes: cur ? (pages[cur.id] || []).length : -1, box: !!selBox, tool: state.tool, loaded: loaded }; };
 
   function init() {
@@ -4203,143 +4377,6 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     else { stop("다시 집중 15분"); say("휴식 끝. [다시 집중 15분]을 누르고 다음 단원 하나만 해 봐요."); }
   }
   btn.addEventListener("click", function () { if (mode) stop(); else run("f"); });
-})();
-
-/* 기초 · 6 무한 연습기: 유형별로 새 숫자 문제를 만들고, 규칙 1~4 하나로 단계 풀이를 보여 준다 */
-(function () {
-  var box = document.getElementById("dr");
-  if (!box) return;
-  var R = function (a, b) { return a + Math.floor(Math.random() * (b - a + 1)); };
-  var H = "0123456789ABCDEF";
-  function hx(v, d) { var s = v.toString(16).toUpperCase(); while (s.length < (d || 1)) s = "0" + s; return s; }
-  function bn(v, bits) { var s = v.toString(2); while (s.length < bits) s = "0" + s; return s.replace(/(.{4})(?=.)/g, "$1 ").replace(/^(.*)$/, "$1"); }
-  function grp(s) { return s.replace(/\B(?=(\d{4})+$)/g, " "); }
-  function sub2(s) { return s + "<sub>2</sub>"; }
-  function sup(n) { return "<sup>" + n + "</sup>"; }
-  function num(v) { return v.toLocaleString("en-US"); }
-  function tbl(head, rows) { return '<div class="tbl"><table><thead><tr>' + head.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (x) { return "<td>" + x + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>"; }
-  // 숫자 뒤 조사: 끝 글자 읽는 소리에 받침이 있으면 을, 없으면 를 (0 영, 1 일, 3 삼, 6 육, 7 칠, 8 팔 = 받침)
-  function eul(s) { var c = String(s).replace(/<[^>]+>/g, "").slice(-1); return "013678".indexOf(c) >= 0 ? "을" : "를"; }
-  function lap(n) { return "0x1" + new Array(n / 4 + 1).join("0"); }
-  // 꼬리: 앞의 F를 떼고(최소 1자리 남김) 남은 자리 수 d, 꼬리 값
-  function tail(hexs) { var t = hexs.replace(/^F+/, ""); if (!t.length) t = "F"; return { s: t, d: t.length, v: parseInt(t, 16) }; }
-
-  var T = [
-    { id: "d2b", name: "10진 → 2진", make: function () {
-      var x = R(20, 255), rows = [], q = x;
-      while (q > 0) { rows.push([q + " ÷ 2", Math.floor(q / 2), q % 2]); q = Math.floor(q / 2); }
-      var b = x.toString(2), b8 = bn(x, 8);
-      var parts = [], rest = x; [128, 64, 32, 16, 8, 4, 2, 1].forEach(function (p) { if (rest >= p) { parts.push(p); rest -= p; } });
-      return { q: "10진수 <b>" + x + "</b>" + eul(x) + " 8비트 2진으로 쓰시오.", a: sub2(b8),
-        steps: ["몫이 <b>0</b>이 될 때까지 2로 나눈다." + tbl(["나눗셈", "몫", "나머지"], rows),
-          "나머지를 <b>아래 → 위</b>로 읽는다(처음 나머지 = 소수점 바로 왼쪽 1의 자리): " + sub2(b) + ".",
-          "8비트로 맞추려 앞을 0으로 채운다: " + sub2(b8) + ".",
-          "방향 없는 방법(자릿값 빼기): " + x + " = " + parts.join(" + ") + " → 그 자리에 1, 나머지 0 → " + sub2(b8) + "."] }; } },
-    { id: "d2h", name: "10진 → 16진", make: function () {
-      var x = R(100, 4095), rows = [], q = x;
-      while (q > 0) { var r = q % 16; rows.push([q + " ÷ 16", Math.floor(q / 16), r + (r > 9 ? " (" + H[r] + ")" : "")]); q = Math.floor(q / 16); }
-      var h = hx(x), h8 = hx(x, 8), ds = h.split("").reverse();
-      var chk = h.split("").map(function (c, i) { var p = Math.pow(16, h.length - 1 - i); return parseInt(c, 16) + " × " + p; }).join(" + ");
-      return { q: "10진수 <b>" + x + "</b>" + eul(x) + " 32비트 값으로 보고 16진 8자리로 쓰시오.", a: "0x" + h8,
-        steps: ["몫이 <b>0</b>이 될 때까지 16으로 나눈다. 나머지 10~15는 A~F." + tbl(["나눗셈", "몫", "나머지"], rows),
-          "나머지를 <b>아래 → 위</b>로 읽는다: 0x" + h + ".",
-          "32비트 = 16진 8자리라 앞을 0으로 채운다: 0x" + h8 + ".",
-          "검산: " + chk + " = " + x + "."] }; } },
-    { id: "f2b", name: "소수 → 2진", make: function () {
-      var den = [8, 16, 32, 64][R(0, 3)], k = R(1, den - 1); if (k % 2 === 0) k += 1; var x = k / den, rows = [], f = x, bits = "";
-      while (f > 0 && rows.length < 8) { var y = f * 2, ip = y >= 1 ? 1 : 0; rows.push([String(f) + " × 2", String(y), ip, String(y - ip)]); bits += ip; f = y - ip; }
-      var chk = bits.split("").map(function (c, i) { return c === "1" ? String(Math.pow(2, -(i + 1))) : null; }).filter(Boolean).join(" + ");
-      return { q: "10진 소수 <b>" + x + "</b>" + eul(x) + " 2진으로 쓰시오.", a: sub2("0." + bits),
-        steps: ["2를 곱하고 <b>정수 부분</b>을 적은 뒤, <b>소수 부분만</b> 다시 곱한다. 소수 부분이 0이면 멈춤." + tbl(["곱하기", "결과", "정수 부분", "남은 소수"], rows),
-          "정수 부분을 <b>위 → 아래</b>로 읽는다(처음 = 소수점 바로 오른쪽 0.5의 자리): " + sub2("0." + bits) + ".",
-          "검산: " + chk + " = " + x + "."] }; } },
-    { id: "neg", name: "음수 → 2의 보수", make: function () {
-      var n = [8, 12, 16, 32][R(0, 3)], lim = Math.min(Math.pow(2, n - 1), 3000), x = R(2, lim), xh = hx(x), d = xh.length;
-      var t = Math.pow(16, d) - x, th = hx(t, d), w = n / 4, ans = (new Array(w - d + 1).join("F")) + th;
-      return { q: "<b>−" + x + "</b>" + eul(x) + " " + n + "비트 2의 보수로 나타내 16진 " + w + "자리로 쓰시오.", a: "0x" + ans,
-        steps: ["범위 확인: " + n + "비트는 −2" + sup(n - 1) + " ~ 2" + sup(n - 1) + " − 1이라 −" + x + "은 들어간다.",
-          "크기를 16진으로: " + x + " = 0x" + xh + " (" + d + "자리).",
-          "규칙 1: −x 모양 = 한 바퀴 − x. 꼬리 " + d + "자리만 보면 <b>0x1" + new Array(d + 1).join("0") + " − 0x" + xh + " = 0x" + th + "</b> (10진으로 " + num(Math.pow(16, d)) + " − " + x + " = " + t + ").",
-          (w > d ? "나머지 앞 " + (w - d) + "자리는 F로 채운다(음수라 위쪽은 전부 1): 0x" + ans + "." : "자리 수가 딱 맞아 그대로: 0x" + ans + "."),
-          "검산: 0x" + ans + " + 0x" + hx(x, w) + " = " + lap(n) + " → " + n + "비트를 넘친 1을 버리면 0. 더해서 0이니 −" + x + "."] }; } },
-    { id: "read", name: "2의 보수 → 10진", make: function () {
-      var n = [8, 12, 16, 32][R(0, 3)], w = n / 4, half = Math.pow(2, n - 1), v = Math.random() < 0.75 ? -R(1, Math.min(half, 3000)) : R(1, Math.min(half - 1, 3000));
-      var pat = v < 0 ? Math.pow(2, n) + v : v, ph = hx(pat, w), lead = parseInt(ph[0], 16);
-      var steps = ["맨 앞 16진 숫자 " + ph[0] + " = " + bn(lead, 4) + " → MSB가 " + (lead >= 8 ? "<b>1</b>이라 음수" : "<b>0</b>이라 양수") + "."];
-      if (v < 0) { var tl = tail(ph), m = Math.pow(16, tl.d) - tl.v;
-        steps.push("규칙 1: 값 = 모양 − 한 바퀴 = −(한 바퀴까지 남은 양). 앞의 F를 떼고 꼬리 0x" + tl.s + "만 본다.");
-        steps.push("남은 양 = 0x1" + new Array(tl.d + 1).join("0") + " − 0x" + tl.s + " = " + num(Math.pow(16, tl.d)) + " − " + tl.v + " = <b>" + m + "</b>.");
-        steps.push("음수이므로 <b>" + v + "</b>. (무부호로 읽으면 " + num(pat) + "이고, 그 값 − 2" + sup(n) + " = " + v + ".)");
-      } else steps.push("양수라 그대로 읽는다: " + ph.replace(/^0+/, "").split("").map(function (c, i, a) { return parseInt(c, 16) + " × " + Math.pow(16, a.length - 1 - i); }).join(" + ") + " = <b>" + v + "</b>.");
-      return { q: n + "비트 2의 보수 <b>0x" + ph + "</b>" + eul(ph) + " 10진으로 쓰시오.", a: String(v).replace("-", "−"), steps: steps.map(function (s) { return s.replace(/(^|[^0-9A-Za-z_])-(\d)/g, "$1−$2"); }) }; } },
-    { id: "ext", name: "부호 확장 12 → 32", make: function () {
-      var p = Math.random() < 0.65 ? R(0x800, 0xFFF) : R(0x010, 0x7FF), ph = hx(p, 3), neg = p >= 0x800, fill = neg ? "FFFFF" : "00000", v = neg ? p - 4096 : p;
-      var steps = ["맨 앞 숫자 " + ph[0] + " = " + bn(parseInt(ph[0], 16), 4) + " → MSB " + (neg ? "1" : "0") + ".",
-        "규칙 4: 원래 " + ph + "는 그대로 두고, 늘어난 왼쪽 5자리를 MSB로 채운다(" + (neg ? "1이면 F" : "0이면 0") + "): <b>0x" + fill + ph + "</b>. +1은 없다(값이 그대로여야 하므로)."];
-      if (neg) { var tl = tail(ph), m = Math.pow(16, tl.d) - tl.v; steps.push("값: 꼬리 0x" + tl.s + " → 0x1" + new Array(tl.d + 1).join("0") + " − 0x" + tl.s + " = " + m + " → <b>−" + m + "</b>."); }
-      else steps.push("값: 양수라 그대로 " + v + ".");
-      return { q: "12비트 즉시값 <b>0x" + ph + "</b>" + eul(ph) + " 32비트로 부호 확장해 16진 8자리로 쓰고, 10진 값을 쓰시오.", a: "0x" + fill + ph + " = " + String(v).replace("-", "−"), steps: steps }; } },
-    { id: "uns", name: "무부호로 읽기", make: function () {
-      var d = R(2, 3), tv = R(Math.pow(16, d - 1), Math.pow(16, d) - 1), th = hx(tv, d), ph = new Array(8 - d + 1).join("F") + th, k = Math.pow(16, d) - tv;
-      return { q: "32비트 값 <b>0x" + ph + "</b>" + eul(ph) + " (가) 무부호 수로, (나) 부호 있는 수로 읽으시오.", a: "(가) 2" + sup(32) + " − " + k + " = " + num(4294967296 - k) + ", (나) −" + k,
-        steps: ["규칙 1: 앞의 F를 떼고 꼬리 0x" + th + "만 본다. 한 바퀴(0x1 0000 0000)까지 남은 양 = 0x1" + new Array(d + 1).join("0") + " − 0x" + th + " = " + num(Math.pow(16, d)) + " − " + tv + " = <b>" + k + "</b>.",
-          "(가) 무부호: 모양 그대로 = 한 바퀴 − 남은 양 = 2" + sup(32) + " − " + k + " = 4,294,967,296 − " + k + " = <b>" + num(4294967296 - k) + "</b>. (최댓값 2" + sup(32) + " − 1을 기준으로 쓰지 말 것: 거기서는 " + (k - 1) + "을 빼야 해 ±1이 헷갈린다.)",
-          "(나) 부호 있게: 맨 앞 F라 음수, 값 = −(남은 양) = <b>−" + k + "</b>."] }; } },
-    { id: "add", name: "16진 덧셈", make: function () {
-      var a = R(0x100, 0x8FF), b = R(0x100, 0x7FF), s = a + b, ah = hx(a, 3), bh = hx(b, 3), rows = [], c = 0;
-      for (var i = 2; i >= 0; i--) { var x = parseInt(ah[i], 16), y = parseInt(bh[i], 16), t = x + y + c, over = t >= 16;
-        rows.push([["1의 자리", "16의 자리", "256의 자리"][2 - i], ah[i] + " + " + bh[i] + (c ? " + 올림 1" : "") + " = " + t, over ? t + " − 16 = " + (t - 16) + " → " + H[t - 16] : H[t], over ? 1 : 0]); c = over ? 1 : 0; }
-      if (c) rows.push(["4096의 자리", "올림 1", "1", 0]);
-      return { q: "16진 <b>0x" + ah + " + 0x" + bh + "</b>" + eul(bh) + " 계산하시오.", a: "0x" + hx(s),
-        steps: ["오른쪽 자리부터 10진으로 더한다. <b>16 이상이면 16을 빼서 쓰고 1을 올린다</b>(규칙 2: 한 바퀴 = 16, 15 아님)." + tbl(["자리", "더하기", "쓸 숫자", "올림"], rows),
-          "왼쪽부터 이어 읽으면 0x" + hx(s) + ".", "검산: " + a + " + " + b + " = " + s + " = 0x" + hx(s) + "."] }; } },
-    { id: "sub", name: "16진 뺄셈", make: function () {
-      var a = R(0x400, 0xFFF), b = R(0x100, a - 0x50), s = a - b, ah = hx(a, 3), bh = hx(b, 3), rows = [], br = 0;
-      for (var i = 2; i >= 0; i--) { var x = parseInt(ah[i], 16) - br, y = parseInt(bh[i], 16), need = x < y;
-        rows.push([["1의 자리", "16의 자리", "256의 자리"][2 - i], ah[i] + (br ? " − 빌려 준 1 = " + x : ""), need ? "빌림: " + x + " + 16 = " + (x + 16) : "빌림 없음", (need ? x + 16 : x) + " − " + y + " = " + ((need ? x + 16 : x) - y) + " → " + H[(need ? x + 16 : x) - y]]); br = need ? 1 : 0; }
-      return { q: "16진 <b>0x" + ah + " − 0x" + bh + "</b>" + eul(bh) + " 계산하시오.", a: "0x" + hx(s),
-        steps: ["오른쪽 자리부터 뺀다. 위 숫자가 작으면 앞자리에서 1을 빌려 <b>16을 더한다</b>(규칙 2: 앞자리 1 = 0x10 = 16, 15 아님). 빌려 준 자리는 1 줄어든다." + tbl(["자리", "위 숫자", "빌림", "빼기"], rows),
-          "왼쪽부터 이어 읽으면 0x" + hx(s) + ".", "검산: " + a + " − " + b + " = " + s + " = 0x" + hx(s) + ". 거꾸로 0x" + hx(s) + " + 0x" + bh + " = 0x" + ah + "."] }; } }
-  ];
-
-  var KEY = "cr_drill_v1", st;
-  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
-  st.sc = st.sc || {}; st.sel = st.sel || "mix";
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
-  var cur = null;
-
-  box.innerHTML = '<div class="dr-types"></div><div class="dr-card"><p class="dr-type"></p><p class="dr-q"></p>' +
-    '<div class="dr-btns"><button type="button" class="dr-b" data-a="new">새 문제</button><button type="button" class="dr-b" data-a="sol">풀이 보기</button></div>' +
-    '<div class="dr-sol" hidden></div><div class="dr-mark" hidden><button type="button" class="dr-b ok" data-a="o">맞음</button><button type="button" class="dr-b no" data-a="x">틀림</button></div></div>' +
-    '<p class="dr-score"></p>';
-  var types = box.querySelector(".dr-types");
-  function paintTypes() {
-    types.innerHTML = [{ id: "mix", name: "섞어서" }].concat(T).map(function (t) {
-      var s = st.sc[t.id], sc = s ? ' <small>' + s.o + "/" + (s.o + s.x) + "</small>" : "";
-      return '<button type="button" class="dr-t" data-t="' + t.id + '" aria-pressed="' + (st.sel === t.id) + '">' + t.name + sc + "</button>";
-    }).join("");
-    var all = T.reduce(function (a, t) { var s = st.sc[t.id] || { o: 0, x: 0 }; return { o: a.o + s.o, x: a.x + s.x }; }, { o: 0, x: 0 });
-    box.querySelector(".dr-score").textContent = "지금까지 맞음 " + all.o + " · 틀림 " + all.x + " (유형 버튼의 숫자 = 맞음/푼 수)";
-  }
-  function next() {
-    var t = st.sel === "mix" ? T[R(0, T.length - 1)] : T.filter(function (x) { return x.id === st.sel; })[0];
-    var p = t.make(); cur = { t: t, p: p };
-    box.querySelector(".dr-type").textContent = t.name;
-    box.querySelector(".dr-q").innerHTML = p.q;
-    var sol = box.querySelector(".dr-sol");
-    sol.innerHTML = '<p class="dr-a">답: <b>' + p.a + "</b></p><ol>" + p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + "</ol>";
-    sol.hidden = true; box.querySelector(".dr-mark").hidden = true;
-  }
-  box.addEventListener("click", function (e) {
-    var b = e.target.closest("button"); if (!b) return;
-    if (b.dataset.t) { st.sel = b.dataset.t; save(); paintTypes(); next(); return; }
-    if (b.dataset.a === "new") next();
-    else if (b.dataset.a === "sol") { box.querySelector(".dr-sol").hidden = false; box.querySelector(".dr-mark").hidden = false; }
-    else if (b.dataset.a === "o" || b.dataset.a === "x") {
-      var s = st.sc[cur.t.id] = st.sc[cur.t.id] || { o: 0, x: 0 }; s[b.dataset.a]++; save(); paintTypes(); next();
-    }
-  });
-  paintTypes(); next();
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("../sw.js").then(function(r){document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")r.update().catch(function(){})})}).catch(function(){})}</script>

@@ -11651,6 +11651,13 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     try { navigator.storage.persisted().then(function (p) { if (!p) return navigator.storage.persist(); }).catch(function () {}); } catch (e) {}
   }
 
+  // 연습장 하나(data-sig)의 필기만 지운다. 되돌리기(↶)로 복구 가능. 지운 획 수를 돌려준다
+  window.caInkClearSig = function (sig) {
+    if (!cur || !loaded) return 0;
+    var list = pages[cur.id] || [], keep = list.filter(function (s) { return s.g !== sig; }), n = list.length - keep.length;
+    if (n) { snapshot(cur.id); pages[cur.id] = keep; touch(cur.id); clearSel(); render(); }
+    return n;
+  };
   window.__inkDebug = function () { return { sel: sel.length, placed: placed.filter(Boolean).length, strokes: cur ? (pages[cur.id] || []).length : -1, box: !!selBox, tool: state.tool, loaded: loaded }; };
 
   function init() {
