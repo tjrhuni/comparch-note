@@ -947,7 +947,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
         <tr><td><code>lw x9, 32(x22)</code></td><td>주소 x22 + 32에서 word를 읽어 x9에 넣는다. <span class="ref">[Ch2 p.14]</span></td></tr>
         <tr><td><code>sw x9, 48(x22)</code></td><td>x9를 주소 x22 + 48에 쓴다(x9는 그대로)</td></tr>
         <tr><td><code>beq x5, x6, L</code></td><td>x5 == x6이면 L로 건너뛰고, 아니면 다음 줄. 이렇게 조건에 따라 다른 줄로 건너뛰는 것을 <b>분기(branch)</b>라 한다. <span class="ref">[Ch2 p.28]</span> bne = 같지 않으면, blt = 작으면, bge = 크거나 같으면 L로</td></tr>
-        <tr><td><code>Loop:</code></td><td>라벨(label). 명령어 위치의 이름, 분기 목적지로 쓴다</td></tr>
+        <tr><td><code>Loop:</code></td><td>라벨(label). 명령어 위치에 붙인 이름표로, 분기 목적지로 쓴다. <b>명령어가 아니다.</b> 이름은 쓰는 사람이 마음대로 짓고 끝에 콜론(:)을 붙인다: Loop(반복), Exit(나가기), Skip(건너뛰기), Diff(difference, 다를 때), L 등. 분기 명령의 마지막 칸(예 <code>beq x5, x6, Skip</code>의 Skip)은 「이 이름이 붙은 줄로 가라」는 뜻이다</td></tr>
         <tr><td><code>// …</code></td><td>주석. 실행되지 않는다</td></tr>
       </tbody>
     </table></div>
@@ -1789,7 +1789,7 @@ add  x7, x5, x6</pre>
 Skip: addi x7, x7, 4</pre>
     <details><summary>답 보기</summary><div class="ans">
     <p><b>x6 = 7이면 x7 = 14, x6 = 8이면 x7 = 15</b></p>
-    <p>① beq는 두 값이 같으면 라벨 Skip으로 건너뛰고, 다르면 바로 다음 줄로 간다.</p>
+    <p>① Skip은 명령어가 아니라 셋째 줄에 붙인 <b>라벨(이름표)</b>이다(영어 skip = 건너뛰다, 기초 · 4 표의 <code>Loop:</code>와 같은 것). beq는 두 값이 같으면 라벨 Skip이 붙은 줄로 건너뛰고, 다르면 바로 다음 줄로 간다.</p>
     <p>② x6 = 7: x5 == x6(7 == 7)이므로 Skip으로 건너뛴다. 둘째 줄은 실행되지 않는다. Skip 줄만 실행: x7 = 10 + 4 = 14.</p>
     <p>③ x6 = 8: 7 ≠ 8이라 다음 줄로. x7 = 10 + 1 = 11, 이어서 Skip 줄도 차례로 실행된다: 11 + 4 = 15.</p>
   </div></details></li>
@@ -1848,7 +1848,7 @@ lw   x6, 0(x5)</pre>
 Diff: sub  x11, x10, x5</pre>
     <details><summary>답 보기</summary><div class="ans">
     <p><b>x6 = 15이면 x10 = 40, x11 = 28 / x6 = 12이면 x10 = 140, x11 = 128</b></p>
-    <p>① bne는 두 값이 <b>같지 않으면</b> 라벨로 건너뛴다.</p>
+    <p>① Diff는 명령어가 아니라 셋째 줄에 붙인 <b>라벨(이름표)</b>이다(difference = 차이, 「다를 때 갈 곳」이라는 뜻으로 지은 이름). bne는 두 값이 <b>같지 않으면</b> 라벨 Diff가 붙은 줄로 건너뛴다.</p>
     <p>② x6 = 15: 12 ≠ 15라 Diff로 건너뛴다. addi 줄은 실행되지 않아 x10 = 40 그대로. Diff 줄: x11 ← x10 − x5 = 40 − 12 = 28.</p>
     <p>③ x6 = 12: 같으므로 건너뛰지 않고 다음 줄. x10 ← 40 + 100 = 140. 이어서 Diff 줄: x11 ← 140 − 12 = 128.</p>
   </div></details></li>
