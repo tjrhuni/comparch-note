@@ -933,6 +933,6 @@ i: 0, ok: 0, wrong: [], t0: performance.now(), retry: !!retry, mode: modeKey(sel
   paintSetup(); paintHist();
 })();
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("../sw.js").then(function(r){document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")r.update().catch(function(){})})}).catch(function(){})}</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("../sw.js").then(function(r){document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){var n=Date.now(),k="sw_upd_at",l=0;try{l=+localStorage.getItem(k)||0}catch(e){}if(n-l>1800000){try{localStorage.setItem(k,n)}catch(e){}r.update().catch(function(){})}}})}).catch(function(){})}</script>
 </body>
 </html>
