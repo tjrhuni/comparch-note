@@ -10643,6 +10643,8 @@ for (i = 0; i &lt; n; i = i + 1) {
     closeToc();
   }
   function go(id){var i=L.findIndex(function(s){return s.id===id});if(i>=0){if(location.hash!=="#"+id)history.replaceState(null,"","#"+id);show(i)}}
+  // 본문 안의 단원 링크(<a href="#n1-3">)를 누르면 그 단원으로 넘어간다
+  document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;var id=a.getAttribute("href").slice(1);if(L.some(function(s){return s.id===id})){e.preventDefault();go(id)}});
   window.caGo = go;
 
   toc.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;e.preventDefault();go(L[+a.dataset.i].id)});
