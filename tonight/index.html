@@ -416,6 +416,7 @@ a.rc-resume{display:flex;align-items:center;justify-content:center;text-decorati
 body.oc-mode:has(section.lesson.on .oc) #doneRow,body.oc-mode:has(section.lesson.on .oc) .pager,body:has(section.lesson.on .rc) #doneRow,body:has(section.lesson.on .rc) .pager{display:none}
 </style>
 <style>a.rc-final{background:var(--surface);color:var(--accent);border-color:var(--accent)}</style>
+<style>.oc-cheer{font-size:.8em;color:var(--easy);font-weight:700;margin-top:1em!important}</style>
 <section class="lesson" id="home" data-ch="0" data-title="오늘 밤 경로">
   <p class="eyebrow">새벽 02:15 기상 · 시험 10/21(수) 10:30</p>
   <h2>오늘 밤 경로</h2>
@@ -4166,6 +4167,9 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     for (var k = res.length - 1; k > 0; k--) if (vis(res[k]) < 16) { res[k - 1] += " " + res[k]; res.splice(k, 1); }
     return res;
   }
+  // 포기하지 않게: 카드 몇 장마다, 단원 끝마다 짧은 응원
+  var CHEER = ["여기까지 온 것만으로 이미 앞서 있어요.", "모르는 문장이 있어도 괜찮아요. 넘겨도 점수는 남아요.", "한 장 넘길 때마다 시험지에 쓸 수 있는 게 하나씩 늘어요.", "완벽할 필요 없어요. 부분 점수도 점수예요.", "지금 집중하고 있는 거, 정말 잘하고 있는 거예요.", "막히면 넘기기. 그게 오늘의 정답이에요.", "어제의 나보다 지금의 내가 훨씬 많이 알아요.", "숨 한 번 크게 쉬고, 다음 한 장만.", "시험장에서 이 카드가 떠오를 거예요.", "끝까지 가는 사람이 이겨요. 지금 그 길 위에 있어요."];
+  function cheer() { return CHEER[Math.floor(Math.random() * CHEER.length)]; }
   function hide(h) { return h.replace(/class="cz on"/g, 'class="cz"'); }
 
   function build(sec) {
@@ -4237,8 +4241,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       box.querySelector(".oc-n").textContent = Math.min(i + 1, steps.length) + " / " + steps.length;
       box.querySelector(".oc-bar i").style.width = (Math.min(i, steps.length) / steps.length * 100) + "%";
       var card = box.querySelector(".oc-card");
-      card.innerHTML = last ? '<p class="oc-done">이 단원 끝! 잘했어요.</p><p class="oc-hint">잠깐 숨 한 번 쉬고 다음 단원으로.</p><button type="button" class="oc-b oc-go" data-o="done">다 봤어요 + 다음 단원 ▶</button>'
-        : steps[i].h + (steps[i].cz ? '<p class="oc-hint">노란 칸을 <b>먼저 떠올려 말해 보고</b> 눌러서 확인.</p>' : "");
+      card.innerHTML = last ? '<p class="oc-done">이 단원 끝! 잘했어요.</p><p class="oc-cheer">' + cheer() + '</p><p class="oc-hint">잠깐 숨 한 번 쉬고 다음 단원으로.</p><button type="button" class="oc-b oc-go" data-o="done">다 봤어요 + 다음 단원 ▶</button>'
+        : steps[i].h + (steps[i].cz ? '<p class="oc-hint">노란 칸을 <b>먼저 떠올려 말해 보고</b> 눌러서 확인.</p>' : "") + (i > 0 && i % 5 === 0 ? '<p class="oc-cheer">' + cheer() + "</p>" : "");
       box.querySelector('[data-o="prev"]').disabled = i === 0;
       box.querySelector(".oc-next").hidden = last;
       POS[sec.id] = i; try { localStorage.setItem(PK, JSON.stringify(POS)); } catch (e) {}
@@ -4313,7 +4317,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       box.querySelector(".oc-bar i").style.width = (total ? known / total * 100 : 0) + "%";
       var card = box.querySelector(".oc-card"), nav = box.querySelector(".oc-nav");
       if (!q.length) {
-        card.innerHTML = '<p class="oc-done">되짚기 끝!</p><p>몰랐다를 누른 횟수 ' + missed + '번. 몰랐던 줄은 아침 <b>최종 회상</b>에 먼저 나옵니다.</p><button type="button" class="oc-b oc-go" data-r="done">다 했어요 + 다음 ▶</button><button type="button" class="oc-b" data-r="again" style="width:100%;margin-top:10px">한 번 더 (새로 섞기)</button>';
+        card.innerHTML = '<p class="oc-done">되짚기 끝! 해냈어요.</p><p>몰랐다를 누른 횟수 ' + missed + '번. 몰랐던 줄은 아침 <b>최종 회상</b>에 먼저 나옵니다.</p><button type="button" class="oc-b oc-go" data-r="done">다 했어요 + 다음 ▶</button><button type="button" class="oc-b" data-r="again" style="width:100%;margin-top:10px">한 번 더 (새로 섞기)</button>';
         nav.hidden = true; return;
       }
       var it = q[0];
