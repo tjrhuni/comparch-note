@@ -4022,6 +4022,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     var ss = sentences(html), res = [], cur = "";
     ss.forEach(function (s) { if (cur && vis(cur) + vis(s) > MAX) { res.push(cur); cur = s; } else cur = cur ? cur + " " + s : s; });
     if (cur) res.push(cur);
+    // 「[Ch1 p.22]」처럼 아주 짧은 조각은 앞 카드에 붙인다
+    for (var k = res.length - 1; k > 0; k--) if (vis(res[k]) < 16) { res[k - 1] += " " + res[k]; res.splice(k, 1); }
     return res;
   }
   function hide(h) { return h.replace(/class="cz on"/g, 'class="cz"'); }
