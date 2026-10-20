@@ -402,6 +402,8 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     <tbody>
       <tr><td class="t"><b>1회독</b> 빠르게 이해</td><td>1회독 · Ch1 ~ Ch4 (36단원)</td><td>① 읽기와 ② 핵심을 <b>멈추지 말고</b> 쭉 읽는다. ③ 풀이 예는 따라 읽기만. <b>④ 떠올리기 카드는 건너뛴다</b>(2회독에서 한다). 모르는 말이 나와도 표시만 하고 넘어간다.</td><td>약 2~3시간</td></tr>
       <tr><td class="t"><b>2회독</b> 중요한 포인트</td><td>2회독 · 핵심 떠올리기 (장마다 1단원)</td><td>가려진 노란 칸을 <b>먼저 말하거나 쓰고</b> 눌러 확인. 「다시 풀기」는 풀이를 펼치기 전에 끝까지 푼다. 막힌 덩어리만 링크로 1회독 단원에 돌아가 읽고, 그 단원의 ④ 카드를 푼다.</td><td>약 1시간 20분 + 막힌 곳</td></tr>
+      <tr><td class="t"><b>공식</b> 손으로</td><td>공식 떠올리기 · Ch1 ~ Ch4</td><td>2회독 직후. 공식을 <b>연습장에 먼저 쓰고</b> 노란 칸으로 확인한 뒤, 「바로 써 보기」에서 새 숫자로 계산한다. 틀린 공식만 다시.</td><td>약 1시간 15분</td></tr>
+      <tr><td class="t"><b>연습 문제</b></td><td>연습 문제 (Ch1~Ch4, 무한)</td><td>시험 모양의 여러 단계 문제가 매번 새 숫자로 나온다. 유형마다 <b>두 번 연속 맞힐 때까지</b>. 시간이 없으면 Ch2(인코딩·실행)와 Ch3(A + B, A × B)부터.</td><td>원하는 만큼</td></tr>
       <tr><td class="t"><b>3회독</b> 시험처럼</td><td>3회독 · 기출 형식 실전 1~8</td><td>시험지라고 생각하고 연습장에 끝까지 쓴 뒤 답을 연다. 틀린 문제는 [틀림] → 오답 노트. 시간이 모자라면 <b>실전 1·3·4·6·7</b>(계산·코드·그림, 기출 빈도 높음)부터.</td><td>약 2~3시간</td></tr>
       <tr><td class="t">시험 날 아침</td><td>마무리 · 시험 전날 한 장 + 오답 노트</td><td>노란 칸 떠올리기와 틀린 문제만 다시.</td><td>약 30분</td></tr>
     </tbody>
@@ -3650,6 +3652,134 @@ sw   x9, (나)(x22)</pre>
   <div class="key nkey"><p class="label">Ch4 · 9 단일 사이클의 한계와 클럭 주기 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>모든 명령어가 <span class="cz" role="button" tabindex="0">같은 길이</span>의 클럭 사이클, <span class="cz" role="button" tabindex="0">가장 긴 경로</span>가 주기를 정함 [Ch4 p.29]</li><li>최장 = <span class="cz" role="button" tabindex="0">lw</span>: 명령어 메모리 → <span class="cz" role="button" tabindex="0">레지스터 파일 → ALU → 데이터 메모리</span> → 레지스터 파일(5개 직렬) [Ch4 p.29]</li><li>명령어마다 주기를 다르게 = <span class="cz" role="button" tabindex="0">불가능</span> → <span class="cz" role="button" tabindex="0">자주 생기는 경우를 빠르게</span> 위반 → 파이프라이닝 [Ch4 p.29]</li><li>CPU 시간 = IC × <span class="cz" role="button" tabindex="0">1</span> × (최장 경로 지연). CPI는 최소지만 <span class="cz" role="button" tabindex="0">주기</span>가 길다 [Ch1 p.28]</li><li>빠지는 장치: sw = 마지막 <span class="cz" role="button" tabindex="0">레지스터 쓰기</span>, R형 = <span class="cz" role="button" tabindex="0">데이터 메모리</span>, beq = 둘 다</li></ul><p class="sub">외우는 고리</p><p>lw 경로 = 「명 레 알 데 레」(명령어 메모리, 레지스터 파일, ALU, 데이터 메모리, 레지스터 파일)</p><div class="nex"><p class="exq">다시 풀기: 명령어 메모리 200 ps, 레지스터 파일 읽기·쓰기 각 100 ps, ALU 150 ps, 데이터 메모리 250 ps(나머지 무시). 클럭 주기, R형에 실제로 필요한 시간, 명령어 10<sup>9</sup>개의 CPU 시간은?</p><details><summary>풀이 보기</summary><ol><li>① lw: 200 + 100 + 150 + 250 + 100 = 800 ps</li><li>② R형(데이터 메모리 없음): 200 + 100 + 150 + 100 = 550 ps</li><li>③ 주기 = 가장 긴 lw = 800 ps. R형도 800 ps를 쓴다</li><li>④ CPU 시간 = 10<sup>9</sup> × 1 × 800 × 10<sup>−12</sup> s = 0.8 s</li></ol><p class="exa">답: <b>주기 800 ps, R형 550 ps, CPU 시간 0.8 s</b></p></details></div><p class="ref"><a href="#n4-9">막히면 1회독 Ch4 · 9로</a></p></div>
 </section>
 
+<section class="lesson nchunk" id="f1" data-ch="f" data-title="Ch1 공식">
+  <p class="eyebrow">공식 · Ch1 <span class="pages">약 20분</span></p>
+  <h2>Ch1 공식 떠올리고 손으로 풀기</h2>
+  <p class="goal">공식은 읽어서는 안 남습니다. 순서대로 하세요. <b>① 연습장에 공식을 먼저 손으로 쓴다 → ② 노란 칸을 눌러 맞는지 확인 → ③ 아래 「바로 써 보기」에서 새 숫자로 계산해 본다.</b> 틀린 공식은 [다시 가리기]로 가리고 한 번 더 씁니다.</p>
+  <div class="key nkey"><p class="label">성능·CPU 시간 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>성능 = <span class="cz" role="button" tabindex="0">1 ÷ 실행 시간</span>. 「X가 Y보다 n배 빠르다」 → n = <span class="cz" role="button" tabindex="0">시간<sub>Y</sub> ÷ 시간<sub>X</sub></span> (느린 쪽 ÷ 빠른 쪽)</li>
+    <li>클럭 속도 = <span class="cz" role="button" tabindex="0">1 ÷ 클럭 주기</span>. 빠른 길: 주기(ps) = <span class="cz" role="button" tabindex="0">1000 ÷ GHz 숫자</span></li>
+    <li>사이클 수 = <span class="cz" role="button" tabindex="0">IC × CPI</span> = <span class="cz" role="button" tabindex="0">실행 시간 × 클럭 속도</span></li>
+    <li>CPU 시간 = <span class="cz" role="button" tabindex="0">IC × CPI × 클럭 주기</span> = <span class="cz" role="button" tabindex="0">IC × CPI ÷ 클럭 속도</span></li>
+    <li>평균 CPI = <span class="cz" role="button" tabindex="0">Σ(CPI<sub>i</sub> × 개수<sub>i</sub>) ÷ 전체 명령어 수</span> (CPI들의 단순 평균이 아님)</li>
+    <li>MIPS = <span class="cz" role="button" tabindex="0">IC ÷ (실행 시간 × 10<sup>6</sup>)</span> = <span class="cz" role="button" tabindex="0">클럭 속도 ÷ (CPI × 10<sup>6</sup>)</span>. 클럭 속도는 <span class="cz" role="button" tabindex="0">Hz</span>로 넣는다</li>
+  </ul></div>
+  <div class="key nkey"><p class="label">개선율·암달 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>속도 향상 = <span class="cz" role="button" tabindex="0">T<sub>전</sub> ÷ T<sub>후</sub></span></li>
+    <li>성능 % 향상 = <span class="cz" role="button" tabindex="0">(속도 향상 − 1) × 100</span> / 시간 감소율(%) = <span class="cz" role="button" tabindex="0">(T<sub>전</sub> − T<sub>후</sub>) ÷ T<sub>전</sub> × 100</span></li>
+    <li>암달: T<sub>후</sub> = <span class="cz" role="button" tabindex="0">T<sub>영향</sub> ÷ n + T<sub>비영향</sub></span></li>
+    <li>암달 거꾸로: 목표 시간 = T<sub>전</sub> ÷ 배수, n = <span class="cz" role="button" tabindex="0">T<sub>영향</sub> ÷ (목표 시간 − T<sub>비영향</sub>)</span> (괄호가 0 이하면 <span class="cz" role="button" tabindex="0">불가능</span>)</li>
+    <li>최대 속도 향상 = <span class="cz" role="button" tabindex="0">T<sub>전</sub> ÷ T<sub>비영향</sub></span></li>
+  </ul></div>
+  <div class="key nkey"><p class="label">전력·비용 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>전력 ∝ <span class="cz" role="button" tabindex="0">용량성 부하 × 전압<sup>2</sup> × 주파수</span> / 동적 에너지 ∝ <span class="cz" role="button" tabindex="0">용량성 부하 × 전압<sup>2</sup></span></li>
+    <li>다이당 비용 = <span class="cz" role="button" tabindex="0">웨이퍼당 비용 ÷ (웨이퍼당 다이 수 × 수율)</span></li>
+    <li>수율 = <span class="cz" role="button" tabindex="0">1 ÷ (1 + 면적당 결함 수 × 다이 면적 ÷ 2)<sup>N</sup></span> (교재 예제 N = 2)</li>
+  </ul></div>
+  <div class="nstep"><p class="nlab"><span>✎</span> 바로 써 보기 · 공식 하나씩, 숫자는 매번 새로</p>
+    <p>유형 버튼으로 공식을 고르거나 [섞어서]. 연습장에 <b>공식부터 쓰고</b> 숫자를 넣어 끝까지 계산한 뒤 [풀이 보기] → [맞음]/[틀림].</p>
+    <div class="dr fmdr" data-set="f1"></div>
+  </div>
+</section>
+
+<section class="lesson nchunk" id="f2" data-ch="f" data-title="Ch2 공식">
+  <p class="eyebrow">공식 · Ch2 <span class="pages">약 15분</span></p>
+  <h2>Ch2 공식 떠올리고 손으로 풀기</h2>
+  <p class="goal">① 연습장에 먼저 쓰기 → ② 노란 칸 확인 → ③ 「바로 써 보기」에서 새 숫자로 계산.</p>
+  <div class="key nkey"><p class="label">주소·분기 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>A[i]의 주소 = <span class="cz" role="button" tabindex="0">시작 주소 + i × 원소 크기</span> (int 4바이트 = slli 2, 8바이트 = slli 3)</li>
+    <li>분기 오프셋(바이트) = <span class="cz" role="button" tabindex="0">목표 주소 − 분기 명령어 자신의 주소</span> (PC + 4 기준 아님)</li>
+    <li>SB형에 저장되는 값 = 오프셋의 1번~12번 비트 = <span class="cz" role="button" tabindex="0">오프셋 ÷ 2</span> (0번 비트는 늘 0이라 버림)</li>
+    <li>분기 목표 = <span class="cz" role="button" tabindex="0">분기 명령어 주소 + 오프셋</span></li>
+    <li>jal x1, L: x1 ← <span class="cz" role="button" tabindex="0">PC + 4</span>, 다음 PC = <span class="cz" role="button" tabindex="0">PC + 오프셋</span></li>
+  </ul></div>
+  <div class="key nkey"><p class="label">스택·큰 상수·엔디언 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>레지스터 k개 저장: <span class="cz" role="button" tabindex="0">addi sp, sp, −4k</span> → sw 오프셋 0, 4, …, 4(k − 1) → 복구 <span class="cz" role="button" tabindex="0">addi sp, sp, 4k</span></li>
+    <li>32비트 상수 = lui <span class="cz" role="button" tabindex="0">위 5자리(20비트)</span> + addi <span class="cz" role="button" tabindex="0">아래 3자리(12비트)</span></li>
+    <li>아래 3자리가 <span class="cz" role="button" tabindex="0">0x800 이상</span>이면 lui + 1, addi = 아래 3자리 − <span class="cz" role="button" tabindex="0">0x1000</span> (addi 즉시값이 부호 확장되므로)</li>
+    <li>리틀 엔디언 = <span class="cz" role="button" tabindex="0">최하위</span> 바이트를 가장 낮은 주소에 (RISC-V) / 빅 = <span class="cz" role="button" tabindex="0">최상위</span> 바이트를 가장 낮은 주소에</li>
+  </ul></div>
+  <div class="nstep"><p class="nlab"><span>✎</span> 바로 써 보기</p>
+    <div class="dr fmdr" data-set="f2"></div>
+  </div>
+</section>
+
+<section class="lesson nchunk" id="f3" data-ch="f" data-title="Ch3 공식">
+  <p class="eyebrow">공식 · Ch3 <span class="pages">약 25분</span></p>
+  <h2>Ch3 공식 떠올리고 손으로 풀기</h2>
+  <p class="goal">① 연습장에 먼저 쓰기 → ② 노란 칸 확인 → ③ 「바로 써 보기」에서 새 숫자로 계산. IEEE는 단계가 길어 손이 기억할 때까지 여러 번 합니다.</p>
+  <div class="key nkey"><p class="label">곱셈·나눗셈·오버플로 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>곱의 길이 = <span class="cz" role="button" tabindex="0">피승수 비트 수 + 승수 비트 수</span> (32 × 32 → 64)</li>
+    <li>n비트 부호 있는 값 = <span class="cz" role="button" tabindex="0">무부호 값 − 2<sup>n</sup></span> (MSB가 1일 때)</li>
+    <li>mul = 곱의 <span class="cz" role="button" tabindex="0">아래 32비트</span> / mulh·mulhu·mulhsu = 곱의 <span class="cz" role="button" tabindex="0">위 32비트</span> (부호×부호 / 무×무 / 부호×무)</li>
+    <li>피제수 = <span class="cz" role="button" tabindex="0">몫 × 제수 + 나머지</span>, 몫은 <span class="cz" role="button" tabindex="0">0 쪽</span>으로 버림, 나머지 부호 = <span class="cz" role="button" tabindex="0">피제수</span> 부호</li>
+    <li>덧셈 오버플로는 <span class="cz" role="button" tabindex="0">부호가 같은 두 수</span>를 더할 때만, 뺄셈 오버플로는 <span class="cz" role="button" tabindex="0">부호가 다른 두 수</span>를 뺄 때만 생길 수 있다</li>
+  </ul></div>
+  <div class="key nkey"><p class="label">부동소수점 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>값 = <span class="cz" role="button" tabindex="0">(−1)<sup>S</sup> × (1 + Fraction) × 2<sup>(지수 칸 − bias)</sup></span></li>
+    <li>칸과 bias: 단정도 <span class="cz" role="button" tabindex="0">1-8-23, bias 127</span> / 배정도 <span class="cz" role="button" tabindex="0">1-11-52, bias 1023</span> / 16비트 <span class="cz" role="button" tabindex="0">1-5-10, bias 15</span></li>
+    <li>지수 칸 = <span class="cz" role="button" tabindex="0">실제 지수 + bias</span> / 실제 지수 = <span class="cz" role="button" tabindex="0">지수 칸 − bias</span></li>
+    <li>단정도 실제 지수 범위 = <span class="cz" role="button" tabindex="0">−126 ~ 127</span> (지수 칸 0과 255는 예약)</li>
+    <li>FP 덧셈 4단계 = <span class="cz" role="button" tabindex="0">지수 맞추기 → 가수 더하기 → 정규화(오버·언더플로 검사) → 반올림</span></li>
+    <li>FP 곱 지수 칸 = <span class="cz" role="button" tabindex="0">지수 칸<sub>1</sub> + 지수 칸<sub>2</sub> − bias</span>, 부호 = <span class="cz" role="button" tabindex="0">S<sub>1</sub> xor S<sub>2</sub></span></li>
+  </ul></div>
+  <div class="nstep"><p class="nlab"><span>✎</span> 바로 써 보기</p>
+    <div class="dr fmdr" data-set="f3"></div>
+  </div>
+</section>
+
+<section class="lesson nchunk" id="f4" data-ch="f" data-title="Ch4 공식">
+  <p class="eyebrow">공식 · Ch4 <span class="pages">약 15분</span></p>
+  <h2>Ch4 공식 떠올리고 손으로 풀기</h2>
+  <p class="goal">① 연습장에 먼저 쓰기 → ② 노란 칸 확인 → ③ 「바로 써 보기」에서 새 숫자로 계산. 제어 신호 표는 열 이름만 보고 한 줄씩 손으로 채웁니다.</p>
+  <div class="key nkey"><p class="label">다음 PC·클럭 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>PCSrc = <span class="cz" role="button" tabindex="0">Branch AND Zero</span> → 0이면 <span class="cz" role="button" tabindex="0">PC + 4</span>, 1이면 <span class="cz" role="button" tabindex="0">분기 목표</span></li>
+    <li>분기 목표 = <span class="cz" role="button" tabindex="0">PC + (오프셋 &lt;&lt; 1)</span> (ImmGen 출력을 1칸 왼쪽 = × 2)</li>
+    <li>Zero = ALU 결과가 <span class="cz" role="button" tabindex="0">0</span>이면 1. beq는 ALU가 <span class="cz" role="button" tabindex="0">rs1 − rs2</span></li>
+    <li>단일 사이클 클럭 주기 = <span class="cz" role="button" tabindex="0">가장 긴 명령어(lw)의 경로 지연 합</span> = 명령어 메모리 + 레지스터 읽기 + ALU + 데이터 메모리 + 레지스터 쓰기</li>
+    <li>CPU 시간 = <span class="cz" role="button" tabindex="0">IC × 1 × 클럭 주기</span> (CPI는 1이지만 주기가 길다)</li>
+  </ul></div>
+  <div class="key nkey"><p class="label">제어 신호 (RegWrite · ALUSrc · MemRead · MemWrite · MemtoReg · Branch · ALUOp) <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul>
+    <li>R형(add·sub·and·or) = <span class="cz" role="button" tabindex="0">1 · 0 · 0 · 0 · 0 · 0 · 10</span></li>
+    <li>lw = <span class="cz" role="button" tabindex="0">1 · 1 · 1 · 0 · 1 · 0 · 00</span></li>
+    <li>sw = <span class="cz" role="button" tabindex="0">0 · 1 · 0 · 1 · X · 0 · 00</span></li>
+    <li>beq = <span class="cz" role="button" tabindex="0">0 · 0 · 0 · 0 · X · 1 · 01</span></li>
+    <li>ALU 제어 4비트: add <span class="cz" role="button" tabindex="0">0010</span>, sub <span class="cz" role="button" tabindex="0">0110</span>, and <span class="cz" role="button" tabindex="0">0000</span>, or <span class="cz" role="button" tabindex="0">0001</span></li>
+    <li>X가 되는 곳 = <span class="cz" role="button" tabindex="0">RegWrite = 0인 sw·beq의 MemtoReg</span>뿐</li>
+  </ul></div>
+  <div class="nstep"><p class="nlab"><span>✎</span> 바로 써 보기</p>
+    <div class="dr fmdr" data-set="f4"></div>
+  </div>
+</section>
+
+<section class="lesson nchunk" id="x1" data-ch="x" data-title="Ch1 연습 문제">
+  <p class="eyebrow">연습 문제 · Ch1 <span class="pages">문제마다 3~5분</span></p>
+  <h2>Ch1 연습 문제 (시험 모양, 무한)</h2>
+  <p class="goal">시험처럼 여러 단계를 이어 푸는 문제입니다. <b>연습장에 끝까지 쓴 뒤</b> [풀이 보기]. 숫자가 매번 새로 나오니 같은 유형을 맞힐 때까지 반복하세요. 틀리면 「공식 · Ch1」에서 그 공식을 다시 씁니다.</p>
+  <div class="dr fmdr" data-set="x1"></div>
+</section>
+
+<section class="lesson nchunk" id="x2" data-ch="x" data-title="Ch2 연습 문제">
+  <p class="eyebrow">연습 문제 · Ch2 <span class="pages">문제마다 3~6분</span></p>
+  <h2>Ch2 연습 문제 (시험 모양, 무한)</h2>
+  <p class="goal">인코딩(R형·lw·sw·addi·beq·bne), 디코딩, 코드 실행 결과, lui·스택·분기 오프셋. 형식별 칸 배치와 opcode·funct는 1회독 Ch2 · 5~7과 기초 · 4 명령어 모음집에 있습니다. 시험에 encoding 표를 안 줄 수도 있으니 <b>보지 않고</b> 풀어 보세요.</p>
+  <div class="dr fmdr" data-set="x2"></div>
+</section>
+
+<section class="lesson nchunk" id="x3" data-ch="x" data-title="Ch3 연습 문제">
+  <p class="eyebrow">연습 문제 · Ch3 <span class="pages">문제마다 4~8분</span></p>
+  <h2>Ch3 연습 문제 (시험 모양, 무한)</h2>
+  <p class="goal">26-1 기출처럼 A + B, A × B를 단계대로 구해 16진으로 쓰는 문제, 16비트 표현, 21-2의 upper·lower 세 방식, 역변환, 오버플로. 단계 이름(지수 맞추기, 정규화 …)도 함께 적는 습관을 들이세요.</p>
+  <div class="dr fmdr" data-set="x3"></div>
+</section>
+
+<section class="lesson nchunk" id="x4" data-ch="x" data-title="Ch4 연습 문제">
+  <p class="eyebrow">연습 문제 · Ch4 <span class="pages">문제마다 3~5분</span></p>
+  <h2>Ch4 연습 문제 (시험 모양, 무한)</h2>
+  <p class="goal">26-1의 「기계어 → 선마다 실리는 레지스터 번호」와 21-2의 제어 신호 표를 한 문제로, 그리고 PCSrc·다음 PC, 클럭 주기. 데이터패스 그림은 1회독 Ch4 · 2에 있습니다.</p>
+  <div class="dr fmdr" data-set="x4"></div>
+</section>
+
 <section class="lesson" id="p1" data-ch="t" data-title="성능 계산: CPU 시간·MIPS·개선율">
   <p class="eyebrow">3회독 · 실전 1 <span class="pages">1회독 Ch1 · 4~8</span></p>
   <h2>성능 계산: CPU 시간·MIPS·개선율</h2>
@@ -5642,7 +5772,7 @@ and  x7, x8, x9</pre>
 
 <script>
 (function(){
-  var CH = {"0":"시작","b":"필수 기초","1":"1회독 · Ch1 컴퓨터 추상화와 기술","2":"1회독 · Ch2 명령어","3":"1회독 · Ch3 컴퓨터 연산","4":"1회독 · Ch4 프로세서 (단일 사이클)","s":"2회독 · 핵심 떠올리기","t":"3회독 · 기출 형식 실전","9":"마무리","m":"모아 보기"};
+  var CH = {"0":"시작","b":"필수 기초","1":"1회독 · Ch1 컴퓨터 추상화와 기술","2":"1회독 · Ch2 명령어","3":"1회독 · Ch3 컴퓨터 연산","4":"1회독 · Ch4 프로세서 (단일 사이클)","s":"2회독 · 핵심 떠올리기","f":"공식 떠올리기 · 손으로 풀기","x":"연습 문제 (Ch1~Ch4, 무한)","t":"3회독 · 기출 형식 실전","9":"마무리","m":"모아 보기"};
   var store = {
     get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
     set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -5693,7 +5823,7 @@ and  x7, x8, x9</pre>
   var toc = document.getElementById("toc");
   var cur = 0;
 
-  function num(s){var e=s.querySelector(".eyebrow");if(s.dataset.ch==="0"||s.dataset.ch==="9")return "";var m=s.id.match(/^(?:kb|n\d-|r2-|p)(\d+)$/);return m?m[1]:""}
+  function num(s){var e=s.querySelector(".eyebrow");if(s.dataset.ch==="0"||s.dataset.ch==="9")return "";var m=s.id.match(/^(?:kb|n\d-|r2-|p|f|x)(\d+)$/);return m?m[1]:""}
 
   // 목차
   var html="", last=null;
@@ -5711,7 +5841,7 @@ and  x7, x8, x9</pre>
     document.getElementById("bar").style.width=(countable.length?n/countable.length*100:0)+"%";
     var g=document.getElementById("chapGrid");
     if(g){
-      g.innerHTML=["b","1","2","3","4","s","t","9"].map(function(c){
+      g.innerHTML=["b","1","2","3","4","s","f","x","t","9"].map(function(c){
         var ls=L.filter(function(s){return s.dataset.ch===c});
         var d=ls.filter(function(s){return done[s.id]}).length;
         var first=ls[0]?ls[0].id:"";
@@ -6084,6 +6214,348 @@ and  x7, x8, x9</pre>
     }
   });
   paintTypes(); paintPad(); next();
+})();
+
+/* 공식 떠올리기·연습 문제: 장마다 공식 하나씩 새 숫자로 손으로 풀어 보는 생성기와, 시험 모양의 여러 단계 문제 생성기 */
+(function () {
+  var R = function (a, b) { return a + Math.floor(Math.random() * (b - a + 1)); };
+  function pick(a) { return a[R(0, a.length - 1)]; }
+  function hx(v, d) { var s = (v >>> 0).toString(16).toUpperCase(); while (s.length < (d || 1)) s = "0" + s; return s; }
+  function h8(v) { return "0x" + hx(v, 8); }
+  function bin(v, n) { var s = (v >>> 0).toString(2); while (s.length < n) s = "0" + s; return s.slice(-n); }
+  function g4(s) { return s.replace(/(.{4})(?=.)/g, "$1 "); }
+  function sup(n) { return "<sup>" + n + "</sup>"; }
+  function f6(x) { var v = parseFloat(Number(x).toPrecision(6)); return Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : String(v); }
+  function mn(x) { return String(x).replace(/(^|[^0-9A-Za-z_])-(\d)/g, "$1−$2").replace(/^-/, "−"); }
+  function c(s) { return "<code>" + s + "</code>"; }
+  function tbl(head, rows) { return '<div class="tbl"><table><thead><tr>' + head.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (x) { return "<td>" + x + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>"; }
+
+  // ---------- 부동소수점 도우미 ----------
+  function bstr(a) { var ip = Math.floor(a), fp = a - ip, s = ip.toString(2), f = ""; while (fp > 0 && f.length < 30) { fp *= 2; if (fp >= 1) { f += "1"; fp -= 1; } else f += "0"; } return s + (f ? "." + f : ""); }
+  function fp(v) { var a = Math.abs(v), e = Math.floor(Math.log(a) / Math.LN2); if (Math.pow(2, e) > a) e--; if (Math.pow(2, e + 1) <= a) e++; return { s: v < 0 ? 1 : 0, a: a, e: e, m: a / Math.pow(2, e) - 1 }; }
+  function mant(m, n) { var M = Math.round(m * Math.pow(2, n)); return bin(M, n); }
+  function trimm(bits) { var t = bits.replace(/0+$/, ""); return t || "0"; }
+  function enc32(v) { var p = fp(v); return ((p.s << 31) | ((p.e + 127) << 23) | Math.round(p.m * 8388608)) >>> 0; }
+  function enc16(v) { var p = fp(v); return ((p.s << 15) | ((p.e + 15) << 10) | Math.round(p.m * 1024)) >>> 0; }
+  function dy() { var p = R(0, 5), k = R(1, 255); if (k % 2 === 0 && p > 0) k++; var v = k / Math.pow(2, p); return (Math.random() < 0.4 ? -1 : 1) * v; }
+  function encSteps(v, bits) {
+    var p = fp(v), E = bits === 16 ? 5 : 8, F = bits === 16 ? 10 : 23, B = bits === 16 ? 15 : 127, mb = mant(p.m, F), ef = p.e + B, word = bits === 16 ? enc16(v) : enc32(v);
+    var all = String(p.s) + bin(ef, E) + mb;
+    return { word: word, steps: [
+      "부호: " + (p.s ? "음수라 S = 1" : "양수라 S = 0") + ". 크기 " + f6(p.a) + "를 2진으로: 정수 부분은 ÷2, 소수 부분은 ×2 → <b>" + bstr(p.a) + "<sub>2</sub></b>.",
+      "정규화(소수점 왼쪽에 1 하나): 1." + trimm(mb) + "<sub>2</sub> × 2" + sup(mn(p.e)) + ". 실제 지수 = " + mn(p.e) + ".",
+      "지수 칸 = 실제 지수 + bias = " + mn(p.e) + " + " + B + " = " + ef + " = " + g4(bin(ef, E)) + "<sub>2</sub> (" + E + "비트).",
+      "가수 칸 = 소수점 뒤 비트(숨은 1 제외)를 " + F + "비트로: " + trimm(mb) + " 뒤를 0으로 채움.",
+      "1-" + E + "-" + F + "로 이어 붙이면 " + g4(all) + " → 4비트씩 16진 <b>0x" + hx(word, bits / 4) + "</b>."] };
+  }
+
+  // ---------- 기계어 도우미 ----------
+  var RF = { add: [0, 0], sub: [0x20, 0], xor: [0, 4], or: [0, 6], and: [0, 7] };
+  function encR(op, rd, r1, r2) { return ((RF[op][0] << 25) | (r2 << 20) | (r1 << 15) | (RF[op][1] << 12) | (rd << 7) | 0x33) >>> 0; }
+  function encI(op, rd, r1, imm) { var o = op === "lw" ? 0x03 : 0x13, f3 = op === "lw" ? 2 : 0; return (((imm & 0xFFF) << 20) | (r1 << 15) | (f3 << 12) | (rd << 7) | o) >>> 0; }
+  function encS(r2, r1, imm) { return ((((imm >> 5) & 0x7F) << 25) | (r2 << 20) | (r1 << 15) | (2 << 12) | ((imm & 0x1F) << 7) | 0x23) >>> 0; }
+  function encB(op, r1, r2, off) { var i = off & 0x1FFF; return ((((i >> 12) & 1) << 31) | (((i >> 5) & 0x3F) << 25) | (r2 << 20) | (r1 << 15) | ((op === "bne" ? 1 : 0) << 12) | (((i >> 1) & 0xF) << 8) | (((i >> 11) & 1) << 7) | 0x63) >>> 0; }
+  function le(w) { return [w & 0xFF, (w >>> 8) & 0xFF, (w >>> 16) & 0xFF, (w >>> 24) & 0xFF].map(function (b) { return hx(b, 2); }); }
+  var CTRL = { lw: [1, 1, 1, 0, "1", 0, "00"], sw: [0, 1, 0, 1, "X", 0, "00"], R: [1, 0, 0, 0, "0", 0, "10"], beq: [0, 0, 0, 0, "X", 1, "01"] };
+  var CN = ["RegWrite", "ALUSrc", "MemRead", "MemWrite", "MemtoReg", "Branch", "ALUOp"];
+  var ALUC = { lw: "0010", sw: "0010", add: "0010", sub: "0110", and: "0000", or: "0001", beq: "0110" };
+  function ctrlRow(op) { return CTRL[op === "lw" || op === "sw" || op === "beq" ? op : "R"]; }
+
+  // ---------- 공식 하나씩 (공식 떠올리기 단원) ----------
+  var F1 = [
+    { id: "nx", name: "n배 빠르다", make: function () {
+      var tx = R(2, 20), k = pick([1.25, 1.5, 2, 2.5, 3, 4]), ty = tx * k;
+      return { q: "컴퓨터 X는 프로그램을 " + tx + " s, Y는 " + f6(ty) + " s에 실행한다. X는 Y보다 몇 배 빠른가?", a: f6(k) + "배",
+        steps: ["공식: 성능 = 1 ÷ 실행 시간, 「X가 n배 빠르다」 → <b>n = 시간<sub>Y</sub> ÷ 시간<sub>X</sub></b> (느린 쪽 ÷ 빠른 쪽, 1보다 크게).", "n = " + f6(ty) + " ÷ " + tx + " = <b>" + f6(k) + "</b>."] }; } },
+    { id: "clk", name: "주기 ↔ 클럭 속도", make: function () {
+      var pr = pick([[200, 5], [250, 4], [400, 2.5], [500, 2], [625, 1.6], [800, 1.25], [1000, 1], [2000, 0.5]]), back = Math.random() < 0.5;
+      return back ? { q: "클럭 속도가 " + pr[1] + " GHz이면 클럭 주기는 몇 ps인가?", a: pr[0] + " ps", steps: ["공식: <b>클럭 주기 = 1 ÷ 클럭 속도</b>.", "1 ÷ (" + pr[1] + " × 10" + sup(9) + ") s = (1000 ÷ " + pr[1] + ") × 10" + sup("−12") + " s = <b>" + pr[0] + " ps</b>. 빠른 길: 주기(ps) = 1000 ÷ GHz 숫자."] }
+        : { q: "클럭 주기가 " + pr[0] + " ps이면 클럭 속도는 몇 GHz인가?", a: pr[1] + " GHz", steps: ["공식: <b>클럭 속도 = 1 ÷ 클럭 주기</b>.", "1 ÷ (" + pr[0] + " × 10" + sup("−12") + ") = (1000 ÷ " + pr[0] + ") × 10" + sup(9) + " Hz = <b>" + pr[1] + " GHz</b>. 빠른 길: GHz = 1000 ÷ 주기(ps) 숫자."] }; } },
+    { id: "cpu", name: "CPU 시간", make: function () {
+      var a = R(1, 9), cpi = pick([1, 1.25, 1.5, 2, 2.5, 3, 4]), f = pick([1, 2, 2.5, 4, 5]), t = a * cpi / f, per = Math.random() < 0.4;
+      var given = per ? "클럭 주기 " + f6(1000 / f) + " ps" : "클럭 " + f + " GHz";
+      return { q: "명령어 " + a + " × 10" + sup(9) + "개, CPI " + cpi + ", " + given + "이다. CPU 시간은?", a: f6(t) + " s",
+        steps: ["공식: <b>CPU 시간 = IC × CPI × 클럭 주기 = IC × CPI ÷ 클럭 속도</b>.", "사이클 수 = IC × CPI = " + a + " × 10" + sup(9) + " × " + cpi + " = " + f6(a * cpi) + " × 10" + sup(9) + ".",
+          (per ? "주기 " + f6(1000 / f) + " ps = " + f6(1000 / f) + " × 10" + sup("−12") + " s를 곱한다: " : "클럭 속도 " + f + " × 10" + sup(9) + " Hz로 나눈다: ") + f6(a * cpi) + " ÷ " + f + " = <b>" + f6(t) + " s</b> (10" + sup(9) + "끼리 약분)."] }; } },
+    { id: "avg", name: "평균 CPI", make: function () {
+      var cp = [1, 2, 3, 4, 5].sort(function () { return Math.random() - 0.5; }).slice(0, 3), n = [R(1, 6) * 10, R(1, 6) * 10, R(1, 6) * 10], f = pick([1, 2, 4, 5]);
+      var cyc = n[0] * cp[0] + n[1] * cp[1] + n[2] * cp[2], tot = n[0] + n[1] + n[2], avg = cyc / tot, ms = cyc / f;
+      return { q: "클럭 " + f + " GHz. 산술 " + n[0] + " × 10" + sup(6) + "개(CPI " + cp[0] + "), load/store " + n[1] + " × 10" + sup(6) + "개(CPI " + cp[1] + "), 분기 " + n[2] + " × 10" + sup(6) + "개(CPI " + cp[2] + "). 평균 CPI와 CPU 시간은?", a: "평균 CPI " + f6(avg) + ", CPU 시간 " + f6(ms) + " ms",
+        steps: ["공식: <b>평균 CPI = Σ(CPI<sub>i</sub> × 개수<sub>i</sub>) ÷ 전체 명령어 수</b> (CPI 셋의 단순 평균이 아님).", "사이클 수 = " + n[0] + "×" + cp[0] + " + " + n[1] + "×" + cp[1] + " + " + n[2] + "×" + cp[2] + " = " + cyc + " (× 10" + sup(6) + ").",
+          "평균 CPI = " + cyc + " ÷ " + tot + " = <b>" + f6(avg) + "</b>.", "CPU 시간 = 사이클 수 ÷ 클럭 속도 = " + cyc + " × 10" + sup(6) + " ÷ (" + f + " × 10" + sup(9) + ") = " + f6(ms) + " × 10" + sup("−3") + " s = <b>" + f6(ms) + " ms</b>."] }; } },
+    { id: "mips", name: "MIPS", make: function () {
+      if (Math.random() < 0.5) { var fm = pick([500, 800, 1000, 2000, 2500, 4000]), cpi = pick([1, 1.25, 2, 2.5, 4, 5]);
+        return { q: "클럭 " + (fm >= 1000 ? fm / 1000 + " GHz" : fm + " MHz") + ", CPI " + cpi + "인 컴퓨터의 MIPS는?", a: f6(fm / cpi) + " MIPS",
+          steps: ["공식: <b>MIPS = 클럭 속도 ÷ (CPI × 10" + sup(6) + ")</b>. 클럭 속도는 <b>Hz</b>로 넣는다.", "클럭 = " + fm + " × 10" + sup(6) + " Hz.", "MIPS = " + fm + " × 10" + sup(6) + " ÷ (" + cpi + " × 10" + sup(6) + ") = " + fm + " ÷ " + cpi + " = <b>" + f6(fm / cpi) + "</b>."] }; }
+      var a = R(1, 9), t = pick([0.5, 1, 2, 2.5, 4, 5]);
+      return { q: "명령어 " + a + " × 10" + sup(9) + "개를 " + t + " s에 실행했다. MIPS는?", a: f6(a * 1000 / t) + " MIPS",
+        steps: ["공식: <b>MIPS = IC ÷ (실행 시간 × 10" + sup(6) + ")</b>.", "= " + a + " × 10" + sup(9) + " ÷ (" + t + " × 10" + sup(6) + ") = (" + a + " ÷ " + t + ") × 10" + sup(3) + " = <b>" + f6(a * 1000 / t) + "</b>."] }; } },
+    { id: "imp", name: "속도 향상·% 향상·시간 감소율", make: function () {
+      var tb = R(4, 40), r = pick([1.25, 1.6, 2, 2.5, 4, 5]), ta = tb * r;
+      return { q: "개선 전 " + f6(ta) + " s, 개선 후 " + tb + " s. 속도 향상, 성능 % 향상, 시간 감소율(%)은?", a: f6(r) + "배, " + f6((r - 1) * 100) + "%, " + f6((1 - 1 / r) * 100) + "%",
+        steps: ["공식: <b>속도 향상 = T<sub>전</sub> ÷ T<sub>후</sub></b>, <b>성능 % 향상 = (속도 향상 − 1) × 100</b>, <b>시간 감소율 = (T<sub>전</sub> − T<sub>후</sub>) ÷ T<sub>전</sub> × 100</b>.",
+          "속도 향상 = " + f6(ta) + " ÷ " + tb + " = <b>" + f6(r) + "</b>.", "성능 % 향상 = (" + f6(r) + " − 1) × 100 = <b>" + f6((r - 1) * 100) + "%</b>.", "시간 감소율 = (" + f6(ta) + " − " + tb + ") ÷ " + f6(ta) + " × 100 = <b>" + f6((1 - 1 / r) * 100) + "%</b>. (두 %는 다른 값이다)"] }; } },
+    { id: "amd", name: "암달 (앞으로)", make: function () {
+      var t0 = R(3, 10) * 20, fr = pick([0.5, 0.6, 0.75, 0.8, 0.9]), ta = t0 * fr, tb = t0 - ta, n = pick([2, 3, 4, 5, 10]), t1 = ta / n + tb;
+      return { q: "실행 시간 " + t0 + " s 중 " + f6(ta) + " s가 곱셈이다. 곱셈만 " + n + "배 빠르게 하면 개선 후 시간과 속도 향상은? 그리고 곱셈을 아무리 빠르게 해도 최대 몇 배인가?", a: f6(t1) + " s, " + f6(t0 / t1) + "배, 최대 " + f6(t0 / tb) + "배",
+        steps: ["공식: <b>T<sub>후</sub> = T<sub>영향</sub> ÷ n + T<sub>비영향</sub></b>, 최대 속도 향상 = <b>T<sub>전</sub> ÷ T<sub>비영향</sub></b>.", "T<sub>비영향</sub> = " + t0 + " − " + f6(ta) + " = " + f6(tb) + " s.",
+          "T<sub>후</sub> = " + f6(ta) + " ÷ " + n + " + " + f6(tb) + " = <b>" + f6(t1) + " s</b>, 속도 향상 = " + t0 + " ÷ " + f6(t1) + " = <b>" + f6(t0 / t1) + "</b>.", "최대 = " + t0 + " ÷ " + f6(tb) + " = <b>" + f6(t0 / tb) + "</b> (곱셈 시간이 0이 되어도 " + f6(tb) + " s는 남음)."] }; } },
+    { id: "amdinv", name: "암달 (거꾸로 n)", make: function () {
+      for (var g = 0; g < 400; g++) {
+        var tt = pick([10, 20, 25, 30, 40, 50]), k = pick([2, 3, 4, 5]), t0 = tt * k, imp = Math.random() < 0.2, tb = imp ? R(tt, t0 - 1) : R(1, tt - 1), ta = t0 - tb;
+        if (imp) return { q: "실행 시간 " + t0 + " s 중 " + ta + " s가 메모리 접근이다. 메모리 접근만 빠르게 해서 전체를 " + k + "배 빠르게 하려면 몇 배 빨라져야 하나?", a: "불가능",
+          steps: ["공식: 목표 시간 = T<sub>전</sub> ÷ 배수, <b>n = T<sub>영향</sub> ÷ (목표 시간 − T<sub>비영향</sub>)</b>.", "목표 시간 = " + t0 + " ÷ " + k + " = " + tt + " s, T<sub>비영향</sub> = " + tb + " s.", "목표 − T<sub>비영향</sub> = " + tt + " − " + tb + " = " + (tt - tb) + " ≤ 0 → 메모리 시간을 0으로 만들어도 " + tb + " s가 남아 <b>불가능</b>."] };
+        var m = tt - tb; if (ta % m) continue; var n = ta / m;
+        return { q: "실행 시간 " + t0 + " s 중 " + ta + " s가 메모리 접근이다. 메모리 접근만 빠르게 해서 전체를 " + k + "배 빠르게 하려면 메모리 접근을 몇 배 빠르게 해야 하나?", a: n + "배",
+          steps: ["공식: ① 목표 시간 = T<sub>전</sub> ÷ 배수 ② <b>n = T<sub>영향</sub> ÷ (목표 시간 − T<sub>비영향</sub>)</b>.", "목표 시간 = " + t0 + " ÷ " + k + " = " + tt + " s, T<sub>비영향</sub> = " + t0 + " − " + ta + " = " + tb + " s.", "영향 부분에 남는 시간 = " + tt + " − " + tb + " = " + m + " s → n = " + ta + " ÷ " + m + " = <b>" + n + "</b>.", "검산: " + ta + " ÷ " + n + " + " + tb + " = " + tt + " s = " + t0 + " ÷ " + k + "."] };
+      } } },
+    { id: "pow", name: "전력 비율", make: function () {
+      var cc = pick([1, 0.85, 1.2]), vv = pick([0.8, 0.85, 0.9]), ff = pick([0.85, 1, 1.2, 2]), r = cc * vv * vv * ff;
+      return { q: "새 칩은 옛 칩보다 용량성 부하 " + cc + "배, 전압 " + vv + "배, 주파수 " + ff + "배다. 전력은 옛 칩의 몇 배인가?", a: f6(Number(r.toFixed(4))) + "배",
+        steps: ["공식: <b>전력 ∝ 용량성 부하 × 전압" + sup(2) + " × 주파수</b> (전압만 제곱).", "비율끼리 곱한다: " + cc + " × " + vv + sup(2) + " × " + ff + " = " + cc + " × " + f6(vv * vv) + " × " + ff + " = <b>" + f6(Number(r.toFixed(4))) + "</b>."] }; } },
+    { id: "yld", name: "수율·다이당 비용", make: function () {
+      var d = pick([0.1, 0.2, 0.3, 0.5]), ar = pick([0.5, 1, 1.5, 2]), w = pick([4000, 5000, 6000]), nd = pick([200, 300, 400, 500]), x = d * ar / 2, y = 1 / Math.pow(1 + x, 2), cost = w / (nd * y);
+      return { q: "면적당 결함 " + d + "개/cm" + sup(2) + ", 다이 면적 " + ar + " cm" + sup(2) + ", N = 2. 수율은? 웨이퍼 한 장 " + w + "달러에 다이 " + nd + "개면 다이당 비용은?", a: "수율 ≈ " + y.toFixed(3) + ", 다이당 ≈ " + cost.toFixed(2) + "달러",
+        steps: ["공식: <b>수율 = 1 ÷ (1 + 면적당 결함 수 × 다이 면적 ÷ 2)" + sup("N") + "</b>, <b>다이당 비용 = 웨이퍼당 비용 ÷ (웨이퍼당 다이 수 × 수율)</b>.", d + " × " + ar + " ÷ 2 = " + f6(x) + " → 수율 = 1 ÷ " + f6(1 + x) + sup(2) + " = 1 ÷ " + f6((1 + x) * (1 + x)) + " ≈ <b>" + y.toFixed(3) + "</b>.", "다이당 = " + w + " ÷ (" + nd + " × " + y.toFixed(3) + ") ≈ <b>" + cost.toFixed(2) + "달러</b>."] }; } }
+  ];
+  var F2 = [
+    { id: "adr", name: "배열 원소 주소", make: function () {
+      var sz = pick([4, 4, 8]), base = R(0x40, 0x7F0) * 16, i = R(1, 40), ad = base + i * sz, back = Math.random() < 0.4, nm = sz === 4 ? "int(4바이트)" : "8바이트 원소";
+      if (back) return { q: nm + " 배열 A의 시작 주소가 " + h8(base) + "이다. 주소 " + h8(ad) + "는 A의 몇 번 원소인가?", a: "A[" + i + "]",
+        steps: ["공식: <b>주소 = 시작 주소 + i × 원소 크기</b> → i = (주소 − 시작) ÷ 크기.", "주소 − 시작 = 0x" + hx(ad - base) + " = " + (ad - base) + ".", "i = " + (ad - base) + " ÷ " + sz + " = <b>" + i + "</b>."] };
+      return { q: nm + " 배열 A의 시작 주소가 " + h8(base) + "이다. A[" + i + "]의 주소는?", a: h8(ad),
+        steps: ["공식: <b>A[i]의 주소 = 시작 주소 + i × 원소 크기</b>" + (sz === 4 ? " (int는 slli 2 = × 4)" : " (8바이트는 slli 3 = × 8)") + ".", "오프셋 = " + i + " × " + sz + " = " + i * sz + " = 0x" + hx(i * sz) + ".", h8(base) + " + 0x" + hx(i * sz) + " = <b>" + h8(ad) + "</b>."] }; } },
+    { id: "boff", name: "분기 오프셋", make: function () {
+      var pc = R(0x40, 0x400) * 4, k = 0; while (!k) k = R(-24, 24); var tg = pc + 4 * k, off = tg - pc, st = off >> 1;
+      return { q: "주소 " + h8(pc) + "의 beq가 " + h8(tg) + "로 분기한다. 바이트 오프셋(10진)과, 명령어에 저장되는 imm[12:1]의 값(10진)은?", a: "오프셋 " + mn(off) + ", imm[12:1] = " + mn(st),
+        steps: ["공식: <b>오프셋 = 목표 주소 − 분기 명령어 자신의 주소</b> (PC + 4 기준 아님). 저장 칸은 0번 비트를 버린 <b>imm[12:1] = 오프셋 ÷ 2</b>.", "0x" + hx(tg) + " − 0x" + hx(pc) + " = " + tg + " − " + pc + " = <b>" + mn(off) + "</b>.", "imm[12:1] = " + mn(off) + " ÷ 2 = <b>" + mn(st) + "</b> (12비트 2의 보수로 " + g4(bin(st, 12)) + ")."] }; } },
+    { id: "btg", name: "분기 목표 주소", make: function () {
+      var pc = R(0x40, 0x400) * 4, st = 0; while (!st) st = R(-40, 40); var tg = pc + 2 * st;
+      return { q: "주소 " + h8(pc) + "의 beq에 저장된 imm[12:1]이 10진 " + mn(st) + "이다. 분기하면 어느 주소로 가나?", a: h8(tg),
+        steps: ["공식: <b>목표 = 분기 명령어 주소 + 오프셋</b>, 오프셋 = imm[12:1] × 2 (0번 비트 0을 되붙임).", "오프셋 = " + mn(st) + " × 2 = " + mn(2 * st) + ".", pc + " + (" + mn(2 * st) + ") = " + tg + " = <b>" + h8(tg) + "</b>."] }; } },
+    { id: "lui", name: "lui + addi 상수", make: function () {
+      var up = R(0x00010, 0x7FFFF), lo = Math.random() < 0.55 ? R(0x800, 0xFFF) : R(0x001, 0x7FF), cst = up * 4096 + lo, big = lo >= 0x800, lu = big ? up + 1 : up, ad = big ? lo - 4096 : lo;
+      return { q: "x5에 32비트 상수 " + h8(cst) + "을 넣으려 한다. " + c("lui x5, ?") + "의 값과 " + c("addi x5, x5, ?") + "의 즉시값(10진)은?", a: "lui 0x" + hx(lu, 5) + ", addi " + mn(ad),
+        steps: ["공식: <b>위 5자리 → lui, 아래 3자리 → addi</b>. addi 즉시값은 12비트 부호 확장이라 <b>아래 3자리 ≥ 0x800이면 lui + 1</b>, addi = 아래 3자리 − 0x1000.",
+          "자르기: 위 0x" + hx(up, 5) + " | 아래 0x" + hx(lo, 3) + ".", big ? "아래 0x" + hx(lo, 3) + "의 맨 앞이 8 이상 → addi가 음수 " + (lo - 4096) + "(= " + lo + " − 4096)로 읽힌다. 그만큼 위에 1을 더해 lui = <b>0x" + hx(lu, 5) + "</b>, addi = <b>" + mn(ad) + "</b>." : "아래 0x" + hx(lo, 3) + "는 0x800 미만이라 그대로: lui = <b>0x" + hx(lu, 5) + "</b>, addi = <b>" + ad + "</b>.",
+          "검산: 0x" + hx(lu, 5) + "000 + (" + mn(ad) + ") = " + h8(cst) + "."] }; } },
+    { id: "stk", name: "스택 확보", make: function () {
+      var n = R(2, 6), sp = R(0x7F0, 0x7FF) * 16, ns = sp - 4 * n;
+      return { q: "레지스터 " + n + "개를 스택에 저장한다. sp = " + h8(sp) + "일 때 첫 명령어와, 실행 뒤 sp, 저장에 쓰는 오프셋들은?", a: c("addi sp, sp, -" + 4 * n).replace("-", "−") + ", sp = " + h8(ns) + ", 오프셋 0 ~ " + (4 * n - 4),
+        steps: ["공식: <b>확보 = addi sp, sp, −(개수 × 4)</b>, 복구 = 같은 크기를 더함. 스택은 낮은 주소로 자란다.", n + " × 4 = " + 4 * n + " → " + c("addi sp, sp, −" + 4 * n) + ".", "sp = 0x" + hx(sp) + " − " + 4 * n + " = <b>" + h8(ns) + "</b>.", "저장은 " + c("sw 레지스터, k(sp)") + "로 k = " + Array.apply(null, Array(n)).map(function (_, j) { return 4 * j; }).join(", ") + "."] }; } },
+    { id: "jal", name: "jal", make: function () {
+      var pc = R(0x100, 0x800) * 4, off = 0; while (!off) off = R(-100, 100) * 4; var tg = pc + off;
+      return { q: "주소 " + h8(pc) + "에서 " + c("jal x1, " + off) + "을 실행했다. x1의 값과 다음에 실행할 주소는?", a: "x1 = " + h8(pc + 4) + ", 다음 = " + h8(tg),
+        steps: ["공식: <b>rd ← PC + 4</b>(돌아올 주소), <b>목표 = PC + 오프셋</b>(숫자 = 목표 − 자기 주소).", "x1 = 0x" + hx(pc) + " + 4 = <b>" + h8(pc + 4) + "</b>.", "목표 = " + pc + " + (" + mn(off) + ") = " + tg + " = <b>" + h8(tg) + "</b>."] }; } },
+    { id: "end", name: "엔디언 바이트", make: function () {
+      var w = R(0, 0xFFFF) * 65536 + R(0, 0xFFFF), ad = R(0x40, 0x400) * 4, k = R(0, 3), big = Math.random() < 0.3, bs = le(w), b = big ? bs[3 - k] : bs[k];
+      return { q: c("sw") + "로 " + h8(w) + "를 주소 " + h8(ad) + "에 저장했다(" + (big ? "빅" : "리틀") + " 엔디언). 주소 " + h8(ad + k) + "의 바이트는?", a: "0x" + b,
+        steps: ["공식: <b>리틀 = 최하위 바이트를 가장 낮은 주소에</b>, 빅 = 최상위 바이트를 가장 낮은 주소에. RISC-V는 리틀.", "바이트로 나누면 " + bs.slice().reverse().join(" ") + " (오른쪽이 최하위).", (big ? "빅" : "리틀") + ": " + [0, 1, 2, 3].map(function (j) { return "0x" + hx(ad + j) + " = " + (big ? bs[3 - j] : bs[j]); }).join(", ") + " → <b>0x" + b + "</b>."] }; } }
+  ];
+  var F3 = [
+    { id: "ul", name: "곱 upper·lower", make: function () {
+      var a = R(1, 15), b = R(1, 15), kind = pick(["u", "s", "su"]), sa = kind === "u" ? a : (a >= 8 ? a - 16 : a), sb = kind === "s" ? (b >= 8 ? b - 16 : b) : b, p = sa * sb, pat = p & 0xFF;
+      var nm = { u: "둘 다 무부호(mulhu 쪽)", s: "둘 다 부호 있게(mulh 쪽)", su: "앞 수 부호 있게 × 뒤 수 무부호(mulhsu 쪽)" }[kind];
+      return { q: "4비트 " + bin(a, 4) + "<sub>2</sub> × " + bin(b, 4) + "<sub>2</sub>를 " + nm + " 곱한다. 8비트 곱의 Upper 4비트와 Lower 4비트는?", a: "Upper " + bin(pat >> 4, 4) + ", Lower " + bin(pat & 15, 4),
+        steps: ["공식: <b>곱의 길이 = 피승수 비트 + 승수 비트</b> (4 + 4 = 8). 부호 있는 값 = <b>무부호 값 − 2" + sup("n") + "</b>(MSB 1일 때).", "값으로 읽기: " + bin(a, 4) + " = " + mn(sa) + ", " + bin(b, 4) + " = " + mn(sb) + ".", "곱 = " + mn(p) + " → 8비트 패턴 " + (p < 0 ? "(음수라 2" + sup(8) + " − " + (-p) + " = " + pat + ") " : "") + g4(bin(pat, 8)) + ".", "Upper = <b>" + bin(pat >> 4, 4) + "</b>, Lower = <b>" + bin(pat & 15, 4) + "</b>. Lower는 세 방식 모두 같다."] }; } },
+    { id: "div", name: "부호 있는 나눗셈", make: function () {
+      var dv = R(2, 9) * (Math.random() < 0.5 ? -1 : 1), q0 = R(2, 15), r0 = R(1, Math.abs(dv) - 1), x = (q0 * Math.abs(dv) + r0) * (Math.random() < 0.5 ? -1 : 1), q = (x / dv) < 0 ? Math.ceil(x / dv) : Math.floor(x / dv), r = x - q * dv;
+      return { q: "div·rem: " + mn(x) + " ÷ " + mn(dv) + "의 몫과 나머지는?", a: "몫 " + mn(q) + ", 나머지 " + mn(r),
+        steps: ["공식: <b>피제수 = 몫 × 제수 + 나머지</b>, 부호 있는 몫은 0 쪽으로 버림, <b>나머지 부호 = 피제수 부호</b>.", "크기만: " + Math.abs(x) + " ÷ " + Math.abs(dv) + " = " + Math.abs(q) + " … " + Math.abs(r) + ".", "몫 부호: 두 수 부호가 " + (q < 0 ? "다르니 음수" : "같으니 양수") + " → <b>" + mn(q) + "</b>. 나머지는 피제수(" + mn(x) + ") 부호 → <b>" + mn(r) + "</b>.", "검산: " + mn(q) + " × " + mn(dv) + " + (" + mn(r) + ") = " + mn(x) + "."] }; } },
+    { id: "ovf", name: "오버플로 판정", make: function () {
+      var a = R(-128, 127), b = R(-128, 127), sub = Math.random() < 0.5, r = sub ? a - b : a + b, of = r > 127 || r < -128, pat = r & 0xFF;
+      var rule = sub ? "뺄셈은 <b>부호가 다른 두 수</b>를 뺄 때만 생길 수 있다(빼는 수의 부호를 뒤집으면 덧셈과 같음)." : "덧셈은 <b>부호가 같은 두 수</b>를 더할 때만 생길 수 있다.";
+      return { q: "8비트 2의 보수 0x" + hx(a & 0xFF, 2) + " " + (sub ? "−" : "+") + " 0x" + hx(b & 0xFF, 2) + "의 8비트 결과(16진)와 오버플로 여부는?", a: "0x" + hx(pat, 2) + ", 오버플로 " + (of ? "O" : "X"),
+        steps: ["규칙: " + rule + " 생겼는지는 결과 부호가 맞는지로 본다.", "10진으로: 0x" + hx(a & 0xFF, 2) + " = " + mn(a) + ", 0x" + hx(b & 0xFF, 2) + " = " + mn(b) + " → 참값 " + mn(r) + ".", "8비트 범위 −128 ~ 127 " + (of ? "밖" : "안") + " → 오버플로 <b>" + (of ? "O" : "X") + "</b>. 8비트에 남는 결과 = <b>0x" + hx(pat, 2) + "</b>" + (of ? " (부호가 뒤집혀 보임)" : "") + "."] }; } },
+    { id: "enc", name: "IEEE 단정도로", make: function () {
+      var v = dy(), e = encSteps(v, 32);
+      return { q: f6(v) + "를 IEEE 754 단정도(1-8-23, bias 127) 16진으로 쓰시오.", a: h8(e.word), steps: ["공식: <b>값 = (−1)" + sup("S") + " × (1 + Fraction) × 2" + sup("지수 칸 − bias") + "</b>, <b>지수 칸 = 실제 지수 + bias</b>."].concat(e.steps) }; } },
+    { id: "dec", name: "IEEE → 10진", make: function () {
+      var v = dy(), p = fp(v), w = enc32(v), mb = mant(p.m, 23), ef = p.e + 127;
+      return { q: "IEEE 754 단정도 " + h8(w) + "가 나타내는 10진 값은?", a: f6(v),
+        steps: ["공식: <b>값 = (−1)" + sup("S") + " × 1.가수<sub>2</sub> × 2" + sup("지수 칸 − 127") + "</b>.", "2진: " + g4(bin(w, 32)) + " → S " + p.s + " | 지수 칸 " + bin(ef, 8) + " | 가수 " + trimm(mb) + "….", "지수 칸 = " + ef + " → 실제 지수 = " + ef + " − 127 = " + mn(p.e) + ".", "1." + trimm(mb) + "<sub>2</sub> × 2" + sup(mn(p.e)) + " = " + bstr(p.a) + "<sub>2</sub> = " + f6(p.a) + (p.s ? ", S = 1이라 <b>" + f6(v) + "</b>." : " → <b>" + f6(v) + "</b>.")] }; } },
+    { id: "h16", name: "16비트(1-5-10)로", make: function () {
+      var v = dy(), e = encSteps(v, 16);
+      return { q: f6(v) + "를 16비트 부동소수점(1-5-10, bias 15) 16진으로 쓰시오.", a: "0x" + hx(e.word, 4), steps: ["공식: 단정도와 같고 칸만 <b>1-5-10, bias 15</b>."].concat(e.steps) }; } },
+    { id: "fexp", name: "FP 곱 지수 칸", make: function () {
+      var e1 = R(-6, 6), e2 = R(-6, 6), f1 = e1 + 127, f2 = e2 + 127;
+      return { q: "단정도 두 수의 지수 칸이 " + f1 + "과 " + f2 + "이다. 곱의 지수 칸(정규화 전)은?", a: String(f1 + f2 - 127),
+        steps: ["공식: <b>곱의 지수 칸 = 지수 칸<sub>1</sub> + 지수 칸<sub>2</sub> − bias</b>. 두 칸에 bias가 한 번씩 들어 있어 한 번 빼야 한다.", f1 + " + " + f2 + " − 127 = <b>" + (f1 + f2 - 127) + "</b>.", "검산: 실제 지수 " + mn(e1) + " + " + mn(e2) + " = " + mn(e1 + e2) + ", + 127 = " + (e1 + e2 + 127) + "."] }; } }
+  ];
+  var F4 = [
+    { id: "pcs", name: "PCSrc와 다음 PC", make: function () {
+      var op = pick(["beq", "beq", "add", "lw"]), a = R(1, 9), b = Math.random() < 0.5 ? a : R(1, 9), pc = R(0x40, 0x400) * 4, off = R(2, 20) * 4;
+      var br = op === "beq" ? 1 : 0, alu = op === "beq" ? a - b : op === "add" ? a + b : 0x1000 + 8, z = alu === 0 ? 1 : 0, ps = br & z, nx = ps ? pc + off : pc + 4;
+      var ins = op === "beq" ? c("beq x5, x6, L") + "(L은 " + off + "바이트 뒤)" : op === "add" ? c("add x7, x5, x6") : c("lw x7, 8(x10)") + "(x10 = 0x1000)";
+      return { q: "PC = " + h8(pc) + ", x5 = " + a + ", x6 = " + b + "일 때 " + ins + "을 실행한다. Branch, Zero, PCSrc와 다음 PC는?", a: "Branch " + br + ", Zero " + z + ", PCSrc " + ps + ", 다음 PC " + h8(nx),
+        steps: ["공식: <b>PCSrc = Branch AND Zero</b>. PCSrc 0 → PC + 4, 1 → 분기 목표.", "Branch = " + (br ? "1(beq)" : "0(분기 명령어가 아님)") + ". ALU 결과 = " + (op === "beq" ? a + " − " + b + " = " + (a - b) : op === "add" ? a + " + " + b + " = " + (a + b) : "주소 0x1008") + " → Zero = " + z + ".", "PCSrc = " + br + " AND " + z + " = <b>" + ps + "</b> → 다음 PC = <b>" + h8(nx) + "</b>" + (ps ? " (분기)" : " (PC + 4)") + "."] }; } },
+    { id: "btg4", name: "분기 가산기 출력", make: function () {
+      var pc = R(0x40, 0x400) * 4, st = 0; while (!st) st = R(-30, 30);
+      return { q: "PC = " + h8(pc) + ", ImmGen 출력(부호 확장한 imm[12:1])이 10진 " + mn(st) + "이다. 분기 가산기 출력은?", a: h8(pc + 2 * st),
+        steps: ["공식: <b>분기 목표 = PC + (오프셋 &lt;&lt; 1)</b> (&lt;&lt; 1 = 왼쪽 1칸 = × 2).", mn(st) + " × 2 = " + mn(2 * st) + ".", pc + " + (" + mn(2 * st) + ") = <b>" + h8(pc + 2 * st) + "</b>."] }; } },
+    { id: "cyc", name: "단일 사이클 주기", make: function () {
+      var im = pick([200, 250, 300]), rf = pick([100, 150]), al = pick([150, 200]), dm = pick([200, 250, 300]), per = im + rf + al + dm + rf, n = R(1, 9);
+      return { q: "명령어 메모리 " + im + ", 레지스터 파일 읽기·쓰기 각 " + rf + ", ALU " + al + ", 데이터 메모리 " + dm + " ps(나머지 무시). 단일 사이클 클럭 주기와, 명령어 " + n + " × 10" + sup(9) + "개의 CPU 시간은? beq에 실제로 필요한 시간은?", a: per + " ps, " + f6(n * per / 1000) + " s, beq " + (im + rf + al) + " ps",
+        steps: ["공식: <b>클럭 주기 = 가장 긴 명령어(lw)의 경로 합</b> = 명령어 메모리 + 레지스터 읽기 + ALU + 데이터 메모리 + 레지스터 쓰기. <b>CPU 시간 = IC × 1 × 주기</b>.", im + " + " + rf + " + " + al + " + " + dm + " + " + rf + " = <b>" + per + " ps</b>.", n + " × 10" + sup(9) + " × " + per + " × 10" + sup("−12") + " = <b>" + f6(n * per / 1000) + " s</b>.", "beq는 명령어 메모리 + 레지스터 읽기 + ALU = <b>" + (im + rf + al) + " ps</b>면 되지만 클럭은 " + per + " ps로 같다(단일 사이클의 한계)."] }; } },
+    { id: "ctl", name: "제어 신호 한 줄", make: function () {
+      var op = pick(["lw", "sw", "add", "sub", "and", "or", "beq"]), r = ctrlRow(op);
+      return { q: c(op) + "의 RegWrite, ALUSrc, MemRead, MemWrite, MemtoReg, Branch, ALUOp는?", a: r.join(", "),
+        steps: ["열마다 묻는다: rd에 쓰나(RegWrite)? ALU 둘째 입력이 즉시값인가(ALUSrc)? 메모리 읽나·쓰나? 레지스터에 쓸 값이 메모리 값인가(MemtoReg, 안 쓰면 X)? 분기인가? ALUOp = 00 덧셈(lw·sw), 01 뺄셈(beq), 10 funct(R형).", tbl(CN, [r.map(String)])] }; } },
+    { id: "alc", name: "ALUOp → ALU 제어", make: function () {
+      var op = pick(["lw", "sw", "add", "sub", "and", "or", "beq"]);
+      return { q: c(op) + "의 ALUOp와 ALU 제어 4비트는?", a: "ALUOp " + ctrlRow(op)[6] + ", ALU 제어 " + ALUC[op],
+        steps: ["공식: ALUOp 00 → 덧셈 0010, 01 → 뺄셈 0110, 10 → funct로: add 0010, sub 0110, and 0000, or 0001.", "<b>" + op + "</b>: ALUOp " + ctrlRow(op)[6] + " → <b>" + ALUC[op] + "</b>."] }; } }
+  ];
+
+  // ---------- 시험 모양 여러 단계 (연습 문제 단원) ----------
+  var X1 = [
+    { id: "two", name: "두 컴퓨터 비교", make: function () {
+      var ca = pick([1, 1.5, 2, 2.5]), fa = pick([2, 2.5, 4]), cb = pick([1.2, 2, 3, 4]), fb = pick([1, 2, 3, 4]), ta = ca / fa, tb = cb / fb; if (Math.abs(ta - tb) < 1e-9) cb += 1, tb = cb / fb;
+      var fast = ta < tb ? "A" : "B", n = Math.max(ta, tb) / Math.min(ta, tb), ic = R(1, 9);
+      return { q: "같은 프로그램(명령어 " + ic + " × 10" + sup(9) + "개)을 A는 CPI " + ca + "·" + fa + " GHz, B는 CPI " + cb + "·" + fb + " GHz로 실행한다. 각 CPU 시간과, 어느 쪽이 몇 배 빠른가?", a: "A " + f6(ic * ta) + " s, B " + f6(ic * tb) + " s, " + fast + "가 " + f6(n) + "배 빠름",
+        steps: ["CPU 시간 = IC × CPI ÷ 클럭 속도.", "A: " + ic + " × " + ca + " ÷ " + fa + " = <b>" + f6(ic * ta) + " s</b>. B: " + ic + " × " + cb + " ÷ " + fb + " = <b>" + f6(ic * tb) + " s</b>.", "n = 느린 쪽 ÷ 빠른 쪽 = " + f6(ic * Math.max(ta, tb)) + " ÷ " + f6(ic * Math.min(ta, tb)) + " = <b>" + f6(n) + "</b> → " + fast + "가 빠름."] }; } },
+    { id: "cmp", name: "컴파일러 두 개 비교", make: function () {
+      var cp = [1, 2, 3], A = [R(1, 5), R(1, 5), R(1, 5)], B = [R(1, 5), R(1, 5), R(1, 5)], ca = A[0] + 2 * A[1] + 3 * A[2], cb = B[0] + 2 * B[1] + 3 * B[2], na = A[0] + A[1] + A[2], nb = B[0] + B[1] + B[2];
+      if (ca === cb) { B[2]++; cb += 3; nb++; }
+      return { q: "명령어 종류 A·B·C의 CPI는 1·2·3이다. 컴파일러 1은 종류별로 " + A.join("·") + " × 10" + sup(9) + "개, 컴파일러 2는 " + B.join("·") + " × 10" + sup(9) + "개를 만든다. 클럭이 같을 때 어느 쪽이 빠르고, 각 평균 CPI는?", a: (ca < cb ? "컴파일러 1" : "컴파일러 2") + " 빠름, 평균 CPI " + f6(ca / na) + " / " + f6(cb / nb),
+        steps: ["클럭이 같으면 사이클 수(= Σ 개수 × CPI)만 비교한다. 명령어 수가 적다고 빠른 것이 아니다.", "1: " + A[0] + "×1 + " + A[1] + "×2 + " + A[2] + "×3 = " + ca + ", 2: " + B[0] + "×1 + " + B[1] + "×2 + " + B[2] + "×3 = " + cb + " (× 10" + sup(9) + ") → <b>" + (ca < cb ? "컴파일러 1" : "컴파일러 2") + "</b>가 빠름.", "평균 CPI = 사이클 ÷ 개수: " + ca + " ÷ " + na + " = <b>" + f6(ca / na) + "</b>, " + cb + " ÷ " + nb + " = <b>" + f6(cb / nb) + "</b>."] }; } },
+    { id: "tbl", name: "표로 개선율", make: function () {
+      var ic1 = R(4, 9), c1 = pick([2, 2.5, 3]), ic2 = ic1 - R(1, 3), c2 = c1 + pick([0, 0.5, -0.5]), f = pick([2, 2.5, 4]), t1 = ic1 * c1 / f, t2 = ic2 * c2 / f, s = t1 / t2;
+      return { q: tbl(["", "명령어 수", "CPI"], [["개선 전", ic1 + " × 10" + sup(9), c1], ["개선 후", ic2 + " × 10" + sup(9), c2]]) + "클럭 " + f + " GHz로 같다. 실행 시간 전·후와 속도 향상, 성능 % 향상은?", a: f6(t1) + " s → " + f6(t2) + " s, " + f6(s) + "배, " + f6((s - 1) * 100) + "%",
+        steps: ["CPU 시간 = IC × CPI ÷ 클럭 속도.", "전: " + ic1 + " × " + c1 + " ÷ " + f + " = " + f6(t1) + " s, 후: " + ic2 + " × " + c2 + " ÷ " + f + " = " + f6(t2) + " s.", "속도 향상 = " + f6(t1) + " ÷ " + f6(t2) + " = <b>" + f6(s) + "</b>, % 향상 = (" + f6(s) + " − 1) × 100 = <b>" + f6((s - 1) * 100) + "%</b>" + (s < 1 ? " (음수 = 오히려 느려짐)" : "") + "."] }; } }
+  ].concat(F1.filter(function (t) { return ["amdinv", "mips", "avg"].indexOf(t.id) >= 0; }));
+  var X2 = [
+    { id: "eR", name: "R형 → 기계어·바이트", make: function () {
+      var op = pick(["add", "sub", "and", "or", "xor"]), rd = R(1, 31), r1 = R(1, 31), r2 = R(1, 31), w = encR(op, rd, r1, r2), ad = R(0x40, 0x400) * 4, bs = le(w);
+      return { q: "주소 " + h8(ad) + "의 " + c(op + " x" + rd + ", x" + r1 + ", x" + r2) + "를 16진 기계어로 쓰고, 메모리 0x" + hx(ad) + "~0x" + hx(ad + 3) + "의 바이트를 쓰시오(리틀 엔디언).", a: h8(w) + " → " + bs.join(" "),
+        steps: ["R형 칸: funct7 · rs2 · rs1 · funct3 · rd · opcode = 7·5·5·3·5·7. opcode 0110011, " + op + "의 funct3 = " + bin(RF[op][1], 3) + ", funct7 = " + bin(RF[op][0], 7) + ".", "rd = x" + rd + " = " + bin(rd, 5) + ", rs1 = x" + r1 + " = " + bin(r1, 5) + ", rs2 = x" + r2 + " = " + bin(r2, 5) + ".", "이어 쓰기: " + g4(bin(w, 32)) + " → <b>" + h8(w) + "</b>.", "리틀 엔디언: 최하위 바이트부터 낮은 주소에 → " + bs.map(function (b, j) { return "0x" + hx(ad + j) + " = " + b; }).join(", ") + "."] }; } },
+    { id: "eM", name: "lw·sw·addi → 기계어", make: function () {
+      var op = pick(["lw", "sw", "addi"]), a = R(1, 31), r1 = R(1, 31), imm = R(-64, 200) * (op === "addi" ? 1 : 4); if (op !== "addi") imm = Math.max(-256, Math.min(imm, 800));
+      var w = op === "sw" ? encS(a, r1, imm) : encI(op, a, r1, imm), asm = op === "addi" ? op + " x" + a + ", x" + r1 + ", " + imm : op + " x" + a + ", " + imm + "(x" + r1 + ")", ib = bin(imm & 0xFFF, 12);
+      var steps = op === "sw" ? ["S형 칸: imm[11:5] · rs2 · rs1 · funct3 · imm[4:0] · opcode. opcode 0100011, funct3 010. rs2 = 저장할 값 x" + a + ", rs1 = 베이스 x" + r1 + ".", "즉시값 " + mn(imm) + " → 12비트 2의 보수 " + g4(ib) + " → 위 7비트 " + ib.slice(0, 7) + ", 아래 5비트 " + ib.slice(7) + "."]
+        : ["I형 칸: imm[11:0] · rs1 · funct3 · rd · opcode. " + (op === "lw" ? "opcode 0000011, funct3 010" : "opcode 0010011, funct3 000") + ". rd = x" + a + ", rs1 = x" + r1 + ".", "즉시값 " + mn(imm) + " → 12비트 2의 보수 " + g4(ib) + "."];
+      steps.push("이어 쓰기: " + g4(bin(w, 32)) + " → <b>" + h8(w) + "</b>.");
+      return { q: c(asm).replace(/-(\d)/, "−$1") + "를 16진 기계어로 쓰시오.", a: h8(w), steps: steps }; } },
+    { id: "eB", name: "beq·bne → 기계어", make: function () {
+      var op = pick(["beq", "bne"]), r1 = R(1, 31), r2 = R(1, 31), pc = R(0x40, 0x400) * 4, off = 0; while (!off) off = R(-30, 30) * 4; var w = encB(op, r1, r2, off), ib = bin(off & 0x1FFF, 13);
+      return { q: "주소 " + h8(pc) + "의 " + c(op + " x" + r1 + ", x" + r2 + ", L") + "에서 L의 주소가 " + h8(pc + off) + "이다. 16진 기계어는?", a: h8(w),
+        steps: ["오프셋 = 목표 − 자기 주소 = " + (pc + off) + " − " + pc + " = " + mn(off) + " → 13비트 2의 보수 " + g4(ib) + " (imm[12] … imm[0]).", "SB형 배치: imm[12] → 31, imm[10:5] → 30–25, rs2, rs1, funct3(" + (op === "bne" ? "001" : "000") + "), imm[4:1] → 11–8, imm[11] → 7, opcode 1100011.", "imm[12] = " + ib[0] + ", imm[11] = " + ib[1] + ", imm[10:5] = " + ib.slice(2, 8) + ", imm[4:1] = " + ib.slice(8, 12) + " (imm[0] = 0은 버림).", "이어 쓰기: " + g4(bin(w, 32)) + " → <b>" + h8(w) + "</b>."] }; } },
+    { id: "dR", name: "기계어 → 어셈블리", make: function () {
+      var op = pick(["add", "sub", "and", "or", "xor"]), rd = R(1, 31), r1 = R(1, 31), r2 = R(1, 31), w = encR(op, rd, r1, r2), b = bin(w, 32);
+      return { q: "기계어 " + h8(w) + "를 어셈블리로 쓰시오.", a: c(op + " x" + rd + ", x" + r1 + ", x" + r2),
+        steps: ["2진: " + g4(b) + ". 오른쪽 7비트 " + b.slice(25) + " → R형.", "7·5·5·3·5·7로 끊기: funct7 " + b.slice(0, 7) + " · rs2 " + b.slice(7, 12) + " · rs1 " + b.slice(12, 17) + " · funct3 " + b.slice(17, 20) + " · rd " + b.slice(20, 25) + ".", "funct3 " + b.slice(17, 20) + ", funct7 " + b.slice(0, 7) + " → " + op + ". 번호: rd " + rd + ", rs1 " + r1 + ", rs2 " + r2 + " → <b>" + op + " x" + rd + ", x" + r1 + ", x" + r2 + "</b>."] }; } },
+    { id: "run", name: "코드 실행 결과", make: function () {
+      var x = { 5: R(1, 0x7FFFFFFF) >>> 0, 6: R(1, 0xFFFF) }, code = [], steps = [];
+      if (Math.random() < 0.5) x[5] = (x[5] | 0x80000000) >>> 0;
+      var OPS = ["addi", "slli", "srli", "srai", "and", "or", "xor", "sub", "add"];
+      for (var j = 0; j < 3; j++) {
+        var op = pick(OPS), d = pick([5, 6, 7]), s = pick([5, 6]), t = s === 5 ? 6 : 5, v, ln;
+        if (x[s] === undefined) x[s] = 0; if (x[t] === undefined) x[t] = 0;
+        if (op === "addi") { var im = R(-50, 50); v = (x[s] + im) >>> 0; ln = "addi x" + d + ", x" + s + ", " + im; }
+        else if (op === "slli" || op === "srli" || op === "srai") { var k = pick([4, 8, 12]); v = op === "slli" ? (x[s] << k) >>> 0 : op === "srli" ? x[s] >>> k : (x[s] >> k) >>> 0; ln = op + " x" + d + ", x" + s + ", " + k; }
+        else { var A = x[s], B = x[t]; v = op === "and" ? (A & B) >>> 0 : op === "or" ? (A | B) >>> 0 : op === "xor" ? (A ^ B) >>> 0 : op === "sub" ? (A - B) >>> 0 : (A + B) >>> 0; ln = op + " x" + d + ", x" + s + ", x" + t; }
+        code.push(ln.replace(/-(\d)/, "−$1")); x[d] = v; steps.push(c(ln.replace(/-(\d)/, "−$1")) + " → x" + d + " = <b>" + h8(v) + "</b>");
+      }
+      return { q: "처음 x5 = " + h8(arguments.length ? 0 : 0) + "", a: "", steps: [] }; } }
+  ];
+  // 코드 실행은 처음 값이 필요해 따로 만든다
+  X2[X2.length - 1].make = function () {
+    var x5 = (R(1, 0x7FFF) * 65536 + R(0, 0xFFFF)) >>> 0; if (Math.random() < 0.5) x5 = (x5 | 0x80000000) >>> 0;
+    var x = { 5: x5, 6: (R(0, 0xFF) * 256 + R(0, 0xFF)) >>> 0, 7: 0 }, init = "x5 = " + h8(x[5]) + ", x6 = " + h8(x[6]) + ", x7 = 0", code = [], steps = [];
+    var OPS = ["addi", "slli", "srli", "srai", "and", "or", "xor", "sub", "add"];
+    for (var j = 0; j < 3; j++) {
+      var op = pick(OPS), d = pick([5, 6, 7]), s = pick([5, 6]), t = s === 5 ? 6 : 5, v, ln, why;
+      if (op === "addi") { var im = R(-50, 50); v = (x[s] + im) >>> 0; ln = "addi x" + d + ", x" + s + ", " + im; why = h8(x[s]) + " + (" + mn(im) + ")"; }
+      else if (op === "slli" || op === "srli" || op === "srai") { var k = pick([4, 8, 12]); v = op === "slli" ? (x[s] << k) >>> 0 : op === "srli" ? x[s] >>> k : (x[s] >> k) >>> 0; ln = op + " x" + d + ", x" + s + ", " + k; why = h8(x[s]) + "를 " + (op === "slli" ? "왼쪽" : "오른쪽") + " " + k + "칸(16진 " + k / 4 + "자리)" + (op === "srai" ? ", 빈칸은 MSB(" + (x[s] >>> 31) + ")로" : op === "srli" ? ", 빈칸은 0" : ""); }
+      else { var A = x[s], B = x[t]; v = op === "and" ? (A & B) >>> 0 : op === "or" ? (A | B) >>> 0 : op === "xor" ? (A ^ B) >>> 0 : op === "sub" ? (A - B) >>> 0 : (A + B) >>> 0; ln = op + " x" + d + ", x" + s + ", x" + t; why = h8(A) + " " + { and: "and", or: "or", xor: "xor", sub: "−", add: "+" }[op] + " " + h8(B); }
+      x[d] = v; code.push(mn(ln)); steps.push(c(mn(ln)) + ": " + why + " → x" + d + " = <b>" + h8(v) + "</b>");
+    }
+    return { q: init + "일 때 아래를 차례로 실행한 뒤 x5, x6, x7을 16진 8자리로 쓰시오.<pre class=\"asm\">" + code.join("\n") + "</pre>", a: "x5 = " + h8(x[5]) + ", x6 = " + h8(x[6]) + ", x7 = " + h8(x[7]), steps: steps.concat(["앞 줄의 결과가 다음 줄의 입력이 된다(바뀐 레지스터를 계속 고쳐 적기)."]) };
+  };
+  X2 = X2.concat(F2.filter(function (t) { return ["lui", "stk", "boff"].indexOf(t.id) >= 0; }));
+  var X3 = [
+    { id: "fadd", name: "FP 덧셈 A + B", make: function () {
+      for (var g = 0; g < 200; g++) { var A = dy(), B = dy(), S = A + B; if (S !== 0 && Math.abs(S) >= 1 / 64 && Math.abs(S) < 512) break; }
+      var pa = fp(A), pb = fp(B), big = Math.abs(A) >= Math.abs(B) ? pa : pb, sm = big === pa ? pb : pa, e = encSteps(S, 32), ps = fp(S);
+      return { q: "A = " + f6(A) + ", B = " + f6(B) + "일 때 A + B를 부동소수점 덧셈 4단계로 구하고 단정도 16진으로 쓰시오.", a: f6(S) + " = " + h8(e.word),
+        steps: ["2진 정규화: A = " + (pa.s ? "−" : "") + "1." + trimm(mant(pa.m, 23)) + " × 2" + sup(mn(pa.e)) + ", B = " + (pb.s ? "−" : "") + "1." + trimm(mant(pb.m, 23)) + " × 2" + sup(mn(pb.e)) + ".",
+          "① 지수 맞추기: 작은 지수(" + mn(sm.e) + ")를 큰 지수(" + mn(big.e) + ")로 → 작은 쪽 가수를 오른쪽으로 " + (big.e - sm.e) + "칸: " + bstr(sm.a / Math.pow(2, big.e)) + " × 2" + sup(mn(big.e)) + ".",
+          "② 가수 더하기(부호 고려): " + (pa.s ? "−" : "") + bstr(pa.a / Math.pow(2, big.e)) + " + " + (pb.s ? "(−" : "") + bstr(pb.a / Math.pow(2, big.e)) + (pb.s ? ")" : "") + " = " + (S < 0 ? "−" : "") + bstr(Math.abs(S) / Math.pow(2, big.e)) + " × 2" + sup(mn(big.e)) + ".",
+          "③ 정규화: " + (S < 0 ? "−" : "") + "1." + trimm(mant(ps.m, 23)) + " × 2" + sup(mn(ps.e)) + " (실제 지수 " + mn(ps.e) + "는 −126 ~ 127 안이라 오버·언더플로 없음). ④ 반올림: 비트가 짧아 그대로.",
+          "10진 검산: " + f6(A) + " + " + f6(B) + " = " + f6(S) + ". 부호화는 아래."].concat(e.steps.slice(2)) }; } },
+    { id: "fmul", name: "FP 곱셈 A × B", make: function () {
+      for (var g = 0; g < 200; g++) { var A = dy(), B = dy(), P = A * B; var pp = fp(P); if (Math.round(pp.m * 8388608) === pp.m * 8388608 && Math.abs(P) < 1e5 && Math.abs(P) > 1e-4) break; }
+      var pa = fp(A), pb = fp(B), ps = fp(P), e = encSteps(P, 32), fa = pa.e + 127, fb = pb.e + 127, sigp = (1 + pa.m) * (1 + pb.m);
+      return { q: "A = " + f6(A) + ", B = " + f6(B) + "일 때 A × B를 부동소수점 곱셈 단계로 구하고 단정도 16진으로 쓰시오.", a: f6(P) + " = " + h8(e.word),
+        steps: ["2진 정규화: A = 1." + trimm(mant(pa.m, 23)) + " × 2" + sup(mn(pa.e)) + "(지수 칸 " + fa + "), B = 1." + trimm(mant(pb.m, 23)) + " × 2" + sup(mn(pb.e)) + "(지수 칸 " + fb + ").",
+          "① 지수: 지수 칸끼리 더하고 bias 한 번 빼기 " + fa + " + " + fb + " − 127 = " + (fa + fb - 127) + " (실제 " + mn(pa.e + pb.e) + ").",
+          "② 가수 곱: " + bstr(1 + pa.m) + " × " + bstr(1 + pb.m) + " = " + bstr(sigp) + " (10진 " + f6(1 + pa.m) + " × " + f6(1 + pb.m) + " = " + f6(sigp) + ").",
+          "③ 정규화: " + (sigp >= 2 ? "2 이상이라 오른쪽 1칸, 지수 + 1 → " : "이미 1.xxx → ") + "1." + trimm(mant(ps.m, 23)) + " × 2" + sup(mn(ps.e)) + ". ④ 반올림: 그대로. ⑤ 부호: " + pa.s + " xor " + pb.s + " = " + ps.s + ".",
+          "10진 검산: " + f6(A) + " × " + f6(B) + " = " + f6(P) + ". 부호화는 아래."].concat(e.steps.slice(2)) }; } },
+    { id: "ul3", name: "upper·lower 세 방식", make: function () {
+      var a = R(9, 15), b = R(1, 15), u = a * b, s = (a - 16) * (b >= 8 ? b - 16 : b), su = (a - 16) * b, row = function (p) { var q = p & 0xFF; return [bin(q >> 4, 4), bin(q & 15, 4)]; };
+      return { q: "4비트 A = " + bin(a, 4) + "<sub>2</sub>, B = " + bin(b, 4) + "<sub>2</sub>. Unsigned × Unsigned, Signed × Signed, Signed × Unsigned 곱의 Upper·Lower를 각각 쓰시오.", a: "U " + row(u).join("|") + ", S " + row(s).join("|") + ", SU " + row(su).join("|"),
+        steps: ["값: A = 무부호 " + a + " / 부호 " + (a - 16) + ", B = 무부호 " + b + " / 부호 " + mn(b >= 8 ? b - 16 : b) + ".", tbl(["방식", "곱(10진)", "8비트", "Upper", "Lower"], [["U × U", u, g4(bin(u & 0xFF, 8)), row(u)[0], row(u)[1]], ["S × S", mn(s), g4(bin(s & 0xFF, 8)), row(s)[0], row(s)[1]], ["S × U", mn(su), g4(bin(su & 0xFF, 8)), row(su)[0], row(su)[1]]]), "음수 곱은 2" + sup(8) + "에서 뺀 패턴. Lower는 셋 다 같고 Upper만 다르다(mul은 같고 mulh·mulhu·mulhsu가 다른 이유)."] }; } }
+  ].concat(F3.filter(function (t) { return ["h16", "dec", "ovf"].indexOf(t.id) >= 0; }));
+  var X4 = [
+    { id: "line", name: "기계어 → 선 번호·제어 신호", make: function () {
+      var k = pick(["R", "lw", "sw", "beq"]), w, asm, a = R(1, 31), b = R(1, 31), d = R(1, 31), op = k === "R" ? pick(["add", "sub", "and", "or"]) : k;
+      if (k === "R") { w = encR(op, d, a, b); asm = op + " x" + d + ", x" + a + ", x" + b; }
+      else if (k === "lw") { var im = R(1, 60) * 4; w = encI("lw", d, a, im); asm = "lw x" + d + ", " + im + "(x" + a + ")"; }
+      else if (k === "sw") { var im2 = R(1, 60) * 4; w = encS(b, a, im2); asm = "sw x" + b + ", " + im2 + "(x" + a + ")"; }
+      else { var of = R(1, 30) * 4; w = encB("beq", a, b, of); asm = "beq x" + a + ", x" + b + ", " + of; }
+      var bb = bin(w, 32), r1 = parseInt(bb.slice(12, 17), 2), r2 = parseInt(bb.slice(7, 12), 2), wr = parseInt(bb.slice(20, 25), 2), r = ctrlRow(op);
+      return { q: "기계어 " + h8(w) + "를 실행하는 동안 읽기 레지스터 1, 읽기 레지스터 2, 쓰기 레지스터 선에 실리는 번호와, 제어 신호(RegWrite, ALUSrc, MemRead, MemWrite, MemtoReg, Branch, ALUOp)는?", a: r1 + ", " + r2 + ", " + wr + " / " + r.join(", "),
+        steps: ["2진: " + g4(bb) + ". 오른쪽 7비트 " + bb.slice(25) + " → " + (k === "R" ? "R형(" + op + ")" : k) + ". 어셈블리로 " + c(asm) + ".", "선은 형식과 상관없이 고정: [19:15] " + bb.slice(12, 17) + " = <b>" + r1 + "</b>, [24:20] " + bb.slice(7, 12) + " = <b>" + r2 + "</b>, [11:7] " + bb.slice(20, 25) + " = <b>" + wr + "</b>." + (k === "lw" ? " (lw의 [24:20]은 즉시값 조각이지만 선에는 실린다. 쓰이지 않을 뿐)" : k === "sw" || k === "beq" ? " ([11:7]은 즉시값 조각이라 RegWrite = 0으로 막는다)" : ""), tbl(CN, [r.map(String)])] }; } }
+  ].concat(F4.filter(function (t) { return ["pcs", "cyc", "btg4"].indexOf(t.id) >= 0; }));
+
+  // ---------- 연습기 화면 (기초 · 6과 같은 모양) ----------
+  function mount(box, T, KEY, SIG) {
+    var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) {}
+    st.sc = st.sc || {}; st.sel = st.sel || "mix"; if (st.pad === undefined) st.pad = 360;
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+    var cur = null;
+    box.innerHTML = '<div class="dr-types"></div><div class="dr-card"><p class="dr-type"></p><div class="dr-q"></div>' +
+      '<div class="dr-pad"><button type="button" class="dr-p" data-p="toggle"></button><button type="button" class="dr-p" data-p="more">늘리기</button><button type="button" class="dr-p" data-p="less">줄이기</button><button type="button" class="dr-p" data-p="clear">초기화</button></div>' +
+      '<div class="scratch dr-scr" data-sig="' + SIG + '" aria-label="연습장"></div>' +
+      '<div class="dr-btns"><button type="button" class="dr-b" data-a="new">새 문제</button><button type="button" class="dr-b" data-a="sol">풀이 보기</button></div>' +
+      '<div class="dr-sol" hidden></div><div class="dr-mark" hidden><button type="button" class="dr-b ok" data-a="o">맞음</button><button type="button" class="dr-b no" data-a="x">틀림</button></div></div><p class="dr-score"></p>';
+    var types = box.querySelector(".dr-types");
+    function paintTypes() {
+      types.innerHTML = [{ id: "mix", name: "섞어서" }].concat(T).map(function (t) { var s = st.sc[t.id], sc = s ? " <small>" + s.o + "/" + (s.o + s.x) + "</small>" : ""; return '<button type="button" class="dr-t" data-t="' + t.id + '" aria-pressed="' + (st.sel === t.id) + '">' + t.name + sc + "</button>"; }).join("");
+      var all = T.reduce(function (a, t) { var s = st.sc[t.id] || { o: 0, x: 0 }; return { o: a.o + s.o, x: a.x + s.x }; }, { o: 0, x: 0 });
+      box.querySelector(".dr-score").textContent = "지금까지 맞음 " + all.o + " · 틀림 " + all.x + " (버튼 숫자 = 맞음/푼 수)";
+    }
+    function next() {
+      var t = st.sel === "mix" ? T[R(0, T.length - 1)] : T.filter(function (x) { return x.id === st.sel; })[0] || T[0], p = t.make(); cur = { t: t, p: p };
+      box.querySelector(".dr-type").textContent = t.name; box.querySelector(".dr-q").innerHTML = "<p>" + p.q + "</p>";
+      var sol = box.querySelector(".dr-sol"); sol.innerHTML = '<p class="dr-a">답: <b>' + p.a + "</b></p><ol>" + p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + "</ol>";
+      sol.hidden = true; box.querySelector(".dr-mark").hidden = true;
+    }
+    function paintPad() {
+      var pad = box.querySelector(".dr-scr"), open = st.pad > 0; pad.hidden = !open; if (open) pad.style.height = st.pad + "px";
+      box.querySelector('[data-p="toggle"]').textContent = open ? "연습장 닫기" : "연습장 펼치기";
+      Array.prototype.forEach.call(box.querySelectorAll('[data-p="more"],[data-p="less"],[data-p="clear"]'), function (x) { x.hidden = !open; });
+    }
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b || !box.contains(b)) return;
+      if (b.dataset.p) {
+        var a = b.dataset.p;
+        if (a === "toggle") st.pad = st.pad > 0 ? -Math.abs(st.pad) : Math.max(220, Math.abs(st.pad) || 360);
+        else if (a === "more") st.pad = Math.min(1600, st.pad + 200); else if (a === "less") st.pad = Math.max(220, st.pad - 200);
+        else if (a === "clear") { if (window.caInkClearSig && confirm("연습장에 쓴 필기를 모두 지울까요? (필기 도구의 되돌리기로 복구할 수 있습니다)")) window.caInkClearSig(SIG); return; }
+        save(); paintPad(); return;
+      }
+      if (b.dataset.t) { st.sel = b.dataset.t; save(); paintTypes(); next(); return; }
+      if (b.dataset.a === "new") next();
+      else if (b.dataset.a === "sol") { box.querySelector(".dr-sol").hidden = false; box.querySelector(".dr-mark").hidden = false; }
+      else if (b.dataset.a === "o" || b.dataset.a === "x") { var s = st.sc[cur.t.id] = st.sc[cur.t.id] || { o: 0, x: 0 }; s[b.dataset.a]++; save(); paintTypes(); next(); }
+    });
+    paintTypes(); paintPad(); next();
+  }
+  var SETS = { f1: F1, f2: F2, f3: F3, f4: F4, x1: X1, x2: X2, x3: X3, x4: X4 };
+  window.crFmSets = SETS; window.crFmEnc = { enc32: enc32, enc16: enc16, encR: encR, encI: encI, encS: encS, encB: encB };
+  Array.prototype.forEach.call(document.querySelectorAll(".fmdr[data-set]"), function (box) { var k = box.dataset.set; if (SETS[k]) mount(box, SETS[k], "cr_fm_" + k, "scr:fm:" + k); });
 })();
 
 /* perfect-freehand 1.2.2 · MIT License · Copyright (c) 2021 Stephen Ruiz Ltd · https://github.com/steveruizok/perfect-freehand */
