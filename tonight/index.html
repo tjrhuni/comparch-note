@@ -4191,11 +4191,13 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
           return;
         }
         var tag = /풀이 예/.test(t) ? "풀이 예" : /그림/.test(t) ? "그림" : "읽기";
+        var sub = ""; // 「푸는 순서」 같은 소제목은 따로 한 장으로 만들지 않고 다음 목록 카드 위에 붙인다
         Array.prototype.forEach.call(el.children, function (c) {
           if (c.classList.contains("nlab")) return;
+          if (c.tagName === "P" && c.classList.contains("sub")) { sub = c.outerHTML; return; }
           if (c.tagName === "FIGURE") { steps.push({ k: "그림", h: c.outerHTML }); return; }
           if (c.tagName === "P" && !c.classList.contains("sub")) { chunks(c.innerHTML).forEach(function (x) { steps.push({ k: tag, h: "<p>" + x + "</p>" }); }); return; }
-          if (c.tagName === "OL" || c.tagName === "UL") { steps.push({ k: tag, h: c.outerHTML }); return; }
+          if (c.tagName === "OL" || c.tagName === "UL") { steps.push({ k: tag, h: sub + c.outerHTML }); sub = ""; return; }
           if (c.classList.contains("nex")) {
             var q = c.querySelector(".exq"), a = c.querySelector(".exa");
             if (q) steps.push({ k: "풀이 예", h: '<p class="oc-q">' + q.innerHTML + "</p><p class=\"oc-hint\">먼저 머릿속으로 어떻게 풀지 생각해 보고 [다음].</p>" });
