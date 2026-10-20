@@ -404,33 +404,43 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 .oc-go{margin-top:1.2em;width:100%}
 </style>
 <style>.oc-card ul,.oc-card ol{margin:.2em 0;padding-left:1.2em}.oc-card li{margin:.45em 0}.oc-card{font-size:1.12em}</style>
+<style>
+.oc-ans{margin-top:.8em;border-top:1px dashed var(--line);padding-top:.6em}
+.oc-ans summary{cursor:pointer;font-weight:700;color:var(--accent);min-height:44px;display:flex;align-items:center}
+.rc-t{font-size:.72em;color:var(--fg2);margin-bottom:.4em!important}
+.rc-no{flex:1;border-color:var(--trap);color:var(--trap)}
+a.rc-resume{display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:18px;min-height:64px;margin:.6em 0 .2em}
+.rc .oc-nav[hidden]{display:none}
+</style>
 <section class="lesson" id="home" data-ch="0" data-title="오늘 밤 경로">
-  <p class="eyebrow">10/20 밤 · 01:00 취침 · 시험 10/21 10:30</p>
+  <p class="eyebrow">새벽 02:15 기상 · 시험 10/21(수) 10:30</p>
   <h2>오늘 밤 경로</h2>
-  <p class="goal">이 페이지는 <b>오늘 밤 할 단원만 순서대로</b> 모았습니다. 맨 아래 <b>[다음]</b>만 누르면 경로대로 넘어갑니다. 1회독을 다 하면 손으로 풀 시간이 없어서, 기출에 나온 단원부터 합니다.</p>
+  <div id="resume"></div>
+  <p class="goal">아래 버튼 하나만 누르면 됩니다. 단원 끝에서 <b>[다 봤어요 + 다음 단원]</b>을 누르면 경로대로 넘어갑니다. 목표는 <b>시험이 끝날 때까지만</b> 기억하는 것이라, 읽은 직후·몇 시간 뒤·시험 직전 세 번 떠올리도록 짰습니다.</p>
 
-  <div class="key"><p class="label">지금 할 일</p>
+  <div class="key"><p class="label">일어나면 (02:15)</p>
     <ol>
-      <li>오른쪽 위 <b>[집중 15분]</b>을 누른다.</li>
-      <li>목차에서 아직 안 한 첫 단원을 연다. 제목 위에 「짧게」가 있으면 3~5분짜리, 없으면 필수 단원이다.</li>
-      <li>끝나면 <b>"이 단원 다 봤어요"</b> 체크 → [다음]. 15분마다 5분 쉬기.</li>
+      <li>불 켜기 → 세수 → 물 한 컵 → 가벼운 간식. 커피는 지금 한 잔.</li>
+      <li>[이어서 하기 ▶]를 누르고, 오른쪽 위 <b>[집중 15분]</b>.</li>
+      <li>15분 끝나면 5분 쉬기(화면 보지 말고 일어나서).</li>
     </ol>
   </div>
 
   <div class="tbl"><table>
-    <thead><tr><th>시간</th><th>목차 묶음</th><th>방식</th></tr></thead>
+    <thead><tr><th>시간</th><th>할 것</th><th>방식</th></tr></thead>
     <tbody>
-      <tr><td class="t">17:45 ~ 21:45</td><td><b>1~4. Ch1 → Ch4</b> (30단원)</td><td>장마다 <b>필수 단원 바로 앞에, 그 단원을 이해하는 데 필요한 앞 단원의 「짧게」</b>를 끼워 두었다. 필수 단원(예상 시간 7~12분)은 ① 읽기 + ② 핵심 + ③ 풀이 예, <b>④ 카드는 건너뜀</b>. 「짧게」 단원(3~5분)은 ① 읽기를 쭉 읽고 ② 핵심 정리의 노란 칸을 떠올린 뒤 확인(풀이 예·카드 없음). 중간에 저녁.</td></tr>
-      <tr><td class="t">21:45 ~ 23:00</td><td><b>5. 손으로 풀기</b></td><td>연습 문제 Ch2(인코딩) · Ch3(A + B, A × B) · Ch4(선 번호·제어 신호). 유형마다 1~2문제씩 연습장에 끝까지 쓰고 [풀이 보기].</td></tr>
-      <tr><td class="t">23:00 ~ 00:30</td><td><b>6. 남는 시간</b></td><td>실전 4 · 6 · 7을 시험지처럼. 시간이 없으면 건너뛴다.</td></tr>
-      <tr><td class="t"><b>01:00</b></td><td colspan="2"><b>취침.</b> 덜 자고 더 보는 것보다 자고 시험 보는 쪽이 계산 실수가 적다.</td></tr>
-      <tr><td class="t">내일 아침</td><td><b>마무리</b></td><td>시험 전날 한 장, 노란 칸 떠올리기 약 30분.</td></tr>
+      <tr><td class="t">02:30 ~ 05:45</td><td><b>Ch2 → Ch3 → Ch4</b></td><td>카드를 [다음]으로 넘기며 읽는다. 「짧게」(3~5분)는 앞 단원 요약, 나머지는 필수 단원(7~12분). 단원 끝 <b>확인 문제</b>는 답을 먼저 말하고 펼친다.</td></tr>
+      <tr><td class="t">장 끝마다</td><td><b>되짚기</b> (5~10분)</td><td>앞 장들의 핵심 줄이 가려진 채 한 줄씩 나온다. 소리 내어 말하고 [보기] → [알았다]/[몰랐다]. 몰랐던 줄은 금방 다시 나온다.</td></tr>
+      <tr><td class="t">05:45 ~ 07:00</td><td><b>손으로 풀기</b></td><td>연습 문제 Ch2(인코딩) · Ch3(A + B, A × B) · Ch4(선 번호·제어 신호). 유형마다 1~2문제를 연습장에 끝까지.</td></tr>
+      <tr><td class="t">07:00 ~ 07:45</td><td>아침 · 걷기</td><td>밥 먹고 잠깐 걷기. 커피는 09:30쯤 한 잔.</td></tr>
+      <tr><td class="t">07:45 ~ 08:45</td><td><b>최종 회상 → 시험 전날 한 장</b></td><td>밤사이 [몰랐다]를 누른 줄이 먼저 나온다. 그다음 시험 전날 한 장의 노란 칸 떠올리기.</td></tr>
+      <tr><td class="t">여유 있으면</td><td>실전 4 · 6 · 7</td><td>시험지처럼. 시간이 없으면 건너뛴다.</td></tr>
     </tbody>
   </table></div>
 
   <h3>진도</h3>
   <div class="home-grid" id="chapGrid"></div>
-  <p class="note">여기서 체크한 진도와 필기는 <a href="https://tjrhuni.github.io/comparch-note/cram/">벼락치기 페이지</a>와 같이 저장됩니다. 다른 단원은 벼락치기 페이지에 그대로 있습니다.</p>
+  <p class="note">필기는 오른쪽 위 [필기] → 도구 막대의 <b>[필기 초기화]</b>로 이 단원 필기를 한 번에 지울 수 있다(두 번 누르면 지움, ↶로 되돌리기). 「한 장씩」과 「전체 보기」는 오른쪽 위 버튼으로 바꾼다. 진도와 필기는 <a href="https://tjrhuni.github.io/comparch-note/cram/">벼락치기 페이지</a>와 같이 저장된다.</p>
 </section>
 <section class="lesson nchunk" id="n1-7" data-ch="A" data-title="실행 시간 표와 개선율">
   <p class="eyebrow">Ch1 · 7 <span class="pages">약 7분</span></p>
@@ -492,7 +502,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q1-9" data-ch="A" data-title="Ch1 · 9 전력 장벽·멀티코어·수율">
   <p class="eyebrow">Ch1 · 9 짧게 <span class="pages">약 4분</span></p>
   <h2>전력 장벽·멀티코어·수율</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n1-9">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n1-9">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 칩의 전력은 전압의 제곱에 비례한다. 전압을 더 낮출 수 없고 열도 더 뺄 수 없게 되자(전력 장벽) 클럭 대신 코어 수를 늘렸다. 칩 한 개 값은 수율로 정해진다.</p>
     <p><b>에너지와 전력</b>: 지금 칩의 주류 기술 CMOS에서 동적 에너지 ∝ 용량성 부하 × 전압<sup>2</sup>이다(∝ = 비례한다: 오른쪽이 몇 배가 되면 왼쪽도 같은 배수가 된다. 정확한 식의 앞 상수(½ 등)는 「몇 배」 계산에 필요 없어 생략하고 = 대신 ∝를 쓴다. 예 전압 2배 → 전압² 4배 → 에너지 4배). 용량성 부하는 트랜지스터가 한 번 켜지고 꺼질 때 채우고 비워야 하는 전기의 양을 정한다. 전력은 여기에 1초당 전환 횟수인 주파수(= 클럭 속도)를 곱한다: 전력 ∝ 용량성 부하 × 전압<sup>2</sup> × 주파수. 에너지 식에는 주파수가 없다. [Ch1 p.30–31]</p>
@@ -503,11 +513,17 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>예: 면적당 결함 0.2개/cm<sup>2</sup>, 다이 면적 1 cm<sup>2</sup> → 0.2 × 1 ÷ 2 = 0.1, 수율 = 1 ÷ 1.1<sup>2</sup> = 1 ÷ 1.21 ≈ 0.83. 웨이퍼 한 장 5000달러에 다이 500개면 다이당 5000 ÷ (500 × 0.826) ≈ 12.1달러. 다이가 커지면 다이 수도 줄고 수율도 떨어져 비용이 면적보다 빠르게 오른다. [Ch1 p.22]</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>동적 에너지 ∝(비례, 몇 배인지만 따짐) 용량성 부하 × <span class="cz" role="button" tabindex="0">전압<sup>2</sup></span> / 전력 ∝ 용량성 부하 × 전압<sup>2</sup> × <span class="cz" role="button" tabindex="0">주파수</span> [Ch1 p.30–31]</li><li>클럭 1000배에 전력 30배뿐 = 전압 <span class="cz" role="button" tabindex="0">5 V → 1 V</span>(세대당 약 15%) [Ch1 p.31]</li><li>전력 장벽 ① 전압을 더 낮출 수 없다(NOT): <span class="cz" role="button" tabindex="0">누설</span> ② 열을 더 제거할 수 없다(NOT): <span class="cz" role="button" tabindex="0">냉각 비용</span> [Ch1 p.31]</li><li>2006년부터 <span class="cz" role="button" tabindex="0">멀티코어</span>, 이득은 응답 시간보다 <span class="cz" role="button" tabindex="0">처리량</span> [Ch1 p.32]</li><li>다이당 비용 = 웨이퍼당 비용 ÷ (웨이퍼당 다이 수 × <span class="cz" role="button" tabindex="0">수율</span>) / 수율 = 1 ÷ (1 + 면적당 결함 수 × <span class="cz" role="button" tabindex="0">다이 면적</span> / 2)<sup>N</sup> (교재 예제 N = 2) [Ch1 p.22]</li></ul><p class="sub">외우는 고리</p><p>전력 = 부·전²·주 (전압만 제곱). 장벽 = 누설·냉각 → 멀티코어</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>빈칸: 전력 ∝ (　　) × 전압<sup>2</sup> × (　　)</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">용량성 부하</span>, <span class="cz on" role="button" tabindex="0">주파수</span>(클럭 속도)</b></p><p>에너지 ∝ 부하 × 전압<sup>2</sup>, 전력은 여기에 주파수를 곱함 [Ch1 p.30–31]</p></div></details></li>
+      <li><p>전력 장벽의 두 가지(무엇을 할 수 없는가와 그 이유)는?</p><details><summary>답 보기</summary><div class="ans"><p><b>전압을 더 낮출 수 없다(<span class="cz on" role="button" tabindex="0">누설</span>), 열을 더 제거할 수 없다(<span class="cz on" role="button" tabindex="0">냉각 비용</span>)</b></p><p>둘 다 NOT 문장. 그래서 클럭을 더 못 올리고 멀티코어로 [Ch1 p.31–32]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="q2-1" data-ch="B" data-title="Ch2 · 1 레지스터 역할">
   <p class="eyebrow">Ch2 · 1 짧게 <span class="pages">약 4분</span></p>
   <h2>레지스터 역할</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n2-1">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n2-1">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: RISC-V CPU 안에는 값을 담는 32비트 칸(레지스터) 32개 x0~x31이 있고, 몇몇 번호는 맡은 역할이 정해져 있다.</p>
     <p>레지스터(register) = CPU 안의 아주 빠른 저장 칸이다. 칸 하나는 32비트이고, 32비트 덩어리를 word(워드), 그 두 배인 64비트를 doubleword라 부른다. 개수를 32개로 묶어 둔 이유는 설계 원칙 2(작을수록 빠르다)에서 다시 나온다. [Ch2 p.10]</p>
@@ -519,6 +535,12 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>주의: x0을 결과 칸에 두면(<code>addi x0, x5, 3</code>) 계산은 해도 쓰기가 무시되어 x0은 여전히 0이다(PDF 외 보충).</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>32비트 레지스터 <span class="cz" role="button" tabindex="0">32</span>개 x0~x31, word = 32비트, doubleword = 64비트 [Ch2 p.10]</li><li>x0 = <span class="cz" role="button" tabindex="0">항상 0</span> · x1 = <span class="cz" role="button" tabindex="0">복귀 주소</span>(jal이 저장) · x2 = <span class="cz" role="button" tabindex="0">sp</span> · x8 = fp [Ch2 p.16, 34–37, 44]</li><li>x10~x17 = 인자 8개, 그중 <span class="cz" role="button" tabindex="0">x10·x11</span> = 반환값 → 호출용 = x10~x17 + x1 = <span class="cz" role="button" tabindex="0">9</span>개 [Ch2 p.34]</li><li>임시(caller-saved) = <span class="cz" role="button" tabindex="0">x5~x7, x28~x31</span> 7개 / 저장(callee-saved) = <span class="cz" role="button" tabindex="0">x8~x9, x18~x27</span> 12개 → 합 19개 [Ch2 p.39]</li><li>호출 규약에서 추가: 임시 쪽 <span class="cz" role="button" tabindex="0">x10~x17</span>, 저장 쪽 <span class="cz" role="button" tabindex="0">x1</span> [Ch2 p.41, 43]</li><li>x0 활용: <code>sub x1, x0, x1</code> = <span class="cz" role="button" tabindex="0">부호 반전</span>, <code>beq x0, x0, L</code> = <span class="cz" role="button" tabindex="0">무조건 분기</span> [Ch2 p.16, 29]</li></ul><p class="sub">외우는 고리</p><p>번호 고리: 0 = 영(항상 0), 1 = 일 끝나고 돌아갈 곳(복귀 주소), 2 = sp(두 글자), 8 = fp(프레임). 임시 7 + 저장 12 = 19, 인자·x1은 19개에 없음</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>jal이 복귀 주소를 남기는 레지스터는?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">x1</span></b></p><p><code>jal x1, L</code>이 x1 = PC + 4를 쓴다 [Ch2 p.35]</p></div></details></li>
+      <li><p>스택 포인터 sp와 프레임 포인터 fp의 레지스터 번호는?</p><details><summary>답 보기</summary><div class="ans"><p><b>sp = <span class="cz on" role="button" tabindex="0">x2</span>, fp = <span class="cz on" role="button" tabindex="0">x8</span></b></p><p>fp는 프로시저 안에서 변하지 않는 기준 [Ch2 p.37, 44]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="n2-2" data-ch="B" data-title="바이트 주소·엔디언">
   <p class="eyebrow">Ch2 · 2 <span class="pages">약 10분</span></p>
@@ -711,7 +733,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q2-8" data-ch="B" data-title="Ch2 · 8 설계 원칙·주소 지정">
   <p class="eyebrow">Ch2 · 8 짧게 <span class="pages">약 3분</span></p>
   <h2>설계 원칙·주소 지정</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n2-8">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n2-8">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: RISC-V를 설계할 때 따른 원칙 3가지(영어 문장 그대로 외움)와, 명령어가 피연산자·주소를 얻는 방법(주소 지정 방식) 4가지.</p>
     <p>원칙 1 <b>Simplicity favors regularity</b>(단순성은 규칙성을 선호): 규칙이 일정하면 하드웨어가 단순해진다. 그래서 산술 명령어는 모두 소스 2개 + 목적지 1개라는 같은 모양이다(<code>add a, b, c</code>). [Ch2 p.9]</p>
@@ -722,11 +744,17 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>판단법: 값이나 주소를 무엇으로 만드나? 상수만 → 즉시값, 레지스터만 → 레지스터, 레지스터 + 상수 → 베이스, PC + 상수 → PC 상대. 주의: jalr은 이름에 jump가 있지만 주소를 레지스터 + 상수로 만드므로 <b>베이스</b>, PC 상대는 jal(과 조건 분기)이다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>원칙 1: <span class="cz" role="button" tabindex="0">Simplicity favors regularity</span> (단순성은 규칙성을 선호) → 산술 = 소스 2 + 목적지 1 [Ch2 p.9]</li><li>원칙 2: <span class="cz" role="button" tabindex="0">Smaller is faster</span> (작을수록 빠르다) → 레지스터가 많으면 클럭 주기가 늘 수 있음 [Ch2 p.10]</li><li>원칙 3: <span class="cz" role="button" tabindex="0">Good design demands good compromises</span> (좋은 설계에는 좋은 타협) → 형식 여럿, 모두 32비트, 최대한 비슷하게 [Ch2 p.23]</li><li>주소 지정 4: <span class="cz" role="button" tabindex="0">즉시값</span>(addi) · <span class="cz" role="button" tabindex="0">레지스터</span>(add) · <span class="cz" role="button" tabindex="0">베이스/변위</span>(lw, sw, jalr) · PC 상대(beq, bne, jal) [Ch2 p.49]</li><li>함정: jalr = <span class="cz" role="button" tabindex="0">베이스</span> 방식(레지스터 + 상수), jal = <span class="cz" role="button" tabindex="0">PC 상대</span></li></ul><p class="sub">외우는 고리</p><p>설계 원칙 「단·작·타」: 단순(규칙) → 작게(빠름) → 타협(형식). 주소 지정 「즉·레·베·피」: 상수 → 레지스터 → 레지스터 + 상수 → PC + 상수</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>설계 원칙 1~3을 영어 문장으로 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">Simplicity favors regularity</span> / <span class="cz on" role="button" tabindex="0">Smaller is faster</span> / <span class="cz on" role="button" tabindex="0">Good design demands good compromises</span></b></p><p>[Ch2 p.9, 10, 23]</p></div></details></li>
+      <li><p>설계 원칙 3의 예를 한 줄로?</p><details><summary>답 보기</summary><div class="ans"><p><b>형식이 여럿이라 해독은 복잡하지만 <span class="cz on" role="button" tabindex="0">모두 32비트</span>, 형식을 최대한 비슷하게</b></p><p>타협 = 해독 복잡함을 감수하고 길이를 통일 [Ch2 p.23]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="q2-9" data-ch="B" data-title="Ch2 · 9 CISC·RISC, 수 표현, 번역">
   <p class="eyebrow">Ch2 · 9 짧게 <span class="pages">약 4분</span></p>
   <h2>CISC·RISC, 수 표현, 번역</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n2-9">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n2-9">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 명령어 집합을 만드는 두 방향(CISC·RISC), 음수를 비트로 나타내는 3가지 방법, C 프로그램이 실행되기까지의 번역 4단계를 묶은 문장 덩어리.</p>
     <p>명령어 = 프로세서 동작 하나를 지시하는 기본 명령으로, 하드웨어와 소프트웨어의 경계다. ISA(instruction set architecture) = 프로세서가 이해하는 명령어 집합. 마이크로아키텍처 = 그 ISA를 설계 제약·목표 아래 실제로 구현한 것이고 소프트웨어에는 <b>드러나지 않는다</b>. 예: 파이프라이닝, 추측 실행(speculative execution), 메모리 접근 스케줄링, 산술 장치. 그래서 「추측 실행은 ISA 기능」은 X. [Ch2 p.3, 5]</p>
@@ -737,11 +765,23 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>번역 4단계: <b>컴파일러</b>(C → 어셈블리) → <b>어셈블러</b>(어셈블리 → 기계어, 목적 파일 object file) → <b>링커</b>(여러 목적 파일을 합쳐 실행 파일로) → <b>로더</b>(실행 파일을 메모리에 올려 실행 시작). 앞 글자 「컴어링로」. 목적 파일을 만드는 단계는 어셈블러다. [Ch2 p.51]</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>CISC(x86): 복잡·<span class="cz" role="button" tabindex="0">가변 길이</span>·마이크로코드 / 장점 <span class="cz" role="button" tabindex="0">어셈블리 쉬움</span>·명령어 메모리 적음 / 단점 CPU 설계 어려움 [Ch2 p.6–7]</li><li>RISC(ARM, MIPS, RISC-V): 단순·작은 집합 / 장점 CPU 설계 쉬움·<span class="cz" role="button" tabindex="0">높은 클럭</span> / 단점 코드 길어짐·<span class="cz" role="button" tabindex="0">메모리 많이 씀</span></li><li>부호 표현 3: <span class="cz" role="button" tabindex="0">부호-크기</span> · <span class="cz" role="button" tabindex="0">1의 보수</span> · 2의 보수(채택, −2<sup>31</sup> ~ 2<sup>31</sup> − 1) [Ch2 p.19]</li><li>부정 = <span class="cz" role="button" tabindex="0">~x + 1</span>, 부호 확장 = <span class="cz" role="button" tabindex="0">부호 비트를 왼쪽에 복제</span>(값 보존) [Ch2 p.20]</li><li>번역 4단계: <span class="cz" role="button" tabindex="0">컴파일러</span> → 어셈블러 → <span class="cz" role="button" tabindex="0">링커</span> → 로더 [Ch2 p.51]</li><li>마이크로아키텍처 = ISA의 구현, SW에 <span class="cz" role="button" tabindex="0">드러나지 않음</span>(파이프라이닝, 추측 실행) [Ch2 p.5]</li></ul><p class="sub">외우는 고리</p><p>부호 표현 「부·1·2」: 숫자가 커지는 순, 마지막 2가 채택. 번역 「컴어링로」: 컴파일 → 어셈블 → 링크 → 로드</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>CISC의 장점 두 가지는?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">어셈블리 프로그래밍 쉬움</span>(컴파일러 단순), <span class="cz on" role="button" tabindex="0">명령어 메모리 적게 씀</span></b></p><p>명령어 하나가 일을 많이 해 코드가 짧다 [Ch2 p.6–7]</p></div></details></li>
+      <li><p>RISC의 단점 두 가지는?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">코드가 길어짐</span>, <span class="cz on" role="button" tabindex="0">메모리를 많이 씀</span></b></p><p>같은 일에 명령어가 더 필요하다 [Ch2 p.6–7]</p></div></details></li>
+    </ol></div>
+  </div>
+</section>
+<section class="lesson nchunk" id="rc1" data-ch="B" data-title="되짚기 · Ch1" data-src="n1-7,n1-8,q1-9" data-max="12" data-final="0">
+  <p class="eyebrow">되짚기 <span class="pages">약 6분</span></p>
+  <h2>되짚기 · Ch1</h2>
+  <p class="goal">읽고 몇 시간 뒤에 한 번 더 떠올리면 시험 끝날 때까지 기억이 버팁니다. 줄마다 가린 칸을 <b>소리 내어 먼저 말하고</b> [보기] → [알았다]/[몰랐다]. 몰랐던 줄은 3장 뒤에 다시 나옵니다.</p>
+  <div class="rc"><div class="oc-top"><span class="oc-k">떠올리기</span><span class="oc-n"></span></div><div class="oc-bar"><i></i></div><div class="oc-card"></div><div class="oc-nav"></div></div>
 </section>
 <section class="lesson nchunk" id="q3-1" data-ch="E" data-title="Ch3 · 1 오버플로 판정">
   <p class="eyebrow">Ch3 · 1 짧게 <span class="pages">약 3분</span></p>
   <h2>오버플로 판정</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-1">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-1">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 오버플로는 계산 결과가 정해진 비트 수에 들어가지 않는 것이다. 2의 보수에서는 「같은 부호끼리 더했는데 결과 부호가 바뀌었는가」로 판정한다.</p>
     <p><b>오버플로(overflow)</b> = 결과를 정해진 비트 수의 하드웨어로 표현할 수 없는 것이다. 8비트 2의 보수는 −128 ~ 127만 담는다. 양수 + 양수의 진짜 답이 127을 넘으면 8비트에는 진짜 답 − 256이 남아 MSB가 1, 즉 음수로 읽힌다. 음수 + 음수가 −128보다 작으면 진짜 답 + 256이 남아 양수로 읽힌다. 그래서 2의 보수에서는 결과 부호가 뒤집혀 보인다.</p>
@@ -751,11 +791,17 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>무부호(unsigned, 8비트면 0 ~ 255, 주소 등): 덧셈 A + B = S가 넘치면 진짜 답 − 256이 남아 원래 수보다 작아진다(200 + 100 = 300 → 44). 그래서 <b>S &lt; A 또는 S &lt; B</b>면 오버플로. 뺄셈 A − B = S가 0 밑으로 가면 진짜 답 + 256이 남아 빼기 전보다 커진다(50 − 100 → 206). 그래서 <b>S &gt; A</b>면 오버플로. 언어: C/C++·Java는 오버플로를 <b>무시</b>하고, Ada·Fortran은 <b>통보</b>를 요구한다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>오버플로 = 결과를 정해진 비트 수로 <span class="cz" role="button" tabindex="0">표현할 수 없음</span>, 2의 보수에서는 결과 부호가 뒤집혀 보임 [Ch3 p.4–5]</li><li>생기는 4경우: <span class="cz" role="button" tabindex="0">+ + + = −</span>, <span class="cz" role="button" tabindex="0">− + − = +</span>, + − − = −, − − + = + [Ch3 p.5]</li><li>생기지 않음: 부호가 <span class="cz" role="button" tabindex="0">다른</span> 두 수의 덧셈, 부호가 <span class="cz" role="button" tabindex="0">같은</span> 두 수의 뺄셈 [Ch3 p.4]</li><li>맨 왼쪽 밖 자리올림(carry)은 <span class="cz" role="button" tabindex="0">버린다</span>, 올림만으로는 오버플로 아님</li><li>무부호: 덧셈 S &lt; A 또는 S &lt; B, 뺄셈 S <span class="cz" role="button" tabindex="0">&gt; A</span>면 오버플로. C/C++·Java <span class="cz" role="button" tabindex="0">무시</span>, Ada·Fortran 통보 [Ch3 p.6]</li></ul><p class="sub">외우는 고리</p><p>같은 부호끼리 더했는데 부호가 바뀌면 오버플로. 뺄셈은 A + (−B)로 바꾸고 같은 질문</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>2의 보수에서 오버플로가 생기지 않는 두 경우는?</p><details><summary>답 보기</summary><div class="ans"><p><b>부호가 <span class="cz on" role="button" tabindex="0">다른</span> 두 수의 덧셈, 부호가 <span class="cz on" role="button" tabindex="0">같은</span> 두 수의 뺄셈</b></p><p>다른 부호의 합은 두 수 사이에 있고, 같은 부호의 뺄셈 c − a = c + (−a)는 다른 부호의 덧셈이 된다 [Ch3 p.4]</p></div></details></li>
+      <li><p>8비트 2의 보수 0111 0000 + 0011 0000의 8비트 결과와 오버플로 여부는?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">1010 0000</span>, 오버플로</b></p><p>112 + 48 = 160 &gt; 127. 양수 + 양수 = 음수(+ + + = −)</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="q3-2" data-ch="E" data-title="Ch3 · 2 곱셈기 1판 vs 개선판">
   <p class="eyebrow">Ch3 · 2 짧게 <span class="pages">약 4분</span></p>
   <h2>곱셈기 1판 vs 개선판</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-2">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-2">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 곱셈기는 손 곱셈을 「LSB 검사 → 더하기 → 시프트」로 한 비트씩 n번 반복하는 하드웨어다. 처음 설계(1판)와 레지스터·ALU 크기를 줄인 개선판이 있다.</p>
     <p>A × B에서 곱해지는 수 A가 <b>피승수</b>(multiplicand), 곱하는 수 B가 <b>승수</b>(multiplier), 결과가 <b>곱</b>(product)이다. 2진 손 곱셈은 승수 비트를 오른쪽부터 보며, 1인 자리마다 피승수를 그 자리만큼 왼쪽으로 민 값을 더한다. 예 0010 × 0011: 승수 0번 비트 1 → 0010, 1번 비트 1 → 0100(1칸 민 것), 합 0110 = 6. 곱의 길이 = 피승수 길이 + 승수 길이라 32 × 32는 <b>64비트</b>가 필요하다. <b>ALU</b>(산술 논리 장치) = 덧셈·뺄셈 같은 계산을 하는 회로다.</p>
@@ -766,6 +812,12 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p><b>부호 있는 곱셈</b>: 두 수를 양수로 바꿔 크기만 곱하고, 두 부호가 다르면 마지막에 곱을 <b>부정</b>(부호 반전)한다. 32비트 중 맨 앞 부호 비트는 따로 처리하니 크기 31비트만 곱해 <b>31번</b> 반복한다. <b>빠른 곱셈</b> = 덧셈기 여러 개를 병렬 트리로 놓아 한꺼번에 더하는 방식(비용과 성능의 맞바꿈). 주의: 곱셈은 n번, 나눗셈은 n+1번 반복한다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>곱의 길이 = 피승수 길이 + 승수 길이 (32 × 32 → <span class="cz" role="button" tabindex="0">64</span>비트) [Ch3 p.7]</li><li>1판: 승수 <span class="cz" role="button" tabindex="0">32</span>비트 오른쪽 시프트, 피승수 <span class="cz" role="button" tabindex="0">64</span>비트 왼쪽 시프트, ALU 64비트, 곱 64비트(처음 0) [Ch3 p.8–9]</li><li>1판 한 반복 = <span class="cz" role="button" tabindex="0">Test-Add-Shift</span>: 승수 LSB 1이면 곱 += 피승수 → 피승수 ← 1칸 → 승수 → 1칸</li><li>개선판: 피승수·ALU <span class="cz" role="button" tabindex="0">32</span>비트, 승수 레지스터 없음(곱 레지스터 <span class="cz" role="button" tabindex="0">오른쪽 절반</span>), 곱 레지스터 LSB 1이면 왼쪽 절반 += 피승수 → 곱 전체 <span class="cz" role="button" tabindex="0">오른쪽</span> 시프트 [Ch3 p.10–11]</li><li>반복 n번(4비트 4번). 부호 있는 곱셈 = 양수로 <span class="cz" role="button" tabindex="0">31</span>번 후 부호 다르면 부정, 빠른 곱셈 = 덧셈기 병렬 트리 [Ch3 p.12]</li></ul><p class="sub">외우는 고리</p><p>1판은 피승수가 왼쪽으로 걸어가고, 개선판은 곱이 오른쪽으로 걸어온다(상대 위치는 같다)</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>곱셈기 1판의 승수·피승수·ALU·곱 레지스터 비트 수는? (32비트 곱셈)</p><details><summary>답 보기</summary><div class="ans"><p><b>승수 <span class="cz on" role="button" tabindex="0">32</span>, 피승수 <span class="cz on" role="button" tabindex="0">64</span>, ALU <span class="cz on" role="button" tabindex="0">64</span>, 곱 64</b></p><p>피승수가 최대 32칸 왼쪽으로 밀리므로 64비트, 오른쪽 절반에서 시작 [Ch3 p.8]</p></div></details></li>
+      <li><p>개선판 곱셈기에서 승수는 어디에 넣고, 피승수·ALU는 몇 비트인가?</p><details><summary>답 보기</summary><div class="ans"><p><b>곱 레지스터 <span class="cz on" role="button" tabindex="0">오른쪽 절반</span>, 피승수·ALU <span class="cz on" role="button" tabindex="0">32</span>비트</b></p><p>피승수 대신 곱을 오른쪽으로 밀면 피승수가 움직이지 않아 32비트면 된다 [Ch3 p.10–11]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="n3-3" data-ch="E" data-title="mul·mulh·mulhu·mulhsu와 upper·lower">
   <p class="eyebrow">Ch3 · 3 <span class="pages">약 9분</span></p>
@@ -800,7 +852,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q3-4" data-ch="E" data-title="Ch3 · 4 나눗셈기와 부호 있는 나눗셈">
   <p class="eyebrow">Ch3 · 4 짧게 <span class="pages">약 4분</span></p>
   <h2>나눗셈기와 부호 있는 나눗셈</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-4">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-4">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 나눗셈기는 손 나눗셈을 「일단 빼 보고, 음수면 되돌린다」로 한 자리씩 n+1번 반복하는 하드웨어다. 부호 있는 나눗셈은 절댓값으로 나눈 뒤 부호만 붙인다.</p>
     <p>A ÷ B에서 나눠지는 수가 <b>피제수</b>(dividend), 나누는 수가 <b>제수</b>(divisor), 결과가 <b>몫</b>(quotient)과 <b>나머지</b>(remainder)다. 항상 피제수 = 몫 × 제수 + 나머지, 제수 ≠ 0. 손 나눗셈은 제수를 높은 자리에 대 보고, 들어가면 몫 자리에 1을 쓰고 빼고, 안 들어가면 0을 쓴 뒤 한 자리 내려간다. 나눗셈기 1판은 곱셈기 1판과 같은 하드웨어를 쓰되 시프트 방향이 반대이고 더하기 대신 뺄셈을 한다.</p>
@@ -811,6 +863,12 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>빠르게 하기: 곱셈은 덧셈기를 병렬로 놓을 수 있지만, 나눗셈은 다음 뺄셈이 앞 나머지의 부호에 달린 조건부라 <b>병렬화할 수 없다</b>. 대신 <b>SRT</b> 나눗셈은 표를 보고 한 단계에 몫 비트 여러 개를 예측한다. RISC-V 명령어: <code>div</code>(몫), <code>rem</code>(나머지), 끝에 u가 붙은 <code>divu</code>·<code>remu</code>는 무부호판이다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>피제수 = 몫 × 제수 + 나머지, 제수 ≠ 0. 1판 = 곱셈기 1판과 같은 HW, 시프트 방향 반대, 뺄셈 [Ch3 p.14–15]</li><li>한 반복 = <span class="cz" role="button" tabindex="0">Subtract-Test-Shift</span>: ① 나머지 − 제수 ② 음수면 제수를 다시 더해 <span class="cz" role="button" tabindex="0">복원</span>·몫 ← 1칸 끝 0 / 0 이상이면 몫 ← 1칸 끝 1 ③ 제수 → 1칸</li><li>초기: 제수는 <span class="cz" role="button" tabindex="0">왼쪽 절반</span>, 나머지 레지스터 = 피제수. 반복 <span class="cz" role="button" tabindex="0">n+1</span>번(4비트 5번, 32비트 33번) [Ch3 p.16]</li><li>부호 규칙: 절댓값으로 나눔 → 부호가 다르면 <span class="cz" role="button" tabindex="0">몫 부정</span> → 나머지 부호 = <span class="cz" role="button" tabindex="0">피제수</span> 부호 (−7 ÷ 2 = −3 … −1) [Ch3 p.19]</li><li>병렬화 불가(뺄셈이 앞 나머지 부호에 달린 조건부) → <span class="cz" role="button" tabindex="0">SRT</span>(표로 몫 여러 비트 예측). 명령어 div·rem, 무부호 divu·remu [Ch3 p.20]</li></ul><p class="sub">외우는 고리</p><p>빼 보고(Subtract) → 음수면 되돌리고(Test) → 제수를 오른쪽으로(Shift). 몫은 부호 곱, 나머지는 피제수 따라</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>나눗셈기 1판 한 번의 반복 이름과 순서는?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">Subtract-Test-Shift</span>: 나머지 − 제수 → 부호 검사(복원·몫 비트) → 제수 오른쪽 시프트</b></p><p>곱셈은 Test-Add-Shift, 나눗셈은 빼기가 먼저 [Ch3 p.15]</p></div></details></li>
+      <li><p>나눗셈기 1판으로 4비트 나눗셈을 하면 몇 번 반복하나? 32비트는?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">5</span>번, 32비트 <span class="cz on" role="button" tabindex="0">33</span>번</b></p><p>제수가 × 2<sup>4</sup> ~ × 2<sup>0</sup> 자리 5개를 시험(n+1) [Ch3 p.16]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="n3-5" data-ch="E" data-title="IEEE 754 형식과 10진 → 16진 변환">
   <p class="eyebrow">Ch3 · 5 <span class="pages">약 12분</span></p>
@@ -936,7 +994,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q3-9" data-ch="E" data-title="Ch3 · 9 부동소수점 외울 문장">
   <p class="eyebrow">Ch3 · 9 짧게 <span class="pages">약 5분</span></p>
   <h2>부동소수점 외울 문장</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-9">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n3-9">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 부동소수점 단원의 T/F·빈칸용 문장 묶음이다. 정규화 장점, 정밀도와 범위, 오버플로·언더플로, bias를 쓰는 이유, 반올림(GRS), RISC-V FP 명령어.</p>
     <p><b>정규화</b> = 소수점 왼쪽에 0이 아닌 숫자가 <b>한 자리</b>. 1.0 × 10<sup>−9</sup>은 정규화, 10.0 × 10<sup>−10</sup>(두 자리)과 0.1 × 10<sup>−8</sup>(0)은 아니다. 장점 3가지: 부동소수점 <b>데이터 교환</b> 단순화, 부동소수점 <b>알고리즘</b> 단순화, 한 word에 저장되는 수의 <b>정확도</b> 증가(쓸모없는 앞자리 0 대신 진짜 숫자를 담으니까).</p>
@@ -949,11 +1007,23 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>이름 읽기: 끝의 <code>.s</code>는 단정도(single), <code>.d</code>는 배정도(double)판이라는 표시다. <code>flt.s</code> = 단정도 두 수를 비교해 앞 수가 작으면 1, 아니면 0. <code>flw</code>의 w는 word(32비트 = 단정도 크기), <code>fld</code>의 d는 doubleword(64비트 = 배정도 크기)다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>정규화 = 소수점 왼쪽에 0이 아닌 숫자 <span class="cz" role="button" tabindex="0">한 자리</span>. 장점: 데이터 교환 단순화, 알고리즘 단순화, word 안 <span class="cz" role="button" tabindex="0">정확도 증가</span> [Ch3 p.23–24]</li><li>가수 칸↑ = <span class="cz" role="button" tabindex="0">정밀도</span>, 지수 칸↑ = <span class="cz" role="button" tabindex="0">범위</span> (맞바꿈). 오버플로 = 지수가 너무 커서, 언더플로 = 음의 지수가 너무 커서 지수 칸에 못 담음 → double [Ch3 p.25–26]</li><li>bias 이유(정수 비교로 정렬): 부호가 MSB → 빠른 비교, 지수가 가수 <span class="cz" role="button" tabindex="0">앞</span> → 정렬 단순, 음수 지수가 크게 보이는 문제 해결 [Ch3 p.29]</li><li>반올림 4모드: 0 쪽, +∞ 쪽, −∞ 쪽, <span class="cz" role="button" tabindex="0">가장 가까운 짝수</span>(기본). G = LSB 다음, R = 그다음, S = 나머지 <span class="cz" role="button" tabindex="0">OR</span>. GRS 000~011 내림, 101~111 올림, 100이면 LSB <span class="cz" role="button" tabindex="0">0</span>인 쪽 [Ch3 p.38–40]</li><li>f0~f31(f0은 0 고정 <span class="cz" role="button" tabindex="0">아님</span>), flw/fsw·fld/fsd. feq·flt·fle 결과는 <span class="cz" role="button" tabindex="0">정수 레지스터</span>에 0·1 → beq·bne [Ch3 p.37]</li></ul><p class="sub">외우는 고리</p><p>정규화 장점 교·알·정(교환, 알고리즘, 정확도). bias 이유 부·앞·음(부호 MSB, 지수 앞, 음수 지수)</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>정규화 표기의 장점 3가지는?</p><details><summary>답 보기</summary><div class="ans"><p><b>부동소수점 <span class="cz on" role="button" tabindex="0">데이터 교환</span> 단순화, <span class="cz on" role="button" tabindex="0">알고리즘</span> 단순화, 한 word에 저장되는 수의 <span class="cz on" role="button" tabindex="0">정확도</span> 증가</b></p><p>쓸모없는 앞자리 0 대신 진짜 숫자를 담는다 [Ch3 p.24]</p></div></details></li>
+      <li><p>1.0 × 10<sup>−9</sup>, 10.0 × 10<sup>−10</sup>, 0.1 × 10<sup>−8</sup> 중 정규화된 것은?</p><details><summary>답 보기</summary><div class="ans"><p><b><span class="cz on" role="button" tabindex="0">1.0 × 10<sup>−9</sup></span>만</b></p><p>소수점 왼쪽에 0이 아닌 숫자가 딱 한 자리 [Ch3 p.23]</p></div></details></li>
+    </ol></div>
+  </div>
+</section>
+<section class="lesson nchunk" id="rc2" data-ch="E" data-title="되짚기 · Ch1~Ch2" data-src="n1-7,n1-8,q1-9,q2-1,n2-2,n2-3,n2-4,n2-5,n2-6,n2-7,q2-8,q2-9" data-max="20" data-final="0">
+  <p class="eyebrow">되짚기 <span class="pages">약 8분</span></p>
+  <h2>되짚기 · Ch1~Ch2</h2>
+  <p class="goal">읽고 몇 시간 뒤에 한 번 더 떠올리면 시험 끝날 때까지 기억이 버팁니다. 줄마다 가린 칸을 <b>소리 내어 먼저 말하고</b> [보기] → [알았다]/[몰랐다]. 몰랐던 줄은 3장 뒤에 다시 나옵니다.</p>
+  <div class="rc"><div class="oc-top"><span class="oc-k">떠올리기</span><span class="oc-n"></span></div><div class="oc-bar"><i></i></div><div class="oc-card"></div><div class="oc-nav"></div></div>
 </section>
 <section class="lesson nchunk" id="q4-1" data-ch="F" data-title="Ch4 · 1 구현 대상과 공통 두 단계">
   <p class="eyebrow">Ch4 · 1 짧게 <span class="pages">약 3분</span></p>
   <h2>구현 대상과 공통 두 단계</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-1">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-1">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: Ch4는 명령어 7개만 실행하는 가장 단순한 프로세서를 부품부터 조립해 보는 장이고, 어떤 명령어든 「명령어 가져오기 → 레지스터 읽기」 두 단계로 시작한다.</p>
     <p><b>프로세서 = 데이터패스 + 제어</b>. Ch1의 5대 구성 요소(입력, 출력, 메모리, 데이터패스, 제어) 중 뒤의 둘이 프로세서다. <b>데이터패스(datapath)</b>는 데이터를 옮기고 계산하고 저장하는 부품과 그 연결선 전체이고, <b>제어</b>는 그 부품마다 「지금 이 일을 해라」 하는 0/1 신호를 보내는 쪽이다. 그 신호를 만드는 회로를 <b>제어 유닛(control unit)</b>이라 부른다.</p>
@@ -963,6 +1033,12 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>그래서 <b>MUX(멀티플렉서)</b>가 필요하다. MUX는 입력 여러 개 중 하나를 선택 신호대로(0이면 입력 0, 1이면 입력 1) 골라 내보내는 장치다. 데이터 선 두 가닥은 그냥 한 점에 합칠 수 없으므로 갈림길마다 MUX를 두고, 데이터패스를 조종할 제어 유닛이 선택 신호를 정한다. 기본 구현 = 단순한 데이터패스에 MUX 3개(ALU 둘째 입력 앞, 레지스터에 쓸 값 앞, 다음 PC 앞)와 제어 유닛을 더한 것이다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>구현 7개: <span class="cz" role="button" tabindex="0">lw, sw</span> / <span class="cz" role="button" tabindex="0">add, sub, and, or</span> / <span class="cz" role="button" tabindex="0">beq</span> [Ch4 p.3]</li><li>공통 두 단계: ① PC로 <span class="cz" role="button" tabindex="0">명령어 메모리</span>에서 인출 ② 필드로 <span class="cz" role="button" tabindex="0">레지스터 1~2개</span> 읽기 [Ch4 p.3]</li><li>프로세서 = <span class="cz" role="button" tabindex="0">데이터패스</span> + <span class="cz" role="button" tabindex="0">제어</span> [Ch4 p.8]</li><li>선을 그냥 합칠 수 없다 → <span class="cz" role="button" tabindex="0">MUX</span>, 데이터패스 조종 → <span class="cz" role="button" tabindex="0">제어 유닛</span>. 기본 구현 = MUX <span class="cz" role="button" tabindex="0">3</span>개 + 제어 유닛 [Ch4 p.7–8]</li><li>add x5, x6, x7: 인출 → x6·x7 읽기 → <span class="cz" role="button" tabindex="0">덧셈</span> → x5 쓰기 / lw x5, 40(x6): 인출 → x6 읽기 → <span class="cz" role="button" tabindex="0">주소 계산(x6 + 40)</span> → 메모리 읽어 x5 [Ch4 p.5–6]</li></ul><p class="sub">외우는 고리</p><p>7개 = 메모리 둘(lw sw) + 산술 넷(add sub and or) + 분기 하나(beq): 2 · 4 · 1</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>단일 사이클 구현 대상 명령어 7개는?</p><details><summary>답 보기</summary><div class="ans"><p><b>lw, sw, add, sub, and, or, beq</b></p><p>메모리 참조 2 + 산술·논리 4 + 분기 1 [Ch4 p.3]</p></div></details></li>
+      <li><p>빠진 것 하나: lw, sw, add, sub, and, (　), beq</p><details><summary>답 보기</summary><div class="ans"><p><b>or</b></p><p>산술·논리 넷 = add, sub, and, or</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="n4-2" data-ch="F" data-title="데이터패스 구성 요소와 그림 빈칸">
   <p class="eyebrow">Ch4 · 2 <span class="pages">약 8분</span></p>
@@ -1313,7 +1389,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q4-3" data-ch="F" data-title="Ch4 · 3 조합·상태 소자, 엣지 트리거, 메모리 둘">
   <p class="eyebrow">Ch4 · 3 짧게 <span class="pages">약 4분</span></p>
   <h2>조합·상태 소자, 엣지 트리거, 메모리 둘</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-3">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-3">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 데이터패스 부품은 「값을 기억하는가」로 조합 소자와 상태 소자로 나뉘고, 상태 소자는 클럭 엣지에서만 값을 바꾼다.</p>
     <p><b>조합 소자(combinational element)</b> = 출력이 지금 들어온 입력만의 함수인 소자다. 같은 입력이면 언제나 같은 출력이고 기억하는 것이 없다. 예: 가산기에 3과 4가 들어오면 언제나 7이다. <b>AND 게이트</b>(입력 비트 두 개를 받아 둘 다 1일 때만 1을 내는 회로, 기초 · 3의 and를 비트 하나에 하는 부품), ALU, 가산기, MUX(입력 중 하나를 고를 뿐), ImmGen(지금 명령어 비트를 늘릴 뿐)이 여기에 든다.</p>
@@ -1324,6 +1400,12 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>비유: 조합 소자는 계산기(넣으면 답, 기억 없음), 상태 소자는 메모장(적어 둔 값을 보여 주다가 종이 울릴 때만 고쳐 씀), 클럭 엣지는 그 종이다. 안 맞는 점: 실제 회로는 답이 즉시 나오지 않고 지연이 있으며, 그 지연이 클럭 주기를 정한다. 주의: 메모리가 둘인 이유를 「속도 때문」이라고 쓰면 틀린다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>조합 소자 = 출력이 <span class="cz" role="button" tabindex="0">입력만의 함수</span>(AND 게이트, ALU, 가산기, MUX, ImmGen) [Ch4 p.9]</li><li>상태 소자 = <span class="cz" role="button" tabindex="0">저장</span>(PC, 레지스터 파일, 메모리). 입력 = 쓸 데이터·<span class="cz" role="button" tabindex="0">클럭</span>, 출력 = <span class="cz" role="button" tabindex="0">이전 사이클에 쓴 값</span> [Ch4 p.9]</li><li>클로킹 방식 = 언제 읽고 쓰는지 정한 규칙(하드웨어를 <span class="cz" role="button" tabindex="0">예측 가능</span>하게) [Ch4 p.10]</li><li>엣지 트리거 = 상태 소자는 <span class="cz" role="button" tabindex="0">클럭 엣지</span>에서만 갱신, <span class="cz" role="button" tabindex="0">가장 긴 지연</span>이 클럭 주기 결정 [Ch4 p.10]</li><li>메모리 둘 = 단일 사이클은 자원을 명령어당 <span class="cz" role="button" tabindex="0">한 번</span>만 → lw·sw는 인출 + 데이터 접근으로 메모리 <span class="cz" role="button" tabindex="0">두 번</span> [Ch4 p.16]</li></ul><p class="sub">외우는 고리</p><p>분류 질문 하나: 「값을 기억하는가?」 기억하면 상태, 아니면 조합</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>분류(조합 C / 상태 S): PC, MUX, 레지스터 파일, ImmGen</p><details><summary>답 보기</summary><div class="ans"><p><b>S, C, S, C</b></p><p>PC·레지스터 파일은 값을 기억, MUX·ImmGen은 지금 입력만으로 출력 [Ch4 p.9]</p></div></details></li>
+      <li><p>상태 소자의 입력 두 가지와 출력은?</p><details><summary>답 보기</summary><div class="ans"><p><b>입력 = 쓸 데이터·클럭, 출력 = 이전 사이클에 쓴 값</b></p><p>[Ch4 p.9]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="n4-4" data-ch="F" data-title="명령어 비트 → 포트, 기계어 → 선 번호">
   <p class="eyebrow">Ch4 · 4 <span class="pages">약 11분</span></p>
@@ -1365,7 +1447,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q4-5" data-ch="F" data-title="Ch4 · 5 제어 신호 7개의 뜻">
   <p class="eyebrow">Ch4 · 5 짧게 <span class="pages">약 4분</span></p>
   <h2>제어 신호 7개의 뜻</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-5">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-5">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 주 제어 유닛은 opcode를 보고 0/1 신호 7개를 내보내, 데이터패스의 스위치(쓰기·읽기 켜고 끄기)와 MUX 갈림길을 정한다.</p>
     <p><b>일을 시키는 스위치</b> 셋: RegWrite = 1이면 쓰기 레지스터(rd)에 쓰기 데이터를 기록한다. MemRead = 1이면 데이터 메모리가 주소의 내용을 읽기 데이터로 내보내고, MemWrite = 1이면 주소의 내용을 쓰기 데이터로 바꾼다. 셋 다 0이면 아무 일도 하지 않는다.</p>
@@ -1376,11 +1458,17 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>예 <code>lw x5, 40(x6)</code>에 대입: 메모리에서 읽은 값을 x5에 쓰니 RegWrite = 1, MemRead = 1, MemtoReg = 1(쓸 값 = 메모리 값). 주소 = x6 + 40이라 ALU 둘째 입력은 즉시값 → ALUSrc = 1. 분기가 아니니 Branch = 0이고 다음 PC = PC + 4. 신호마다 「이 명령어가 그 일을 하나?」를 물으면 값이 나온다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>RegWrite = 1 → <span class="cz" role="button" tabindex="0">rd에 쓰기 데이터 기록</span> / MemRead·MemWrite = 1 → 데이터 메모리 <span class="cz" role="button" tabindex="0">읽기·쓰기</span> [Ch4 p.24]</li><li>ALUSrc: 0 = 읽기 데이터 2, 1 = <span class="cz" role="button" tabindex="0">부호 확장 즉시값</span> [Ch4 p.24]</li><li>MemtoReg: 0 = <span class="cz" role="button" tabindex="0">ALU 결과</span>, 1 = <span class="cz" role="button" tabindex="0">메모리 읽기 데이터</span> [Ch4 p.24]</li><li>Branch = 1 → 분기 명령어 / PCSrc: 0 = PC + 4, 1 = <span class="cz" role="button" tabindex="0">분기 목표 주소</span> [Ch4 p.24–25]</li><li>ALUOp(2비트) = 주 제어 → <span class="cz" role="button" tabindex="0">ALU 제어 유닛</span>에 주는 힌트 [Ch4 p.18]</li><li>주 제어 출력 순서(그림 위부터): Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite. <span class="cz" role="button" tabindex="0">PCSrc</span>는 바깥 AND 게이트 [Ch4 p.26–28]</li></ul><p class="sub">외우는 고리</p><p>7개 = 레지스터 쪽 2(RegWrite, ALUSrc) + 메모리 쪽 3(MemRead, MemWrite, MemtoReg) + 분기·ALU 2(Branch, ALUOp). PCSrc는 따로 AND 게이트가 만든다</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>주 제어 유닛 출력 7개 중 빠진 것: RegWrite, ALUSrc, MemRead, MemWrite, Branch, ALUOp</p><details><summary>답 보기</summary><div class="ans"><p><b>MemtoReg</b></p><p>레지스터 쓰기 데이터를 ALU 결과/메모리 중에서 고르는 MUX 신호 [Ch4 p.24]</p></div></details></li>
+      <li><p>ALUSrc = 1의 뜻은?</p><details><summary>답 보기</summary><div class="ans"><p><b>ALU 둘째 입력 = 부호 확장 즉시값</b></p><p>0이면 읽기 데이터 2(레지스터) [Ch4 p.24]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="q4-7" data-ch="F" data-title="Ch4 · 7 PCSrc = Branch AND Zero">
   <p class="eyebrow">Ch4 · 7 짧게 <span class="pages">약 3분</span></p>
   <h2>PCSrc = Branch AND Zero</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-7">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-7">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 다음 PC를 분기 목표로 바꾸는 신호 PCSrc는 Branch AND Zero로 만들고, 제어 신호 중 유일하게 opcode만으로 정할 수 없다.</p>
     <p><b>Zero</b>는 ALU 출력으로, ALU 결과가 0이면 1이다. ALU는 모든 명령어에서 계산하므로 Zero도 언제나 나온다. add의 결과가 우연히 0이어도 Zero = 1이다. beq에서는 ALU가 rs1 − rs2를 계산하므로 Zero = 1 ⇔ 두 레지스터 값이 같음이다(⇔ = 「왼쪽이 맞으면 오른쪽도 맞고, 오른쪽이 맞으면 왼쪽도 맞다」. 그래서 값이 다르면 Zero = 0이다).</p>
@@ -1390,11 +1478,17 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>비유: 제어 유닛은 opcode를 보고 스위치를 한 번에 정하는 조작판이다. 안 맞는 점: PCSrc 스위치 하나만은 조작판만으로 못 정하고 계산 결과(Zero)를 봐야 한다.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>PCSrc = <span class="cz" role="button" tabindex="0">Branch</span> AND <span class="cz" role="button" tabindex="0">Zero</span> [Ch4 p.25]</li><li>Zero = ALU 결과가 <span class="cz" role="button" tabindex="0">0</span>이면 1. 모든 명령어에서 나온다 [Ch4 p.12]</li><li>beq: ALU가 <span class="cz" role="button" tabindex="0">rs1 − rs2</span> → Zero = 1 ⇔ 두 값이 같음 [Ch4 p.15]</li><li>PCSrc는 <span class="cz" role="button" tabindex="0">opcode만으로</span> 정할 수 없는 유일한 신호(Zero는 실행 중에 정해짐) [Ch4 p.25]</li></ul></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>빈칸: PCSrc = (　) AND (　)</p><details><summary>답 보기</summary><div class="ans"><p><b>Branch, Zero</b></p><p>beq이고 ALU 결과가 0일 때만 분기 [Ch4 p.25]</p></div></details></li>
+      <li><p>PCSrc가 opcode만으로 정해지지 않는 이유는?</p><details><summary>답 보기</summary><div class="ans"><p><b>Zero가 실행 중 레지스터 값을 빼 봐야 정해져서</b></p><p>다른 신호는 명령어 종류만 알면 정해진다 [Ch4 p.25]</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="q4-8" data-ch="F" data-title="Ch4 · 8 ALUOp + funct → ALU 제어 4비트">
   <p class="eyebrow">Ch4 · 8 짧게 <span class="pages">약 3분</span></p>
   <h2>ALUOp + funct → ALU 제어 4비트</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-8">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-8">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: ALU에 들어가는 4비트 ALU 제어 값은 ALU 제어 유닛이 ALUOp(2비트)와 funct7·funct3을 보고 만든다.</p>
     <p>ALU 제어 4비트 값은 정해진 약속이라 그대로 외운다: 0000 = AND, 0001 = OR, 0010 = add(덧셈), 0110 = sub(뺄셈). 외우는 고리: 끝 두 자리가 00 AND, 01 OR, 10 덧셈이고, 뺄셈만 덧셈 0010 앞에 1이 붙은 0110이다.</p>
@@ -1405,6 +1499,12 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>주의: 4096은 2<sup>4</sup>가 아니라 입력 12비트의 2<sup>12</sup>다. ALUOp(2비트)와 ALU 제어(4비트)를 섞지 말 것.</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>ALUOp: <span class="cz" role="button" tabindex="0">00</span> = 덧셈(lw·sw), <span class="cz" role="button" tabindex="0">01</span> = 뺄셈(beq), <span class="cz" role="button" tabindex="0">10</span> = funct로 정함(R형) [Ch4 p.18]</li><li>ALU 제어: <span class="cz" role="button" tabindex="0">0000</span> AND, <span class="cz" role="button" tabindex="0">0001</span> OR, <span class="cz" role="button" tabindex="0">0010</span> add, 0110 sub [Ch4 p.18]</li><li>R형: add 0000000·000, <span class="cz" role="button" tabindex="0">sub 0100000·000</span>, and 0000000·<span class="cz" role="button" tabindex="0">111</span>, or 0000000·<span class="cz" role="button" tabindex="0">110</span> (funct7·funct3) [Ch4 p.20]</li><li>다단 디코딩: 주 제어 → ALUOp → ALU 제어 → 주 제어 유닛이 <span class="cz" role="button" tabindex="0">작아지고</span> 지연 감소 [Ch4 p.19]</li><li>입력 2 + 7 + 3 = 12비트 → 2<sup>12</sup> = <span class="cz" role="button" tabindex="0">4096</span> 조합, <span class="cz" role="button" tabindex="0">don't care</span>로 압축 [Ch4 p.20]</li></ul><p class="sub">외우는 고리</p><p>ALU 제어 끝 두 자리: 00 AND, 01 OR, 10 덧셈. 뺄셈만 앞에 1 붙은 0110</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>lw·sw의 ALUOp와 ALU 제어는?</p><details><summary>답 보기</summary><div class="ans"><p><b>00, 0010(add)</b></p><p>주소 계산은 늘 덧셈. funct를 보지 않는다</p></div></details></li>
+      <li><p>beq의 ALUOp와 ALU 제어는?</p><details><summary>답 보기</summary><div class="ans"><p><b>01, 0110(sub)</b></p><p>두 레지스터를 빼서 같은지 검사</p></div></details></li>
+    </ol></div>
+  </div>
 </section>
 <section class="lesson nchunk" id="n4-6" data-ch="F" data-title="명령어별 제어 신호 0/1/X 표">
   <p class="eyebrow">Ch4 · 6 <span class="pages">약 9분</span></p>
@@ -1439,7 +1539,7 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
 <section class="lesson nchunk" id="q4-9" data-ch="F" data-title="Ch4 · 9 단일 사이클의 한계와 클럭 주기">
   <p class="eyebrow">Ch4 · 9 짧게 <span class="pages">약 3분</span></p>
   <h2>단일 사이클의 한계와 클럭 주기</h2>
-  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 풀이 예·카드는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-9">벼락치기 단원</a>).</p>
+  <p class="goal"><b>① 읽기</b>를 쭉 읽고, <b>② 핵심 정리</b>의 노란 칸을 먼저 떠올린 뒤 눌러 확인. 끝에 확인 2문제. 풀이 예는 뺐다(전체는 <a href="https://tjrhuni.github.io/comparch-note/cram/#n4-9">벼락치기 단원</a>).</p>
   <div class="nstep"><p class="nlab"><span>1</span> 읽기</p>
     <p><b>한 줄 요약</b>: 단일 사이클은 동작은 맞지만, 모든 명령어가 가장 긴 lw에 맞춘 긴 클럭 주기를 써야 해서 너무 비효율적이다.</p>
     <p>단일 사이클에서는 모든 명령어가 한 클럭 사이클에 끝나므로 모든 명령어의 사이클 길이가 같다. 다음 엣지 전에 가장 느린 명령어까지 끝나야 하므로 <b>가장 긴 경로</b>가 클럭 주기를 정한다. 여기서 경로는 한 명령어가 차례로 지나는 장치들의 줄이다.</p>
@@ -1450,6 +1550,18 @@ body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exa
     <p>주의: 단일 사이클 CPU 시간 = IC × 1 × (가장 긴 경로 지연). CPI는 1로 최소지만 주기가 길어서 「CPI가 1이니 가장 빠르다」는 틀린 말이다. 가장 긴 경로는 sw가 아니라 lw다(sw는 마지막 레지스터 쓰기가 없다).</p>
   </div>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">다시 가리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>모든 명령어가 <span class="cz" role="button" tabindex="0">같은 길이</span>의 클럭 사이클, <span class="cz" role="button" tabindex="0">가장 긴 경로</span>가 주기를 정함 [Ch4 p.29]</li><li>최장 = <span class="cz" role="button" tabindex="0">lw</span>: 명령어 메모리 → <span class="cz" role="button" tabindex="0">레지스터 파일 → ALU → 데이터 메모리</span> → 레지스터 파일(5개 직렬) [Ch4 p.29]</li><li>명령어마다 주기를 다르게 = <span class="cz" role="button" tabindex="0">불가능</span> → <span class="cz" role="button" tabindex="0">자주 생기는 경우를 빠르게</span> 위반 → 파이프라이닝 [Ch4 p.29]</li><li>CPU 시간 = IC × <span class="cz" role="button" tabindex="0">1</span> × (최장 경로 지연). CPI는 최소지만 <span class="cz" role="button" tabindex="0">주기</span>가 길다 [Ch1 p.28]</li><li>빠지는 장치: sw = 마지막 <span class="cz" role="button" tabindex="0">레지스터 쓰기</span>, R형 = <span class="cz" role="button" tabindex="0">데이터 메모리</span>, beq = 둘 다</li></ul><p class="sub">외우는 고리</p><p>lw 경로 = 「명 레 알 데 레」(명령어 메모리, 레지스터 파일, ALU, 데이터 메모리, 레지스터 파일)</p></div>
+  <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="check"><p class="label">확인 2문제 · 답을 떠올린 뒤 펼치기</p><ol>
+      <li><p>단일 사이클에서 가장 긴 경로의 명령어와 장치 순서는?</p><details><summary>답 보기</summary><div class="ans"><p><b>lw: 명령어 메모리 → 레지스터 파일 → ALU → 데이터 메모리 → 레지스터 파일</b></p><p>sw는 마지막 레지스터 쓰기가 없어 더 짧다 [Ch4 p.29]</p></div></details></li>
+      <li><p>단일 사이클이 위반하는 8대 아이디어는?</p><details><summary>답 보기</summary><div class="ans"><p><b>자주 생기는 경우를 빠르게(Make the common case fast)</b></p><p>짧은 명령어도 lw 길이의 주기를 기다린다 [Ch4 p.29]</p></div></details></li>
+    </ol></div>
+  </div>
+</section>
+<section class="lesson nchunk" id="rc3" data-ch="F" data-title="되짚기 · Ch3~Ch4" data-src="q3-1,q3-2,n3-3,q3-4,n3-5,n3-6,n3-7,n3-8,q3-9,q4-1,n4-2,q4-3,n4-4,q4-5,q4-7,q4-8,n4-6,q4-9" data-max="24" data-final="0">
+  <p class="eyebrow">되짚기 <span class="pages">약 10분</span></p>
+  <h2>되짚기 · Ch3~Ch4</h2>
+  <p class="goal">읽고 몇 시간 뒤에 한 번 더 떠올리면 시험 끝날 때까지 기억이 버팁니다. 줄마다 가린 칸을 <b>소리 내어 먼저 말하고</b> [보기] → [알았다]/[몰랐다]. 몰랐던 줄은 3장 뒤에 다시 나옵니다.</p>
+  <div class="rc"><div class="oc-top"><span class="oc-k">떠올리기</span><span class="oc-n"></span></div><div class="oc-bar"><i></i></div><div class="oc-card"></div><div class="oc-nav"></div></div>
 </section>
 <section class="lesson nchunk" id="x2" data-ch="C" data-title="Ch2 연습 문제">
   <p class="eyebrow">연습 문제 · Ch2 <span class="pages">문제마다 3~6분</span></p>
@@ -2394,6 +2506,12 @@ and  x7, x8, x9</pre>
     </ol>
   </div>
 </section>
+<section class="lesson nchunk" id="rcF" data-ch="9" data-title="최종 회상 (시험 직전)" data-src="n1-7,n1-8,q1-9,q2-1,n2-2,n2-3,n2-4,n2-5,n2-6,n2-7,q2-8,q2-9,q3-1,q3-2,n3-3,q3-4,n3-5,n3-6,n3-7,n3-8,q3-9,q4-1,n4-2,q4-3,n4-4,q4-5,q4-7,q4-8,n4-6,q4-9" data-max="40" data-final="1">
+  <p class="eyebrow">되짚기 <span class="pages">약 15분</span></p>
+  <h2>최종 회상 (시험 직전)</h2>
+  <p class="goal">시험 직전 마지막 떠올리기입니다. 밤사이 <b>몰랐다</b>를 누른 줄이 먼저 나오고, 나머지는 무작위로 채웁니다. 다 맞힐 때까지 반복됩니다.</p>
+  <div class="rc"><div class="oc-top"><span class="oc-k">떠올리기</span><span class="oc-n"></span></div><div class="oc-bar"><i></i></div><div class="oc-card"></div><div class="oc-nav"></div></div>
+</section>
 <section class="lesson nchunk" id="n9" data-ch="9" data-title="시험 전날 한 장">
   <p class="eyebrow">마무리 <span class="pages">약 10분</span></p>
   <h2>시험 전날 한 장</h2>
@@ -2422,7 +2540,7 @@ and  x7, x8, x9</pre>
 
 <script>
 (function(){
-  var CH = {"0":"시작","A":"1. Ch1 (17:45 ~)","B":"2. Ch2","E":"3. Ch3","F":"4. Ch4 (~ 21:45)","C":"5. 손으로 풀기 (21:45 ~ 23:00)","D":"6. 남는 시간 (23:00 ~ 00:30)","9":"내일 아침","m":"모아 보기"};
+  var CH = {"0":"시작","A":"1. Ch1","B":"2. Ch2 (02:30 ~)","E":"3. Ch3","F":"4. Ch4 (~ 05:45)","C":"5. 손으로 풀기 (05:45 ~ 07:00)","D":"6. 여유 있을 때","9":"7. 아침 (07:45 ~ 08:45)","m":"모아 보기"};
   var store = {
     get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
     set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -2473,7 +2591,7 @@ and  x7, x8, x9</pre>
   var toc = document.getElementById("toc");
   var cur = 0;
 
-  function num(s){var e=s.querySelector(".eyebrow");if(s.dataset.ch==="0"||s.dataset.ch==="9")return "";var m=s.id.match(/^(?:c\d+-|[pbmr])(\d+)$/);return m?m[1]:""}
+  function num(s){var e=s.querySelector(".eyebrow");if(s.dataset.ch==="0"||s.dataset.ch==="9")return "";var m=s.id.match(/^(?:n\d-|q\d-|x|p)(\d+)$/);return m?m[1]:""}
 
   // 목차
   var html="", last=null;
@@ -3687,6 +3805,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       '<span class="ink-sep"></span>' +
       '<button type="button" data-act="undo" aria-label="되돌리기">↶</button>' +
       '<button type="button" data-act="redo" aria-label="다시 하기">↷</button>' +
+      '<button type="button" data-act="clear" aria-label="이 단원 필기 모두 지우기">필기 초기화</button>' +
       '<button type="button" data-act="more" aria-label="더 보기">⋯</button>' +
       '</div>' +
       '<div class="ink-row ink-opts"></div>' +
@@ -3696,8 +3815,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       '<span class="ink-hint">손떨림 보정</span><button type="button" data-stab="0">약</button><button type="button" data-stab="1">보통</button><button type="button" data-stab="2">강</button>' +
       '<button type="button" data-act="backup">백업 저장</button>' +
       '<label class="ink-file">백업 불러오기<input type="file" accept="application/json,.json" data-act="restore"></label>' +
-      '<button type="button" data-act="clear">이 단원 필기 지우기</button>' +
-      '<button type="button" data-act="log">입력 기록 보기</button>' +
+            '<button type="button" data-act="log">입력 기록 보기</button>' +
       '<span class="ink-store"></span>' +
       '<pre class="ink-log" hidden></pre>' +
       '</div>' +
@@ -3726,8 +3844,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
         clearTimeout(clearTimer);
         if (b.dataset.armed) {
           if ((pages[cur.id] || []).length) { snapshot(cur.id); pages[cur.id] = []; touch(cur.id); clearSel(); render(); msg("지웠습니다. 되돌리기(↶)로 복구할 수 있어요."); }
-          delete b.dataset.armed; b.textContent = "이 단원 필기 지우기";
-        } else { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 지움"; clearTimer = setTimeout(function () { delete b.dataset.armed; b.textContent = "이 단원 필기 지우기"; }, 3000); }
+          delete b.dataset.armed; b.textContent = "필기 초기화";
+        } else { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 지움"; clearTimer = setTimeout(function () { delete b.dataset.armed; b.textContent = "필기 초기화"; }, 3000); }
       }
     });
     bar.querySelector('[data-opt="finger"]').addEventListener("change", function (e) { state.finger = e.target.checked; saveUi(); });
@@ -4034,7 +4152,13 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     Array.prototype.forEach.call(sec.children, function (el) {
       if (el.classList.contains("nstep")) {
         var lab = el.querySelector(".nlab"), t = lab ? lab.textContent : "";
-        if (/떠올리기/.test(t)) return; // ④는 오늘 밤엔 건너뜀
+        if (/떠올리기/.test(t)) { // ④는 카드 2장만: 읽은 직후 떠올리기
+          Array.prototype.slice.call(el.querySelectorAll(".check > ol > li"), 0, 2).forEach(function (li) {
+            var qq = li.querySelector(":scope > p"), aa = li.querySelector(".ans");
+            if (qq && aa) steps.push({ k: "확인 문제", h: '<p class="oc-q">' + qq.innerHTML + '</p><p class="oc-hint">답을 먼저 말하거나 써 보고 펼치기.</p><details class="oc-ans"><summary>답 보기</summary>' + aa.innerHTML + "</details>" });
+          });
+          return;
+        }
         var tag = /풀이 예/.test(t) ? "풀이 예" : /그림/.test(t) ? "그림" : "읽기";
         Array.prototype.forEach.call(el.children, function (c) {
           if (c.classList.contains("nlab")) return;
@@ -4106,6 +4230,90 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (e.key === "ArrowLeft") s.querySelector('[data-o="prev"]').click();
   });
   apply();
+})();
+/* 오늘 밤 페이지: 되짚기(간격을 둔 빠른 회상)와 [이어서 하기]
+   되짚기 = 앞에서 읽은 단원의 핵심 줄을 가린 채 한 줄씩 떠올리기. 몰랐던 줄은 3장 뒤에 다시 나오고, 아침 최종 회상에 우선 나온다. */
+(function () {
+  var KEY = "cr_rc";
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function hide(h) { return h.replace(/class="cz on"/g, 'class="cz"'); }
+
+  // 단원들의 핵심 정리 줄 중 가림 칸이 있는 줄만 모은다
+  function itemsOf(ids) {
+    var out = [];
+    ids.forEach(function (id) {
+      var sec = document.getElementById(id); if (!sec) return;
+      var title = sec.dataset.title || id;
+      Array.prototype.forEach.call(sec.querySelectorAll(".nkey li"), function (li, j) {
+        if (!li.querySelector(".cz")) return;
+        out.push({ id: id + "#" + j, t: title, h: hide(li.innerHTML) });
+      });
+    });
+    return out;
+  }
+
+  function mount(sec) {
+    var ids = (sec.dataset.src || "").split(",").filter(Boolean), max = +sec.dataset.max || 20, all = itemsOf(ids), finalMode = sec.dataset.final === "1";
+    var box = sec.querySelector(".rc"), q = [], known = 0, missed = 0;
+    function start() {
+      var pool = all.slice();
+      if (finalMode) { // 몰랐던 줄을 먼저, 나머지는 무작위로 채움
+        shuffle(pool); pool.sort(function (a, b) { return ((st[b.id] || {}).m || 0) - ((st[a.id] || {}).m || 0); });
+        q = pool.slice(0, max); shuffle(q);
+      } else q = shuffle(pool).slice(0, max);
+      known = 0; missed = 0; paint(false);
+    }
+    function paint(shown) {
+      var total = known + q.length;
+      box.querySelector(".oc-n").textContent = known + " / " + total + " 알았다";
+      box.querySelector(".oc-bar i").style.width = (total ? known / total * 100 : 0) + "%";
+      var card = box.querySelector(".oc-card"), nav = box.querySelector(".oc-nav");
+      if (!q.length) {
+        card.innerHTML = '<p class="oc-done">되짚기 끝!</p><p>몰랐다를 누른 횟수 ' + missed + '번. 몰랐던 줄은 아침 <b>최종 회상</b>에 먼저 나옵니다.</p><button type="button" class="oc-b oc-go" data-r="done">다 했어요 + 다음 ▶</button><button type="button" class="oc-b" data-r="again" style="width:100%;margin-top:10px">한 번 더 (새로 섞기)</button>';
+        nav.hidden = true; return;
+      }
+      var it = q[0];
+      card.innerHTML = '<p class="rc-t">' + it.t + "</p><p>" + it.h + "</p>" + (shown ? "" : '<p class="oc-hint">가린 칸을 <b>소리 내어 먼저 말하고</b> [보기].</p>');
+      if (shown) Array.prototype.forEach.call(card.querySelectorAll(".cz"), function (z) { z.classList.add("on"); });
+      nav.hidden = false;
+      nav.innerHTML = shown ? '<button type="button" class="oc-b rc-no" data-r="no">몰랐다</button><button type="button" class="oc-b oc-next" data-r="yes">알았다 ✓</button>'
+        : '<button type="button" class="oc-b oc-next" data-r="show">보기</button>';
+    }
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b || !b.dataset.r) return;
+      var r = b.dataset.r, it = q[0];
+      if (r === "show") { paint(true); return; }
+      if (r === "yes" || r === "no") {
+        var s = st[it.id] = st[it.id] || { n: 0, m: 0 }; s.n++; s.t = Date.now();
+        q.shift();
+        if (r === "yes") known++; else { s.m++; missed++; q.splice(Math.min(3, q.length), 0, it); }
+        save(); paint(false); return;
+      }
+      if (r === "again") { start(); return; }
+      if (r === "done") {
+        var ck = document.getElementById("doneChk"); if (ck && !ck.checked) { ck.checked = true; ck.dispatchEvent(new Event("change")); }
+        var nb = document.getElementById("nextBtn"); if (nb && !nb.disabled) nb.click(); window.scrollTo(0, 0);
+      }
+    });
+    if (!all.length) { box.querySelector(".oc-card").innerHTML = "<p>모을 줄이 없습니다.</p>"; return; }
+    start();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("section[data-src]"), mount);
+
+  // 홈의 [이어서 하기]: 아직 체크 안 한 첫 단원으로
+  var rs = document.getElementById("resume");
+  if (rs) {
+    var paintResume = function () {
+      var done = {}; try { done = JSON.parse(localStorage.getItem("cr_done") || "{}") || {}; } catch (e) {}
+      var L = Array.prototype.filter.call(document.querySelectorAll("section.lesson"), function (s) { return s.id !== "home" && s.dataset.ch !== "m"; });
+      var nx = L.filter(function (s) { return !done[s.id]; })[0], cnt = L.filter(function (s) { return done[s.id]; }).length;
+      rs.innerHTML = nx ? '<a class="oc-b oc-go rc-resume" href="#' + nx.id + '">이어서 하기 ▶ ' + nx.dataset.title + '</a><p class="oc-hint">' + cnt + " / " + L.length + " 끝냄</p>" : '<p class="oc-done">전부 끝! 시험 잘 보세요.</p>';
+    };
+    paintResume(); document.addEventListener("visibilitychange", paintResume);
+    window.addEventListener("hashchange", paintResume); document.addEventListener("change", function (e) { if (e.target.id === "doneChk") setTimeout(paintResume, 50); });
+  }
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("../sw.js").catch(function(){})}</script>

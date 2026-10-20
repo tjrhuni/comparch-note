@@ -11463,6 +11463,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       '<span class="ink-sep"></span>' +
       '<button type="button" data-act="undo" aria-label="되돌리기">↶</button>' +
       '<button type="button" data-act="redo" aria-label="다시 하기">↷</button>' +
+      '<button type="button" data-act="clear" aria-label="이 단원 필기 모두 지우기">필기 초기화</button>' +
       '<button type="button" data-act="more" aria-label="더 보기">⋯</button>' +
       '</div>' +
       '<div class="ink-row ink-opts"></div>' +
@@ -11472,8 +11473,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       '<span class="ink-hint">손떨림 보정</span><button type="button" data-stab="0">약</button><button type="button" data-stab="1">보통</button><button type="button" data-stab="2">강</button>' +
       '<button type="button" data-act="backup">백업 저장</button>' +
       '<label class="ink-file">백업 불러오기<input type="file" accept="application/json,.json" data-act="restore"></label>' +
-      '<button type="button" data-act="clear">이 단원 필기 지우기</button>' +
-      '<button type="button" data-act="log">입력 기록 보기</button>' +
+            '<button type="button" data-act="log">입력 기록 보기</button>' +
       '<span class="ink-store"></span>' +
       '<pre class="ink-log" hidden></pre>' +
       '</div>' +
@@ -11502,8 +11502,8 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
         clearTimeout(clearTimer);
         if (b.dataset.armed) {
           if ((pages[cur.id] || []).length) { snapshot(cur.id); pages[cur.id] = []; touch(cur.id); clearSel(); render(); msg("지웠습니다. 되돌리기(↶)로 복구할 수 있어요."); }
-          delete b.dataset.armed; b.textContent = "이 단원 필기 지우기";
-        } else { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 지움"; clearTimer = setTimeout(function () { delete b.dataset.armed; b.textContent = "이 단원 필기 지우기"; }, 3000); }
+          delete b.dataset.armed; b.textContent = "필기 초기화";
+        } else { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 지움"; clearTimer = setTimeout(function () { delete b.dataset.armed; b.textContent = "필기 초기화"; }, 3000); }
       }
     });
     bar.querySelector('[data-opt="finger"]').addEventListener("change", function (e) { state.finger = e.target.checked; saveUi(); });
