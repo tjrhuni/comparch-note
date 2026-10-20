@@ -382,6 +382,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
 .dr-scr{margin:0 0 12px;border-radius:12px}
 .dr-p[hidden],.dr-scr[hidden]{display:none!important}
 </style>
+<style>.itbl td:first-child code{white-space:nowrap}.itbl td:first-child{min-width:9.5em}</style>
 <section class="lesson" id="home" data-ch="0" data-title="시작하기">
   <p class="eyebrow">COMP0411 중간고사 · 10월 21일(수) 10:30</p>
   <h2>컴퓨터구조 벼락치기</h2>
@@ -963,7 +964,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     <p><b>칸 이름</b>: rd = register destination(결과를 받는 레지스터), rs1·rs2 = register source(값을 읽는 레지스터), imm = immediate(명령어에 적힌 상수), L = 라벨. <b>이름 읽는 법</b>: 끝 <b>i</b> = immediate(셋째 칸이 상수), 끝 <b>u</b> = unsigned(무부호로 다룸), <b>l</b>로 시작 = load(메모리 → 레지스터), <b>s</b>로 시작 = store(레지스터 → 메모리), <b>b</b> = byte(1바이트), <b>h</b> = halfword(2바이트), <b>w</b> = word(4바이트), <b>d</b> = doubleword(8바이트). 이 규칙만 알면 처음 보는 이름도 뜻을 짐작할 수 있다.</p>
 
     <p class="sub">① 산술 <span class="ref">[Ch2 p.9–10, 16]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>add rd, rs1, rs2</code> (R)</td><td>add → 더하기</td><td>rd ← rs1 + rs2</td><td>x6 = 7, x7 = 3일 때 <code>add x5, x6, x7</code> → x5 = 10</td></tr>
@@ -973,7 +974,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">② 메모리 읽기·쓰기 <span class="ref">[Ch2 p.11–15, 50]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제 (x6 = 0x100)</th></tr></thead>
       <tbody>
         <tr><td><code>lw rd, imm(rs1)</code> (I)</td><td>load word → 4바이트 읽기</td><td>주소 rs1 + imm부터 4바이트를 rd에</td><td><code>lw x5, 8(x6)</code> → 주소 0x108~0x10B의 4바이트가 x5로</td></tr>
@@ -986,7 +987,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">③ 논리 (비트 연산) <span class="ref">[Ch2 p.26–27]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>and</code> / <code>andi</code> (R / I)</td><td>and (immediate) → 그리고</td><td>자리마다 둘 다 1이면 1. 원하는 비트만 남기기·지우기(마스크)</td><td>x6 = 0x0C(1100), x7 = 0x0A(1010) → <code>and x5, x6, x7</code> = 0x08(1000). x6 = 0x3C면 <code>andi x5, x6, 0xF</code> = 0xC</td></tr>
@@ -996,7 +997,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">④ 시프트 <span class="ref">[Ch2 p.25]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>sll</code> / <code>slli</code> (R / I)</td><td>shift left logical → 왼쪽 논리 시프트</td><td>왼쪽으로 밀고 오른쪽 빈칸 0. k칸 = × 2<sup>k</sup>. sll은 칸 수를 rs2에서, slli는 상수로</td><td>x6 = 3일 때 <code>slli x5, x6, 3</code> → 24. x7 = 2면 <code>sll x5, x6, x7</code> → 12</td></tr>
@@ -1006,7 +1007,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">⑤ 조건 분기 <span class="ref">[Ch2 p.28–31]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>beq rs1, rs2, L</code> (SB)</td><td>branch if equal → 같으면 분기</td><td>rs1 = rs2이면 라벨 L 줄로, 아니면 다음 줄</td><td>x5 = 3, x6 = 3 → <code>beq x5, x6, L</code>은 L로 간다</td></tr>
@@ -1018,7 +1019,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">⑥ 점프·큰 상수 <span class="ref">[Ch2 p.35, 46]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>jal rd, L</code> (UJ)</td><td>jump and link → 뛰면서 돌아올 주소 남기기</td><td>rd ← PC + 4(다음 명령어 주소)를 저장하고 L로 간다. 함수 호출: <code>jal x1, 함수</code></td><td>0x100에서 <code>jal x1, F</code> → x1 = 0x104, 다음 실행은 F 줄</td></tr>
@@ -1028,7 +1029,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">⑦ 곱셈·나눗셈 (Ch3에서 배움) <span class="ref">[Ch3 p.13, 20]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어 (형식)</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>mul rd, rs1, rs2</code> (R)</td><td>multiply → 곱하기</td><td>32비트 × 32비트 = 64비트 곱 중 <b>아래(lower) 32비트</b>를 rd에</td><td>6 × 7 → 42. 0x10000 × 0x10000 = 0x1_00000000 → mul = 0</td></tr>
@@ -1039,7 +1040,7 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
     </table></div>
 
     <p class="sub">⑧ 부동소수점 (Ch3에서 배움) <span class="ref">[Ch3 p.37]</span></p>
-    <div class="tbl"><table>
+    <div class="tbl itbl"><table>
       <thead><tr><th>명령어</th><th>영어 → 뜻</th><th>하는 일</th><th>예제</th></tr></thead>
       <tbody>
         <tr><td><code>fadd.s</code> / <code>fsub.s</code> / <code>fmul.s</code> / <code>fdiv.s</code> (.d판도 있음)</td><td>float add / subtract / multiply / divide → 실수 사칙연산</td><td>FP 레지스터 f0~f31끼리 계산. 끝 .s = single(단정도 32비트), .d = double(배정도 64비트)</td><td>f2 = 1.5, f3 = 2.25 → <code>fadd.s f1, f2, f3</code> → f1 = 3.75. <code>fmul.s</code> → 3.375</td></tr>
