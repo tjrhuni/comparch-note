@@ -10981,8 +10981,9 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
   function resolve(s) { // 저장된 서명으로 블록을 다시 찾는다
     if (s.g && sigs[s.k] !== s.g) {
       var best = -1, bd = 1e9;
-      for (var i = 0; i < sigs.length; i++) if (sigs[i] === s.g && Math.abs(i - s.k) < bd) { bd = Math.abs(i - s.k); best = i; }
+      for (var i = 0; i < sigs.length; i++) if (sigs[i] === s.g && Math.abs(i - s.k) < bd && !hiddenBlock(blocks[i])) { bd = Math.abs(i - s.k); best = i; }
       if (best >= 0) s.k = best;
+      else if (document.body.classList.contains("oc-mode")) return null; // 한 장씩 보기: 지금 카드에 없는 획은 그리지 않음
     }
     return blocks[s.k] || null;
   }
@@ -11675,6 +11676,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     tbtn = document.createElement("button"); tbtn.className = "tbtn ink-toggle"; tbtn.type = "button"; tbtn.textContent = "필기"; tbtn.setAttribute("aria-pressed", "false");
     var fsDown = document.getElementById("fsDown"); if (fsDown) fsDown.parentNode.insertBefore(tbtn, fsDown);
     tbtn.onclick = function () { setOn(!state.on); };
+    document.addEventListener("oc:paint", render); // 한 장씩 보기에서 카드가 바뀌면 다시 그림
     document.addEventListener("pointerdown", onDown, { passive: false });
     document.addEventListener("pointermove", onMove, { passive: false });
     document.addEventListener("pointermove", ringMove, { passive: true });
