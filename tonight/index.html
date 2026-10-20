@@ -4353,7 +4353,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       var L = Array.prototype.filter.call(document.querySelectorAll("section.lesson"), function (s) { return s.id !== "home" && s.dataset.ch !== "m"; });
       var nx = L.filter(function (s) { return !done[s.id]; })[0], cnt = L.filter(function (s) { return done[s.id]; }).length;
       rs.innerHTML = nx ? '<a class="oc-b oc-go rc-resume" href="#' + nx.id + '">이어서 하기 ▶ ' + nx.dataset.title + '</a><p class="oc-hint">' + cnt + " / " + L.length + " 끝냄</p>" : '<p class="oc-done">전부 끝! 시험 잘 보세요.</p>';
-      if (new Date().getHours() >= 7 && document.getElementById("rcF")) rs.innerHTML += '<a class="oc-b rc-resume rc-final" href="#rcF">최종 회상 바로 가기 ▶</a>';
+      var hh = new Date().getHours(); if (hh >= 7 && hh < 12 && document.getElementById("rcF")) rs.innerHTML += '<a class="oc-b rc-resume rc-final" href="#rcF">최종 회상 바로 가기 ▶</a>';
     };
     paintResume(); document.addEventListener("visibilitychange", paintResume);
     var home = document.getElementById("home"); if (home) onShow(home, paintResume);
