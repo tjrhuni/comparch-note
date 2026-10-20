@@ -4171,11 +4171,17 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       if (el.classList.contains("nstep")) {
         var lab = el.querySelector(".nlab"), t = lab ? lab.textContent : "";
         if (/떠올리기/.test(t)) { // ④: 빈칸 풀이(있으면) 1장 + 확인 문제, 합쳐 2장
-          var ex = el.querySelector(".example");
-          if (ex) { var cl = ex.cloneNode(true);
-            Array.prototype.forEach.call(cl.querySelectorAll(".label,.mark-row,.scratch,.scratch-foot,.scr-btn"), function (x) { x.parentNode.removeChild(x); });
-            steps.push({ k: "빈칸 풀이", h: hide(cl.innerHTML) + '<p class="oc-hint">연습장이나 종이에 먼저 써 보고, 노란 칸을 눌러 맞춰 보기.</p>' }); }
-          Array.prototype.slice.call(el.querySelectorAll(".check > ol > li"), 0, ex ? 1 : 2).forEach(function (li) {
+          var strip = function (n) { var cl = n.cloneNode(true); Array.prototype.forEach.call(cl.querySelectorAll(".label,.mark-row,.scratch,.scratch-foot,.scr-btn"), function (x) { x.parentNode.removeChild(x); }); return cl; };
+          var ex = null, checks = Array.prototype.slice.call(el.querySelectorAll(".check"));
+          Array.prototype.forEach.call(el.querySelectorAll(".example"), function (e) {
+            if (e.querySelector("svg")) { // 그림 빈칸: 그림과 바로 뒤 문제들을 한 장에
+              var nx = e.nextElementSibling, qs = nx && nx.classList.contains("check") ? strip(nx).innerHTML : "";
+              checks = checks.filter(function (c) { return c !== nx; });
+              steps.push({ k: "그림 빈칸", h: strip(e).innerHTML + qs, fig: 1 });
+            } else if (!ex) { ex = e; steps.push({ k: "빈칸 풀이", h: hide(strip(e).innerHTML) + '<p class="oc-hint">연습장이나 종이에 먼저 써 보고, 노란 칸을 눌러 맞춰 보기.</p>' }); }
+          });
+          var lastCheck = checks[checks.length - 1];
+          Array.prototype.slice.call(lastCheck ? lastCheck.querySelectorAll(":scope > ol > li") : [], 0, ex ? 1 : 2).forEach(function (li) {
             var qq = li.querySelector(":scope > p"), aa = li.querySelector(".ans");
             if (qq && aa) steps.push({ k: "확인 문제", h: '<p class="oc-q">' + qq.innerHTML + '</p><p class="oc-hint">답을 먼저 말하거나 써 보고 펼치기.</p><details class="oc-ans"><summary>답 보기</summary>' + aa.innerHTML + "</details>" });
           });
@@ -4205,7 +4211,7 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
       }
     });
     // 순서: 읽기 → 풀이 예 → 빈칸 풀이 → 핵심 떠올리기 → 확인(읽은 뒤 조금 시간을 두고 떠올리기)
-    var G = { "읽기": 0, "그림": 0, "풀이 예": 1, "빈칸 풀이": 2, "핵심 떠올리기": 3, "외우는 고리": 3, "확인 문제": 4 };
+    var G = { "읽기": 0, "그림": 0, "풀이 예": 1, "빈칸 풀이": 2, "그림 빈칸": 2, "핵심 떠올리기": 3, "외우는 고리": 3, "확인 문제": 4 };
     if (sec.id !== "n9") { steps.forEach(function (s, n) { s.o = n; }); steps.sort(function (a, b) { return ((G[a.k] || 0) - (G[b.k] || 0)) || (a.o - b.o); }); }
     return steps;
   }
