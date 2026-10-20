@@ -383,6 +383,26 @@ ol.wrong-list > li{padding:.7em 0;border-bottom:1px solid var(--line)}
 .dr-p[hidden],.dr-scr[hidden]{display:none!important}
 </style>
 <style>.itbl td:first-child code{white-space:nowrap}.itbl td:first-child{min-width:9.5em}</style>
+<style>
+body:not(.oc-mode) .oc{display:none}
+body.oc-mode .oc-sec>.nstep,body.oc-mode .oc-sec>.nkey,body.oc-mode .oc-sec>.exam,body.oc-mode .oc-sec>.goal,body.oc-mode .oc-sec>.flow{display:none}
+.oc{margin:1em 0 1.4em}
+.oc-top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--fg2);margin-bottom:6px}
+.oc-k{font-weight:700;color:var(--accent);letter-spacing:.02em}
+.oc-bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:14px}
+.oc-bar i{display:block;height:100%;background:var(--easy);border-radius:99px;transition:width .2s}
+.oc-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px 26px;min-height:38vh;font-size:1.22em;line-height:1.85;display:flex;flex-direction:column;justify-content:center}
+.oc-card p{margin:.3em 0}
+.oc-card figure{margin:0}
+.oc-q{font-weight:700}
+.oc-hint{font-size:.78em;color:var(--fg2);margin-top:1em!important}
+.oc-done{font-size:1.3em;font-weight:800;color:var(--easy)}
+.oc-nav{display:flex;gap:12px;margin-top:14px}
+.oc-b{font:inherit;font-size:17px;font-weight:700;min-height:56px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:0 18px;cursor:pointer}
+.oc-b:disabled{opacity:.35}
+.oc-next,.oc-go{flex:1;background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.oc-go{margin-top:1.2em;width:100%}
+</style>
 <section class="lesson" id="home" data-ch="0" data-title="오늘 밤 경로">
   <p class="eyebrow">10/20 밤 · 01:00 취침 · 시험 10/21 10:30</p>
   <h2>오늘 밤 경로</h2>
@@ -3972,6 +3992,117 @@ function $(e,t,u,x=h=>h){return e*x(.5-t*(.5-u))}function se(e){return[-e[0],-e[
     if (document.visibilityState === "hidden") clearInterval(tick);
     else { clearInterval(tick); tick = setInterval(step, 1000); step(); }
   });
+})();
+/* 한 장씩 보기(ADHD용): 단원의 글을 한두 문장씩 카드로 나눠 한 장만 보여 준다. 핵심 정리는 한 줄씩 가린 채, 끝에서 [다 봤어요 + 다음 단원] */
+(function () {
+  var KEY = "cr_onecard", POS = {};
+  var on = true; try { on = localStorage.getItem(KEY) !== "0"; } catch (e) {}
+  var MAX = 110; // 카드 한 장에 넣을 글자 수(태그 제외) 기준
+
+  function vis(h) { return h.replace(/<[^>]+>/g, "").replace(/&[a-z]+;/g, "x").length; }
+  // HTML 문단을 문장 끝(「다.」「요.」) 기준으로 나눈다. 태그 안이나 열린 태그 사이에서는 자르지 않는다.
+  function sentences(html) {
+    var out = [], start = 0, depth = 0, i = 0, n = html.length;
+    while (i < n) {
+      var ch = html[i];
+      if (ch === "<") {
+        var j = html.indexOf(">", i); if (j < 0) break;
+        var tag = html.slice(i + 1, j);
+        if (/^\//.test(tag)) depth = Math.max(0, depth - 1);
+        else if (!/\/$/.test(tag) && !/^(br|img|hr|input|wbr)\b/i.test(tag)) depth++;
+        i = j + 1; continue;
+      }
+      if (ch === "." && depth === 0 && /[다요]/.test(html[i - 1] || "") && (i + 1 >= n || html[i + 1] === " ")) { out.push(html.slice(start, i + 1).trim()); start = i + 1; }
+      i++;
+    }
+    var rest = html.slice(start).trim(); if (rest) out.push(rest);
+    return out;
+  }
+  function chunks(html) {
+    var ss = sentences(html), res = [], cur = "";
+    ss.forEach(function (s) { if (cur && vis(cur) + vis(s) > MAX) { res.push(cur); cur = s; } else cur = cur ? cur + " " + s : s; });
+    if (cur) res.push(cur);
+    return res;
+  }
+  function hide(h) { return h.replace(/class="cz on"/g, 'class="cz"'); }
+
+  function build(sec) {
+    var steps = [];
+    Array.prototype.forEach.call(sec.children, function (el) {
+      if (el.classList.contains("nstep")) {
+        var lab = el.querySelector(".nlab"), t = lab ? lab.textContent : "";
+        if (/떠올리기/.test(t)) return; // ④는 오늘 밤엔 건너뜀
+        var tag = /풀이 예/.test(t) ? "풀이 예" : /그림/.test(t) ? "그림" : "읽기";
+        Array.prototype.forEach.call(el.children, function (c) {
+          if (c.classList.contains("nlab")) return;
+          if (c.tagName === "FIGURE") { steps.push({ k: "그림", h: c.outerHTML }); return; }
+          if (c.tagName === "P" && !c.classList.contains("sub")) { chunks(c.innerHTML).forEach(function (x) { steps.push({ k: tag, h: "<p>" + x + "</p>" }); }); return; }
+          if (c.tagName === "OL" || c.tagName === "UL") { Array.prototype.forEach.call(c.children, function (li) { steps.push({ k: tag, h: "<p>" + li.innerHTML + "</p>" }); }); return; }
+          if (c.classList.contains("nex")) {
+            var q = c.querySelector(".exq"), a = c.querySelector(".exa");
+            if (q) steps.push({ k: "풀이 예", h: '<p class="oc-q">' + q.innerHTML + "</p><p class=\"oc-hint\">먼저 머릿속으로 어떻게 풀지 생각해 보고 [다음].</p>" });
+            Array.prototype.forEach.call(c.querySelectorAll("li"), function (li, j) { steps.push({ k: "풀이 예", h: "<p><b>" + (j + 1) + "단계</b> " + li.innerHTML + "</p>" }); });
+            if (a) steps.push({ k: "풀이 예", h: "<p>" + a.innerHTML + "</p>" });
+            return;
+          }
+          steps.push({ k: tag, h: c.outerHTML });
+        });
+      } else if (el.classList.contains("nkey")) {
+        Array.prototype.forEach.call(el.querySelectorAll("li"), function (li) { steps.push({ k: "핵심 떠올리기", h: "<p>" + hide(li.innerHTML) + "</p>", cz: 1 }); });
+        Array.prototype.forEach.call(el.querySelectorAll("p.sub + p"), function (p) { steps.push({ k: "외우는 고리", h: "<p>" + hide(p.innerHTML) + "</p>", cz: 1 }); });
+      } else if (el.classList.contains("exam")) {
+        var p = el.querySelector("p:not(.label)"); if (p) steps.push({ k: "외우는 고리", h: "<p>" + hide(p.innerHTML) + "</p>", cz: 1 });
+      }
+    });
+    return steps;
+  }
+
+  function mount(sec) {
+    var steps = build(sec); if (!steps.length) return;
+    sec.classList.add("oc-sec");
+    var box = document.createElement("div"); box.className = "oc";
+    box.innerHTML = '<div class="oc-top"><span class="oc-k"></span><span class="oc-n"></span></div><div class="oc-bar"><i></i></div><div class="oc-card"></div>' +
+      '<div class="oc-nav"><button type="button" class="oc-b" data-o="prev">◀ 이전</button><button type="button" class="oc-b oc-next" data-o="next">다음 ▶</button></div>';
+    var h2 = sec.querySelector("h2"); h2.parentNode.insertBefore(box, h2.nextSibling);
+    var i = POS[sec.id] || 0;
+    function paint() {
+      var last = i >= steps.length;
+      box.querySelector(".oc-k").textContent = last ? "끝" : steps[i].k;
+      box.querySelector(".oc-n").textContent = Math.min(i + 1, steps.length) + " / " + steps.length;
+      box.querySelector(".oc-bar i").style.width = (Math.min(i, steps.length) / steps.length * 100) + "%";
+      var card = box.querySelector(".oc-card");
+      card.innerHTML = last ? '<p class="oc-done">이 단원 끝! 잘했어요.</p><p class="oc-hint">잠깐 숨 한 번 쉬고 다음 단원으로.</p><button type="button" class="oc-b oc-go" data-o="done">다 봤어요 + 다음 단원 ▶</button>'
+        : steps[i].h + (steps[i].cz ? '<p class="oc-hint">노란 칸을 <b>먼저 떠올려 말해 보고</b> 눌러서 확인.</p>' : "");
+      box.querySelector('[data-o="prev"]').disabled = i === 0;
+      box.querySelector(".oc-next").hidden = last;
+      POS[sec.id] = i;
+    }
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b || !b.dataset.o) return;
+      if (b.dataset.o === "next") i = Math.min(steps.length, i + 1);
+      else if (b.dataset.o === "prev") i = Math.max(0, i - 1);
+      else if (b.dataset.o === "done") {
+        var ck = document.getElementById("doneChk"); if (ck && !ck.checked) { ck.checked = true; ck.dispatchEvent(new Event("change")); }
+        var nb = document.getElementById("nextBtn"); if (nb && !nb.disabled) nb.click(); window.scrollTo(0, 0); return;
+      }
+      paint(); box.scrollIntoView({ block: "nearest" });
+    });
+    paint();
+  }
+
+  var secs = Array.prototype.filter.call(document.querySelectorAll("section.nchunk"), function (s) { return /^[nq]\d-\d+$/.test(s.id); });
+  secs.forEach(mount);
+  // 맨 위 전환 버튼: 한 장씩 ↔ 전체 보기
+  function apply() { document.body.classList.toggle("oc-mode", on); var b = document.getElementById("ocBtn"); if (b) b.textContent = on ? "전체 보기" : "한 장씩"; }
+  var top = document.querySelector(".top-in");
+  if (top) { var tb = document.createElement("button"); tb.type = "button"; tb.id = "ocBtn"; tb.className = "fz-btn"; top.insertBefore(tb, top.querySelector(".fz-btn") || document.getElementById("tocBtn")); tb.onclick = function () { on = !on; try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {} apply(); }; }
+  document.addEventListener("keydown", function (e) {
+    if (!on || /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    var s = document.querySelector("section.nchunk.on .oc"); if (!s) return;
+    if (e.key === "ArrowRight") { var n = s.querySelector('.oc-next:not([hidden])') || s.querySelector(".oc-go"); if (n) n.click(); }
+    if (e.key === "ArrowLeft") s.querySelector('[data-o="prev"]').click();
+  });
+  apply();
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("../sw.js").catch(function(){})}</script>
