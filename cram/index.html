@@ -6226,6 +6226,9 @@ and  x7, x8, x9</pre>
   function g4(s) { return s.replace(/(.{4})(?=.)/g, "$1 "); }
   function sup(n) { return "<sup>" + n + "</sup>"; }
   function f6(x) { var v = parseFloat(Number(x).toPrecision(6)); return Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : String(v); }
+  // 끝나지 않는 소수는 「약 x.xxx」로, 끝나는 값은 그대로
+  function nice(x) { var r = Math.round(x * 10000) / 10000; return Math.abs(r - x) < 1e-9 ? f6(x) : "약 " + x.toFixed(3); }
+  function fv(v) { return mn(String(v)); }
   function mn(x) { return String(x).replace(/(^|[^0-9A-Za-z_])-(\d)/g, "$1−$2").replace(/^-/, "−"); }
   function c(s) { return "<code>" + s + "</code>"; }
   function tbl(head, rows) { return '<div class="tbl"><table><thead><tr>' + head.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (x) { return "<td>" + x + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>"; }
@@ -6238,11 +6241,12 @@ and  x7, x8, x9</pre>
   function enc32(v) { var p = fp(v); return ((p.s << 31) | ((p.e + 127) << 23) | Math.round(p.m * 8388608)) >>> 0; }
   function enc16(v) { var p = fp(v); return ((p.s << 15) | ((p.e + 15) << 10) | Math.round(p.m * 1024)) >>> 0; }
   function dy() { var p = R(0, 5), k = R(1, 255); if (k % 2 === 0 && p > 0) k++; var v = k / Math.pow(2, p); return (Math.random() < 0.4 ? -1 : 1) * v; }
+  function dyS() { var p = R(0, 3), k = R(1, 31); if (k % 2 === 0 && p > 0) k++; return (Math.random() < 0.4 ? -1 : 1) * k / Math.pow(2, p); }
   function encSteps(v, bits) {
     var p = fp(v), E = bits === 16 ? 5 : 8, F = bits === 16 ? 10 : 23, B = bits === 16 ? 15 : 127, mb = mant(p.m, F), ef = p.e + B, word = bits === 16 ? enc16(v) : enc32(v);
     var all = String(p.s) + bin(ef, E) + mb;
     return { word: word, steps: [
-      "부호: " + (p.s ? "음수라 S = 1" : "양수라 S = 0") + ". 크기 " + f6(p.a) + "를 2진으로: 정수 부분은 ÷2, 소수 부분은 ×2 → <b>" + bstr(p.a) + "<sub>2</sub></b>.",
+      "부호: " + (p.s ? "음수라 S = 1" : "양수라 S = 0") + ". 크기 " + String(p.a) + "를 2진으로: 정수 부분은 ÷2, 소수 부분은 ×2 → <b>" + bstr(p.a) + "<sub>2</sub></b>.",
       "정규화(소수점 왼쪽에 1 하나): 1." + trimm(mb) + "<sub>2</sub> × 2" + sup(mn(p.e)) + ". 실제 지수 = " + mn(p.e) + ".",
       "지수 칸 = 실제 지수 + bias = " + mn(p.e) + " + " + B + " = " + ef + " = " + g4(bin(ef, E)) + "<sub>2</sub> (" + E + "비트).",
       "가수 칸 = 소수점 뒤 비트(숨은 1 제외)를 " + F + "비트로: " + trimm(mb) + " 뒤를 0으로 채움.",
@@ -6280,9 +6284,9 @@ and  x7, x8, x9</pre>
     { id: "avg", name: "평균 CPI", make: function () {
       var cp = [1, 2, 3, 4, 5].sort(function () { return Math.random() - 0.5; }).slice(0, 3), n = [R(1, 6) * 10, R(1, 6) * 10, R(1, 6) * 10], f = pick([1, 2, 4, 5]);
       var cyc = n[0] * cp[0] + n[1] * cp[1] + n[2] * cp[2], tot = n[0] + n[1] + n[2], avg = cyc / tot, ms = cyc / f;
-      return { q: "클럭 " + f + " GHz. 산술 " + n[0] + " × 10" + sup(6) + "개(CPI " + cp[0] + "), load/store " + n[1] + " × 10" + sup(6) + "개(CPI " + cp[1] + "), 분기 " + n[2] + " × 10" + sup(6) + "개(CPI " + cp[2] + "). 평균 CPI와 CPU 시간은?", a: "평균 CPI " + f6(avg) + ", CPU 시간 " + f6(ms) + " ms",
+      return { q: "클럭 " + f + " GHz. 산술 " + n[0] + " × 10" + sup(6) + "개(CPI " + cp[0] + "), load/store " + n[1] + " × 10" + sup(6) + "개(CPI " + cp[1] + "), 분기 " + n[2] + " × 10" + sup(6) + "개(CPI " + cp[2] + "). 평균 CPI와 CPU 시간은?", a: "평균 CPI " + nice(avg) + ", CPU 시간 " + f6(ms) + " ms",
         steps: ["공식: <b>평균 CPI = Σ(CPI<sub>i</sub> × 개수<sub>i</sub>) ÷ 전체 명령어 수</b> (CPI 셋의 단순 평균이 아님).", "사이클 수 = " + n[0] + "×" + cp[0] + " + " + n[1] + "×" + cp[1] + " + " + n[2] + "×" + cp[2] + " = " + cyc + " (× 10" + sup(6) + ").",
-          "평균 CPI = " + cyc + " ÷ " + tot + " = <b>" + f6(avg) + "</b>.", "CPU 시간 = 사이클 수 ÷ 클럭 속도 = " + cyc + " × 10" + sup(6) + " ÷ (" + f + " × 10" + sup(9) + ") = " + f6(ms) + " × 10" + sup("−3") + " s = <b>" + f6(ms) + " ms</b>."] }; } },
+          "평균 CPI = " + cyc + " ÷ " + tot + " = <b>" + nice(avg) + "</b>.", "CPU 시간 = 사이클 수 ÷ 클럭 속도 = " + cyc + " × 10" + sup(6) + " ÷ (" + f + " × 10" + sup(9) + ") = " + f6(ms) + " × 10" + sup("−3") + " s = <b>" + f6(ms) + " ms</b>."] }; } },
     { id: "mips", name: "MIPS", make: function () {
       if (Math.random() < 0.5) { var fm = pick([500, 800, 1000, 2000, 2500, 4000]), cpi = pick([1, 1.25, 2, 2.5, 4, 5]);
         return { q: "클럭 " + (fm >= 1000 ? fm / 1000 + " GHz" : fm + " MHz") + ", CPI " + cpi + "인 컴퓨터의 MIPS는?", a: f6(fm / cpi) + " MIPS",
@@ -6297,15 +6301,15 @@ and  x7, x8, x9</pre>
           "속도 향상 = " + f6(ta) + " ÷ " + tb + " = <b>" + f6(r) + "</b>.", "성능 % 향상 = (" + f6(r) + " − 1) × 100 = <b>" + f6((r - 1) * 100) + "%</b>.", "시간 감소율 = (" + f6(ta) + " − " + tb + ") ÷ " + f6(ta) + " × 100 = <b>" + f6((1 - 1 / r) * 100) + "%</b>. (두 %는 다른 값이다)"] }; } },
     { id: "amd", name: "암달 (앞으로)", make: function () {
       var t0 = R(3, 10) * 20, fr = pick([0.5, 0.6, 0.75, 0.8, 0.9]), ta = t0 * fr, tb = t0 - ta, n = pick([2, 3, 4, 5, 10]), t1 = ta / n + tb;
-      return { q: "실행 시간 " + t0 + " s 중 " + f6(ta) + " s가 곱셈이다. 곱셈만 " + n + "배 빠르게 하면 개선 후 시간과 속도 향상은? 그리고 곱셈을 아무리 빠르게 해도 최대 몇 배인가?", a: f6(t1) + " s, " + f6(t0 / t1) + "배, 최대 " + f6(t0 / tb) + "배",
+      return { q: "실행 시간 " + t0 + " s 중 " + f6(ta) + " s가 곱셈이다. 곱셈만 " + n + "배 빠르게 하면 개선 후 시간과 속도 향상은? 그리고 곱셈을 아무리 빠르게 해도 최대 몇 배인가?", a: nice(t1) + " s, " + nice(t0 / t1) + "배, 최대 " + nice(t0 / tb) + "배",
         steps: ["공식: <b>T<sub>후</sub> = T<sub>영향</sub> ÷ n + T<sub>비영향</sub></b>, 최대 속도 향상 = <b>T<sub>전</sub> ÷ T<sub>비영향</sub></b>.", "T<sub>비영향</sub> = " + t0 + " − " + f6(ta) + " = " + f6(tb) + " s.",
-          "T<sub>후</sub> = " + f6(ta) + " ÷ " + n + " + " + f6(tb) + " = <b>" + f6(t1) + " s</b>, 속도 향상 = " + t0 + " ÷ " + f6(t1) + " = <b>" + f6(t0 / t1) + "</b>.", "최대 = " + t0 + " ÷ " + f6(tb) + " = <b>" + f6(t0 / tb) + "</b> (곱셈 시간이 0이 되어도 " + f6(tb) + " s는 남음)."] }; } },
+          "T<sub>후</sub> = " + f6(ta) + " ÷ " + n + " + " + f6(tb) + " = <b>" + nice(t1) + " s</b>, 속도 향상 = " + t0 + " ÷ " + nice(t1) + " = <b>" + nice(t0 / t1) + "</b>.", "최대 = " + t0 + " ÷ " + f6(tb) + " = <b>" + nice(t0 / tb) + "</b> (곱셈 시간이 0이 되어도 " + f6(tb) + " s는 남음)."] }; } },
     { id: "amdinv", name: "암달 (거꾸로 n)", make: function () {
       for (var g = 0; g < 400; g++) {
         var tt = pick([10, 20, 25, 30, 40, 50]), k = pick([2, 3, 4, 5]), t0 = tt * k, imp = Math.random() < 0.2, tb = imp ? R(tt, t0 - 1) : R(1, tt - 1), ta = t0 - tb;
         if (imp) return { q: "실행 시간 " + t0 + " s 중 " + ta + " s가 메모리 접근이다. 메모리 접근만 빠르게 해서 전체를 " + k + "배 빠르게 하려면 몇 배 빨라져야 하나?", a: "불가능",
           steps: ["공식: 목표 시간 = T<sub>전</sub> ÷ 배수, <b>n = T<sub>영향</sub> ÷ (목표 시간 − T<sub>비영향</sub>)</b>.", "목표 시간 = " + t0 + " ÷ " + k + " = " + tt + " s, T<sub>비영향</sub> = " + tb + " s.", "목표 − T<sub>비영향</sub> = " + tt + " − " + tb + " = " + (tt - tb) + " ≤ 0 → 메모리 시간을 0으로 만들어도 " + tb + " s가 남아 <b>불가능</b>."] };
-        var m = tt - tb; if (ta % m) continue; var n = ta / m;
+        var m = tt - tb; if (ta % m || ta / m > 20 || tb % 5) continue; var n = ta / m;
         return { q: "실행 시간 " + t0 + " s 중 " + ta + " s가 메모리 접근이다. 메모리 접근만 빠르게 해서 전체를 " + k + "배 빠르게 하려면 메모리 접근을 몇 배 빠르게 해야 하나?", a: n + "배",
           steps: ["공식: ① 목표 시간 = T<sub>전</sub> ÷ 배수 ② <b>n = T<sub>영향</sub> ÷ (목표 시간 − T<sub>비영향</sub>)</b>.", "목표 시간 = " + t0 + " ÷ " + k + " = " + tt + " s, T<sub>비영향</sub> = " + t0 + " − " + ta + " = " + tb + " s.", "영향 부분에 남는 시간 = " + tt + " − " + tb + " = " + m + " s → n = " + ta + " ÷ " + m + " = <b>" + n + "</b>.", "검산: " + ta + " ÷ " + n + " + " + tb + " = " + tt + " s = " + t0 + " ÷ " + k + "."] };
       } } },
@@ -6369,14 +6373,14 @@ and  x7, x8, x9</pre>
         steps: ["규칙: " + rule + " 생겼는지는 결과 부호가 맞는지로 본다.", "10진으로: 0x" + hx(a & 0xFF, 2) + " = " + mn(a) + ", 0x" + hx(b & 0xFF, 2) + " = " + mn(b) + " → 참값 " + mn(r) + ".", "8비트 범위 −128 ~ 127 " + (of ? "밖" : "안") + " → 오버플로 <b>" + (of ? "O" : "X") + "</b>. 8비트에 남는 결과 = <b>0x" + hx(pat, 2) + "</b>" + (of ? " (부호가 뒤집혀 보임)" : "") + "."] }; } },
     { id: "enc", name: "IEEE 단정도로", make: function () {
       var v = dy(), e = encSteps(v, 32);
-      return { q: f6(v) + "를 IEEE 754 단정도(1-8-23, bias 127) 16진으로 쓰시오.", a: h8(e.word), steps: ["공식: <b>값 = (−1)" + sup("S") + " × (1 + Fraction) × 2" + sup("지수 칸 − bias") + "</b>, <b>지수 칸 = 실제 지수 + bias</b>."].concat(e.steps) }; } },
+      return { q: fv(v) + "를 IEEE 754 단정도(1-8-23, bias 127) 16진으로 쓰시오.", a: h8(e.word), steps: ["공식: <b>값 = (−1)" + sup("S") + " × (1 + Fraction) × 2" + sup("지수 칸 − bias") + "</b>, <b>지수 칸 = 실제 지수 + bias</b>."].concat(e.steps) }; } },
     { id: "dec", name: "IEEE → 10진", make: function () {
       var v = dy(), p = fp(v), w = enc32(v), mb = mant(p.m, 23), ef = p.e + 127;
-      return { q: "IEEE 754 단정도 " + h8(w) + "가 나타내는 10진 값은?", a: f6(v),
+      return { q: "IEEE 754 단정도 " + h8(w) + "가 나타내는 10진 값은?", a: fv(v),
         steps: ["공식: <b>값 = (−1)" + sup("S") + " × 1.가수<sub>2</sub> × 2" + sup("지수 칸 − 127") + "</b>.", "2진: " + g4(bin(w, 32)) + " → S " + p.s + " | 지수 칸 " + bin(ef, 8) + " | 가수 " + trimm(mb) + "….", "지수 칸 = " + ef + " → 실제 지수 = " + ef + " − 127 = " + mn(p.e) + ".", "1." + trimm(mb) + "<sub>2</sub> × 2" + sup(mn(p.e)) + " = " + bstr(p.a) + "<sub>2</sub> = " + f6(p.a) + (p.s ? ", S = 1이라 <b>" + f6(v) + "</b>." : " → <b>" + f6(v) + "</b>.")] }; } },
     { id: "h16", name: "16비트(1-5-10)로", make: function () {
       var v = dy(), e = encSteps(v, 16);
-      return { q: f6(v) + "를 16비트 부동소수점(1-5-10, bias 15) 16진으로 쓰시오.", a: "0x" + hx(e.word, 4), steps: ["공식: 단정도와 같고 칸만 <b>1-5-10, bias 15</b>."].concat(e.steps) }; } },
+      return { q: fv(v) + "를 16비트 부동소수점(1-5-10, bias 15) 16진으로 쓰시오.", a: "0x" + hx(e.word, 4), steps: ["공식: 단정도와 같고 칸만 <b>1-5-10, bias 15</b>."].concat(e.steps) }; } },
     { id: "fexp", name: "FP 곱 지수 칸", make: function () {
       var e1 = R(-6, 6), e2 = R(-6, 6), f1 = e1 + 127, f2 = e2 + 127;
       return { q: "단정도 두 수의 지수 칸이 " + f1 + "과 " + f2 + "이다. 곱의 지수 칸(정규화 전)은?", a: String(f1 + f2 - 127),
@@ -6412,17 +6416,17 @@ and  x7, x8, x9</pre>
     { id: "two", name: "두 컴퓨터 비교", make: function () {
       var ca = pick([1, 1.5, 2, 2.5]), fa = pick([2, 2.5, 4]), cb = pick([1.2, 2, 3, 4]), fb = pick([1, 2, 3, 4]), ta = ca / fa, tb = cb / fb; if (Math.abs(ta - tb) < 1e-9) cb += 1, tb = cb / fb;
       var fast = ta < tb ? "A" : "B", n = Math.max(ta, tb) / Math.min(ta, tb), ic = R(1, 9);
-      return { q: "같은 프로그램(명령어 " + ic + " × 10" + sup(9) + "개)을 A는 CPI " + ca + "·" + fa + " GHz, B는 CPI " + cb + "·" + fb + " GHz로 실행한다. 각 CPU 시간과, 어느 쪽이 몇 배 빠른가?", a: "A " + f6(ic * ta) + " s, B " + f6(ic * tb) + " s, " + fast + "가 " + f6(n) + "배 빠름",
-        steps: ["CPU 시간 = IC × CPI ÷ 클럭 속도.", "A: " + ic + " × " + ca + " ÷ " + fa + " = <b>" + f6(ic * ta) + " s</b>. B: " + ic + " × " + cb + " ÷ " + fb + " = <b>" + f6(ic * tb) + " s</b>.", "n = 느린 쪽 ÷ 빠른 쪽 = " + f6(ic * Math.max(ta, tb)) + " ÷ " + f6(ic * Math.min(ta, tb)) + " = <b>" + f6(n) + "</b> → " + fast + "가 빠름."] }; } },
+      return { q: "같은 프로그램(명령어 " + ic + " × 10" + sup(9) + "개)을 A는 CPI " + ca + "·" + fa + " GHz, B는 CPI " + cb + "·" + fb + " GHz로 실행한다. 각 CPU 시간과, 어느 쪽이 몇 배 빠른가?", a: "A " + nice(ic * ta) + " s, B " + nice(ic * tb) + " s, " + fast + "가 " + nice(n) + "배 빠름",
+        steps: ["CPU 시간 = IC × CPI ÷ 클럭 속도.", "A: " + ic + " × " + ca + " ÷ " + fa + " = <b>" + nice(ic * ta) + " s</b>. B: " + ic + " × " + cb + " ÷ " + fb + " = <b>" + nice(ic * tb) + " s</b>.", "n = 느린 쪽 ÷ 빠른 쪽 = " + nice(ic * Math.max(ta, tb)) + " ÷ " + nice(ic * Math.min(ta, tb)) + " = <b>" + nice(n) + "</b> → " + fast + "가 빠름."] }; } },
     { id: "cmp", name: "컴파일러 두 개 비교", make: function () {
       var cp = [1, 2, 3], A = [R(1, 5), R(1, 5), R(1, 5)], B = [R(1, 5), R(1, 5), R(1, 5)], ca = A[0] + 2 * A[1] + 3 * A[2], cb = B[0] + 2 * B[1] + 3 * B[2], na = A[0] + A[1] + A[2], nb = B[0] + B[1] + B[2];
       if (ca === cb) { B[2]++; cb += 3; nb++; }
-      return { q: "명령어 종류 A·B·C의 CPI는 1·2·3이다. 컴파일러 1은 종류별로 " + A.join("·") + " × 10" + sup(9) + "개, 컴파일러 2는 " + B.join("·") + " × 10" + sup(9) + "개를 만든다. 클럭이 같을 때 어느 쪽이 빠르고, 각 평균 CPI는?", a: (ca < cb ? "컴파일러 1" : "컴파일러 2") + " 빠름, 평균 CPI " + f6(ca / na) + " / " + f6(cb / nb),
-        steps: ["클럭이 같으면 사이클 수(= Σ 개수 × CPI)만 비교한다. 명령어 수가 적다고 빠른 것이 아니다.", "1: " + A[0] + "×1 + " + A[1] + "×2 + " + A[2] + "×3 = " + ca + ", 2: " + B[0] + "×1 + " + B[1] + "×2 + " + B[2] + "×3 = " + cb + " (× 10" + sup(9) + ") → <b>" + (ca < cb ? "컴파일러 1" : "컴파일러 2") + "</b>가 빠름.", "평균 CPI = 사이클 ÷ 개수: " + ca + " ÷ " + na + " = <b>" + f6(ca / na) + "</b>, " + cb + " ÷ " + nb + " = <b>" + f6(cb / nb) + "</b>."] }; } },
+      return { q: "명령어 종류 A·B·C의 CPI는 1·2·3이다. 컴파일러 1은 종류별로 " + A.join("·") + " × 10" + sup(9) + "개, 컴파일러 2는 " + B.join("·") + " × 10" + sup(9) + "개를 만든다. 클럭이 같을 때 어느 쪽이 빠르고, 각 평균 CPI는?", a: (ca < cb ? "컴파일러 1" : "컴파일러 2") + " 빠름, 평균 CPI " + nice(ca / na) + " / " + nice(cb / nb),
+        steps: ["클럭이 같으면 사이클 수(= Σ 개수 × CPI)만 비교한다. 명령어 수가 적다고 빠른 것이 아니다.", "1: " + A[0] + "×1 + " + A[1] + "×2 + " + A[2] + "×3 = " + ca + ", 2: " + B[0] + "×1 + " + B[1] + "×2 + " + B[2] + "×3 = " + cb + " (× 10" + sup(9) + ") → <b>" + (ca < cb ? "컴파일러 1" : "컴파일러 2") + "</b>가 빠름.", "평균 CPI = 사이클 ÷ 개수: " + ca + " ÷ " + na + " = <b>" + nice(ca / na) + "</b>, " + cb + " ÷ " + nb + " = <b>" + nice(cb / nb) + "</b>."] }; } },
     { id: "tbl", name: "표로 개선율", make: function () {
       var ic1 = R(4, 9), c1 = pick([2, 2.5, 3]), ic2 = ic1 - R(1, 3), c2 = c1 + pick([0, 0.5, -0.5]), f = pick([2, 2.5, 4]), t1 = ic1 * c1 / f, t2 = ic2 * c2 / f, s = t1 / t2;
-      return { q: tbl(["", "명령어 수", "CPI"], [["개선 전", ic1 + " × 10" + sup(9), c1], ["개선 후", ic2 + " × 10" + sup(9), c2]]) + "클럭 " + f + " GHz로 같다. 실행 시간 전·후와 속도 향상, 성능 % 향상은?", a: f6(t1) + " s → " + f6(t2) + " s, " + f6(s) + "배, " + f6((s - 1) * 100) + "%",
-        steps: ["CPU 시간 = IC × CPI ÷ 클럭 속도.", "전: " + ic1 + " × " + c1 + " ÷ " + f + " = " + f6(t1) + " s, 후: " + ic2 + " × " + c2 + " ÷ " + f + " = " + f6(t2) + " s.", "속도 향상 = " + f6(t1) + " ÷ " + f6(t2) + " = <b>" + f6(s) + "</b>, % 향상 = (" + f6(s) + " − 1) × 100 = <b>" + f6((s - 1) * 100) + "%</b>" + (s < 1 ? " (음수 = 오히려 느려짐)" : "") + "."] }; } }
+      return { q: tbl(["", "명령어 수", "CPI"], [["개선 전", ic1 + " × 10" + sup(9), c1], ["개선 후", ic2 + " × 10" + sup(9), c2]]) + "클럭 " + f + " GHz로 같다. 실행 시간 전·후와 속도 향상, 성능 % 향상은?", a: nice(t1) + " s → " + nice(t2) + " s, " + nice(s) + "배, " + nice((s - 1) * 100) + "%",
+        steps: ["CPU 시간 = IC × CPI ÷ 클럭 속도.", "전: " + ic1 + " × " + c1 + " ÷ " + f + " = " + nice(t1) + " s, 후: " + ic2 + " × " + c2 + " ÷ " + f + " = " + nice(t2) + " s.", "속도 향상 = " + nice(t1) + " ÷ " + nice(t2) + " = <b>" + nice(s) + "</b>, % 향상 = (" + nice(s) + " − 1) × 100 = <b>" + nice((s - 1) * 100) + "%</b>" + (s < 1 ? " (음수 = 오히려 느려짐)" : "") + "."] }; } }
   ].concat(F1.filter(function (t) { return ["amdinv", "mips", "avg"].indexOf(t.id) >= 0; }));
   var X2 = [
     { id: "eR", name: "R형 → 기계어·바이트", make: function () {
@@ -6477,21 +6481,21 @@ and  x7, x8, x9</pre>
     { id: "fadd", name: "FP 덧셈 A + B", make: function () {
       for (var g = 0; g < 200; g++) { var A = dy(), B = dy(), S = A + B; if (S !== 0 && Math.abs(S) >= 1 / 64 && Math.abs(S) < 512) break; }
       var pa = fp(A), pb = fp(B), big = Math.abs(A) >= Math.abs(B) ? pa : pb, sm = big === pa ? pb : pa, e = encSteps(S, 32), ps = fp(S);
-      return { q: "A = " + f6(A) + ", B = " + f6(B) + "일 때 A + B를 부동소수점 덧셈 4단계로 구하고 단정도 16진으로 쓰시오.", a: f6(S) + " = " + h8(e.word),
+      return { q: "A = " + fv(A) + ", B = " + fv(B) + "일 때 A + B를 부동소수점 덧셈 4단계로 구하고 단정도 16진으로 쓰시오.", a: fv(S) + " = " + h8(e.word),
         steps: ["2진 정규화: A = " + (pa.s ? "−" : "") + "1." + trimm(mant(pa.m, 23)) + " × 2" + sup(mn(pa.e)) + ", B = " + (pb.s ? "−" : "") + "1." + trimm(mant(pb.m, 23)) + " × 2" + sup(mn(pb.e)) + ".",
           "① 지수 맞추기: 작은 지수(" + mn(sm.e) + ")를 큰 지수(" + mn(big.e) + ")로 → 작은 쪽 가수를 오른쪽으로 " + (big.e - sm.e) + "칸: " + bstr(sm.a / Math.pow(2, big.e)) + " × 2" + sup(mn(big.e)) + ".",
           "② 가수 더하기(부호 고려): " + (pa.s ? "−" : "") + bstr(pa.a / Math.pow(2, big.e)) + " + " + (pb.s ? "(−" : "") + bstr(pb.a / Math.pow(2, big.e)) + (pb.s ? ")" : "") + " = " + (S < 0 ? "−" : "") + bstr(Math.abs(S) / Math.pow(2, big.e)) + " × 2" + sup(mn(big.e)) + ".",
           "③ 정규화: " + (S < 0 ? "−" : "") + "1." + trimm(mant(ps.m, 23)) + " × 2" + sup(mn(ps.e)) + " (실제 지수 " + mn(ps.e) + "는 −126 ~ 127 안이라 오버·언더플로 없음). ④ 반올림: 비트가 짧아 그대로.",
-          "10진 검산: " + f6(A) + " + " + f6(B) + " = " + f6(S) + ". 부호화는 아래."].concat(e.steps.slice(2)) }; } },
+          "10진 검산: " + fv(A) + " + " + fv(B) + " = " + fv(S) + ". 부호화는 아래."].concat(e.steps.slice(2)) }; } },
     { id: "fmul", name: "FP 곱셈 A × B", make: function () {
-      for (var g = 0; g < 200; g++) { var A = dy(), B = dy(), P = A * B; var pp = fp(P); if (Math.round(pp.m * 8388608) === pp.m * 8388608 && Math.abs(P) < 1e5 && Math.abs(P) > 1e-4) break; }
+      for (var g = 0; g < 200; g++) { var A = dyS(), B = dyS(), P = A * B; var pp = fp(P); if (Math.round(pp.m * 8388608) === pp.m * 8388608 && Math.abs(P) < 1e5 && Math.abs(P) > 1e-4) break; }
       var pa = fp(A), pb = fp(B), ps = fp(P), e = encSteps(P, 32), fa = pa.e + 127, fb = pb.e + 127, sigp = (1 + pa.m) * (1 + pb.m);
-      return { q: "A = " + f6(A) + ", B = " + f6(B) + "일 때 A × B를 부동소수점 곱셈 단계로 구하고 단정도 16진으로 쓰시오.", a: f6(P) + " = " + h8(e.word),
+      return { q: "A = " + fv(A) + ", B = " + fv(B) + "일 때 A × B를 부동소수점 곱셈 단계로 구하고 단정도 16진으로 쓰시오.", a: fv(P) + " = " + h8(e.word),
         steps: ["2진 정규화: A = 1." + trimm(mant(pa.m, 23)) + " × 2" + sup(mn(pa.e)) + "(지수 칸 " + fa + "), B = 1." + trimm(mant(pb.m, 23)) + " × 2" + sup(mn(pb.e)) + "(지수 칸 " + fb + ").",
           "① 지수: 지수 칸끼리 더하고 bias 한 번 빼기 " + fa + " + " + fb + " − 127 = " + (fa + fb - 127) + " (실제 " + mn(pa.e + pb.e) + ").",
           "② 가수 곱: " + bstr(1 + pa.m) + " × " + bstr(1 + pb.m) + " = " + bstr(sigp) + " (10진 " + f6(1 + pa.m) + " × " + f6(1 + pb.m) + " = " + f6(sigp) + ").",
           "③ 정규화: " + (sigp >= 2 ? "2 이상이라 오른쪽 1칸, 지수 + 1 → " : "이미 1.xxx → ") + "1." + trimm(mant(ps.m, 23)) + " × 2" + sup(mn(ps.e)) + ". ④ 반올림: 그대로. ⑤ 부호: " + pa.s + " xor " + pb.s + " = " + ps.s + ".",
-          "10진 검산: " + f6(A) + " × " + f6(B) + " = " + f6(P) + ". 부호화는 아래."].concat(e.steps.slice(2)) }; } },
+          "10진 검산: " + fv(A) + " × " + fv(B) + " = " + fv(P) + ". 부호화는 아래."].concat(e.steps.slice(2)) }; } },
     { id: "ul3", name: "upper·lower 세 방식", make: function () {
       var a = R(9, 15), b = R(1, 15), u = a * b, s = (a - 16) * (b >= 8 ? b - 16 : b), su = (a - 16) * b, row = function (p) { var q = p & 0xFF; return [bin(q >> 4, 4), bin(q & 15, 4)]; };
       return { q: "4비트 A = " + bin(a, 4) + "<sub>2</sub>, B = " + bin(b, 4) + "<sub>2</sub>. Unsigned × Unsigned, Signed × Signed, Signed × Unsigned 곱의 Upper·Lower를 각각 쓰시오.", a: "U " + row(u).join("|") + ", S " + row(s).join("|") + ", SU " + row(su).join("|"),
