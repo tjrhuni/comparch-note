@@ -2901,9 +2901,327 @@ sw   x9, (나)(x22)</pre>
     <p>예 <code>beq x1, x2, L</code>: 분기 목표 주소는 ALU가 아니라 분기 가산기가 계산한다. ALU는 x1 − x2를 계산해 Zero로 두 값이 같은지만 알려 준다. <code>&lt;&lt; 1</code>(왼쪽 1비트 시프트 = × 2)은 Ch2에서 분기 오프셋의 0번 비트를 저장하지 않았던 것을 되돌리는 일이고, 이 그림에서는 ImmGen이 함께 한다(따로 Shift left 1 상자가 그려진 그림도 있다).</p>
     <p><b>그림 빈칸 푸는 법</b>: 모양으로 후보를 좁히고, 모양이 같으면 들어오는 선으로 가른다. Add 둘: 입력이 PC와 4면 PC + 4 가산기, PC와 ImmGen 출력이면 분기 가산기. 타원 셋: [6:0](opcode)을 받으면 제어 유닛, [31:0]을 받으면 ImmGen, <b>ALUOp</b>(주 제어 유닛이 「덧셈·뺄셈·funct를 보고 정함」 중 무엇인지 알려 주는 2비트 힌트)를 받아 ALU에 넣을 4비트 제어 값을 만들어 보내면 <b>ALU 제어 유닛</b>(주 제어 유닛과 따로 있는 작은 타원). [Ch4 p.18–19] 주의: 슬라이드 그림은 MemtoReg MUX만 위가 1·아래가 0이니 위치가 아니라 적힌 숫자로 읽는다.</p>
   </div>
+  <div class="nstep"><p class="nlab"><span>+</span> 그림으로 보기</p>
+    <p>위에서 읽은 부품이 실제 그림에서 어디 있는지 확인한다. 시험 그림도 이 모양이다(슬라이드 p.17·24·26–28). 그림이 화면보다 넓으면 옆으로 밀어 본다.</p>
+  <figure class="diagram">
+    <svg viewBox="0 0 1200 790" role="img" aria-label="단일 사이클 데이터패스 전체: PC, 명령어 메모리, PC+4 가산기, 제어 유닛(출력 Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite), 레지스터 파일, ImmGen, ALUSrc MUX, ALU, ALU 제어, 데이터 메모리, MemtoReg MUX, 분기 가산기, AND, PCSrc MUX">
+      <defs><marker id="n42-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
+
+      <!-- PC와 명령어 메모리 -->
+      <rect class="bx" x="40" y="400" width="60" height="80"/>
+      <text class="t" x="70" y="445" text-anchor="middle">PC</text>
+      <path class="ln" fill="none" d="M100,440 H140" marker-end="url(#n42-arrow)"/>
+      <rect class="bx" x="140" y="380" width="150" height="140"/>
+      <text class="t" x="215" y="412" text-anchor="middle">명령어 메모리</text>
+      <text class="lbl" x="146" y="444">읽기 주소</text>
+      <text class="lbl" x="284" y="484" text-anchor="end">명령어</text>
+
+      <!-- PC + 4 가산기 -->
+      <path class="ln" fill="none" d="M120,440 V80 H180" marker-end="url(#n42-arrow)"/>
+      <path class="ln" fill="none" d="M140,120 H180" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="134" y="124" text-anchor="end">4</text>
+      <rect class="bx" x="180" y="60" width="60" height="80"/>
+      <text class="t" x="210" y="105" text-anchor="middle">Add</text>
+      <path class="ln" fill="none" d="M240,100 H1060" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="252" y="92">PC + 4</text>
+
+      <!-- PC → 분기 가산기 -->
+      <path class="ln" fill="none" d="M120,150 H850 V175 H870" marker-end="url(#n42-arrow)"/>
+
+      <!-- 명령어 비트 버스 -->
+      <path class="ln" fill="none" d="M290,480 H320"/>
+      <path class="ln" fill="none" d="M320,260 V700"/>
+      <path class="ln" fill="none" d="M320,260 H390" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="326" y="254">[6:0]</text>
+      <path class="ln" fill="none" d="M320,430 H420" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="326" y="424">[19:15]</text>
+      <path class="ln" fill="none" d="M320,470 H420" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="326" y="464">[24:20]</text>
+      <path class="ln" fill="none" d="M320,520 H420" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="326" y="514">[11:7]</text>
+      <path class="ln" fill="none" d="M320,650 H445" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="330" y="644">[31:0]</text>
+      <path class="ln" fill="none" d="M320,700 H685" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="562" y="694">[30], [14:12]</text>
+
+      <!-- 제어 유닛과 출력 7개(슬라이드 p.26 순서) -->
+      <ellipse class="hl" cx="450" cy="260" rx="60" ry="95"/>
+      <text class="t" x="450" y="265" text-anchor="middle">제어 유닛</text>
+      <path class="ac" fill="none" d="M497,200 H575"/>
+      <text class="lbl" x="514" y="196">Branch</text>
+      <path class="ac" fill="none" d="M504,220 H575"/>
+      <text class="lbl" x="514" y="216">MemRead</text>
+      <path class="ac" fill="none" d="M509,240 H575"/>
+      <text class="lbl" x="514" y="236">MemtoReg</text>
+      <path class="ac" fill="none" d="M510,260 H575"/>
+      <text class="lbl" x="514" y="256">ALUOp</text>
+      <path class="ac" fill="none" d="M509,280 H575"/>
+      <text class="lbl" x="514" y="276">MemWrite</text>
+      <path class="ac" fill="none" d="M504,300 H575"/>
+      <text class="lbl" x="514" y="296">ALUSrc</text>
+      <path class="ac" fill="none" d="M497,320 H575"/>
+      <text class="lbl" x="514" y="316">RegWrite</text>
+
+      <!-- 레지스터 파일 -->
+      <rect class="bx" x="420" y="400" width="160" height="200"/>
+      <text class="lbl" x="426" y="434">읽기 레지스터 1</text>
+      <text class="lbl" x="426" y="474">읽기 레지스터 2</text>
+      <text class="lbl" x="426" y="524">쓰기 레지스터</text>
+      <text class="lbl" x="426" y="574">쓰기 데이터</text>
+      <text class="lbl" x="574" y="454" text-anchor="end">읽기 데이터 1</text>
+      <text class="lbl" x="574" y="544" text-anchor="end">읽기 데이터 2</text>
+      <text class="t" x="500" y="594" text-anchor="middle">레지스터 파일</text>
+      <path class="ac" fill="none" d="M500,375 V400" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="512" y="390">RegWrite</text>
+      <path class="ln" fill="none" d="M580,450 H700" marker-end="url(#n42-arrow)"/>
+      <path class="ln" fill="none" d="M580,540 H640" marker-end="url(#n42-arrow)"/>
+
+      <!-- ImmGen: 부호 확장 + 분기용 1비트 시프트(p.15) -->
+      <ellipse class="bx" cx="500" cy="650" rx="55" ry="28"/>
+      <text class="t" x="500" y="655" text-anchor="middle">ImmGen</text>
+      <path class="ln" fill="none" d="M555,650 H610 V225 H870" marker-end="url(#n42-arrow)"/>
+      <path class="ln" fill="none" d="M610,580 H640" marker-end="url(#n42-arrow)"/>
+
+      <!-- ALUSrc MUX: 위 0 = 읽기 데이터 2, 아래 1 = ImmGen -->
+      <rect class="mx" x="640" y="520" width="24" height="80" rx="12"/>
+      <text class="lbl" x="652" y="544" text-anchor="middle">0</text>
+      <text class="lbl" x="652" y="584" text-anchor="middle">1</text>
+      <path class="ac" fill="none" d="M652,495 V520" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="652" y="488" text-anchor="middle">ALUSrc</text>
+      <path class="ln" fill="none" d="M664,560 H700" marker-end="url(#n42-arrow)"/>
+
+      <!-- 저장할 데이터(읽기 데이터 2) → 데이터 메모리 -->
+      <path class="ln" fill="none" d="M595,540 V615 H880" marker-end="url(#n42-arrow)"/>
+
+      <!-- ALU -->
+      <polygon class="bx" points="700,430 780,470 780,570 700,610 700,540 715,520 700,500"/>
+      <text class="t" x="742" y="525" text-anchor="middle">ALU</text>
+      <text class="lbl" x="774" y="494" text-anchor="end">Zero</text>
+      <text class="lbl" x="774" y="554" text-anchor="end">결과</text>
+      <path class="ln" fill="none" d="M780,550 H880" marker-end="url(#n42-arrow)"/>
+      <path class="ln" fill="none" d="M780,490 H800 V290 H960" marker-end="url(#n42-arrow)"/>
+
+      <!-- ALU 제어 -->
+      <ellipse class="bx" cx="740" cy="700" rx="55" ry="22"/>
+      <text class="t" x="740" y="705" text-anchor="middle">ALU 제어</text>
+      <path class="ln" fill="none" d="M740,678 V592" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="746" y="662">4비트</text>
+      <path class="ac" fill="none" d="M850,700 H795" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="856" y="704">ALUOp</text>
+
+      <!-- 분기 가산기, AND, PCSrc MUX -->
+      <rect class="bx" x="870" y="150" width="80" height="100"/>
+      <text class="t" x="896" y="205" text-anchor="middle">Add</text>
+      <text class="lbl" x="944" y="204" text-anchor="end">Sum</text>
+      <text class="lbl" x="910" y="142" text-anchor="middle">분기 가산기</text>
+      <path class="ln" fill="none" d="M950,200 H1020 V160 H1060" marker-end="url(#n42-arrow)"/>
+      <path class="bx" d="M960,260 H980 A20,20 0 0 1 980,300 H960 Z"/>
+      <text class="lbl" x="976" y="284" text-anchor="middle">AND</text>
+      <path class="ac" fill="none" d="M918,270 H960" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="912" y="274" text-anchor="end">Branch</text>
+      <path class="ac" fill="none" d="M1000,280 H1072 V190" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="1080" y="240">PCSrc</text>
+      <rect class="mx" x="1060" y="70" width="24" height="120" rx="12"/>
+      <text class="lbl" x="1072" y="104" text-anchor="middle">0</text>
+      <text class="lbl" x="1072" y="164" text-anchor="middle">1</text>
+      <path class="ln" fill="none" d="M1084,130 H1170 V770 H20 V440 H40" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="1100" y="122">다음 PC</text>
+
+      <!-- 데이터 메모리 -->
+      <rect class="bx" x="880" y="460" width="150" height="170"/>
+      <text class="t" x="955" y="492" text-anchor="middle">데이터 메모리</text>
+      <text class="lbl" x="886" y="554">주소</text>
+      <text class="lbl" x="886" y="619">쓰기 데이터</text>
+      <text class="lbl" x="1024" y="524" text-anchor="end">읽기 데이터</text>
+      <path class="ac" fill="none" d="M955,440 V460" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="955" y="432" text-anchor="middle">MemWrite</text>
+      <path class="ac" fill="none" d="M955,665 V630" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="955" y="681" text-anchor="middle">MemRead</text>
+
+      <!-- MemtoReg MUX: 위 1 = 메모리 읽기 데이터, 아래 0 = ALU 결과 -->
+      <path class="ln" fill="none" d="M1030,520 H1080" marker-end="url(#n42-arrow)"/>
+      <path class="ln" fill="none" d="M840,550 V645 H1060 V565 H1080" marker-end="url(#n42-arrow)"/>
+      <rect class="mx" x="1080" y="490" width="24" height="100" rx="12"/>
+      <text class="lbl" x="1092" y="524" text-anchor="middle">1</text>
+      <text class="lbl" x="1092" y="569" text-anchor="middle">0</text>
+      <path class="ac" fill="none" d="M1092,468 V490" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="1092" y="460" text-anchor="middle">MemtoReg</text>
+      <path class="ln" fill="none" d="M1104,540 H1140 V740 H395 V570 H420" marker-end="url(#n42-arrow)"/>
+      <text class="lbl" x="900" y="732">레지스터에 쓸 값</text>
+    </svg>
+    <figcaption>단일 사이클 데이터패스(슬라이드 p.17·p.24 구성에 p.26–28의 제어 유닛과 AND 게이트를 더함). 제어 유닛 오른쪽의 강조 선 7개는 슬라이드 p.26–28과 같은 순서(Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite)이고, 선을 끝까지 그리면 겹쳐서 같은 이름의 짧은 강조 선으로 들어가는 곳을 표시했다. 분기용 1비트 시프트는 ImmGen이 함께 하므로 시프트 상자가 따로 없다(p.15). MUX 안 숫자는 슬라이드와 같다: PCSrc 위 0·아래 1, ALUSrc 위 0·아래 1, MemtoReg 위 1·아래 0. 선이 엇갈리기만 하는 곳은 연결이 아니고, T자로 갈라지는 곳만 연결이다. [ ] 안은 명령어의 비트 위치.</figcaption>
+  </figure>
+  </div>
+
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">가리고 떠올리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>PC = 현재 명령어 <span class="cz on" role="button" tabindex="0">주소</span> / 명령어 메모리 = PC 받아 <span class="cz on" role="button" tabindex="0">32비트 명령어</span> 출력 / 가산기 = <span class="cz on" role="button" tabindex="0">PC + 4</span> [Ch4 p.11]</li><li>레지스터 파일 = 레지스터 <span class="cz on" role="button" tabindex="0">32</span>개, 읽기 포트 <span class="cz on" role="button" tabindex="0">2</span>, 쓰기 포트 <span class="cz on" role="button" tabindex="0">1</span> [Ch4 p.12]</li><li>ALU = 입력 2개, <span class="cz on" role="button" tabindex="0">4비트</span> 제어, 결과 0이면 <span class="cz on" role="button" tabindex="0">Zero = 1</span> / ImmGen = 12비트 → 32비트 <span class="cz on" role="button" tabindex="0">부호 확장</span> [Ch4 p.12–13]</li><li>분기 가산기 = PC + (<span class="cz on" role="button" tabindex="0">오프셋 &lt;&lt; 1</span>), ALU와 별개 / 데이터 메모리 주소 = <span class="cz on" role="button" tabindex="0">ALU 결과</span> [Ch4 p.14–15]</li><li>MUX 3개 자리: ALUSrc = <span class="cz on" role="button" tabindex="0">ALU 둘째 입력</span> 앞, MemtoReg = <span class="cz on" role="button" tabindex="0">레지스터 쓰기 데이터</span> 앞, PCSrc = <span class="cz on" role="button" tabindex="0">PC 입력</span> 앞 [Ch4 p.16–17]</li></ul></div>
   <div class="exam"><p class="label">외우는 고리</p><p>모양이 같은 상자는 선으로 가른다: Add 둘(PC + 4 / PC + ImmGen), 타원 셋([6:0] 제어 유닛 / [31:0] ImmGen / ALUOp ALU 제어)</p></div>
   <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="example"><p class="label">그림 빈칸 · 21-2 기출 유형</p>
+    <p>위 전체 그림에서 부품 이름을 ①~⑭로 비웠다(제어 신호 이름 ⓐ~ⓗ는 Ch4 · 5에서 연습). 포트 이름(읽기 레지스터 1 등)과 명령어 비트 범위는 남겨 두었다. 시험 그림도 포트 이름은 남기고 부품 이름을 비운다.</p>
+  <figure class="diagram">
+    <svg viewBox="0 0 1200 790" role="img" aria-label="부품 이름을 번호 ①~⑭, 제어 신호 이름을 ⓐ~ⓗ로 비운 단일 사이클 데이터패스">
+      <defs><marker id="n42b-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
+
+      <rect class="bx" x="40" y="400" width="60" height="80"/>
+      <text class="t" x="70" y="445" text-anchor="middle">①</text>
+      <path class="ln" fill="none" d="M100,440 H140" marker-end="url(#n42b-arrow)"/>
+      <rect class="bx" x="140" y="380" width="150" height="140"/>
+      <text class="t" x="215" y="412" text-anchor="middle">②</text>
+      <text class="lbl" x="146" y="444">읽기 주소</text>
+      <text class="lbl" x="284" y="484" text-anchor="end">명령어</text>
+
+      <path class="ln" fill="none" d="M120,440 V80 H180" marker-end="url(#n42b-arrow)"/>
+      <path class="ln" fill="none" d="M140,120 H180" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="134" y="124" text-anchor="end">4</text>
+      <rect class="bx" x="180" y="60" width="60" height="80"/>
+      <text class="t" x="210" y="105" text-anchor="middle">③</text>
+      <path class="ln" fill="none" d="M240,100 H1060" marker-end="url(#n42b-arrow)"/>
+
+      <path class="ln" fill="none" d="M120,150 H850 V175 H870" marker-end="url(#n42b-arrow)"/>
+
+      <path class="ln" fill="none" d="M290,480 H320"/>
+      <path class="ln" fill="none" d="M320,260 V700"/>
+      <path class="ln" fill="none" d="M320,260 H390" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="326" y="254">[6:0]</text>
+      <path class="ln" fill="none" d="M320,430 H420" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="326" y="424">[19:15]</text>
+      <path class="ln" fill="none" d="M320,470 H420" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="326" y="464">[24:20]</text>
+      <path class="ln" fill="none" d="M320,520 H420" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="326" y="514">[11:7]</text>
+      <path class="ln" fill="none" d="M320,650 H445" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="330" y="644">[31:0]</text>
+      <path class="ln" fill="none" d="M320,700 H685" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="562" y="694">[30], [14:12]</text>
+
+      <ellipse class="hl" cx="450" cy="260" rx="60" ry="95"/>
+      <text class="t" x="450" y="265" text-anchor="middle">④</text>
+      <path class="ac" fill="none" d="M497,200 H575"/>
+      <text class="lbl" x="514" y="196">ⓐ</text>
+      <path class="ac" fill="none" d="M504,220 H575"/>
+      <text class="lbl" x="514" y="216">ⓑ</text>
+      <path class="ac" fill="none" d="M509,240 H575"/>
+      <text class="lbl" x="514" y="236">ⓒ</text>
+      <path class="ac" fill="none" d="M510,260 H575"/>
+      <text class="lbl" x="514" y="256">ⓓ</text>
+      <path class="ac" fill="none" d="M509,280 H575"/>
+      <text class="lbl" x="514" y="276">ⓔ</text>
+      <path class="ac" fill="none" d="M504,300 H575"/>
+      <text class="lbl" x="514" y="296">ⓕ</text>
+      <path class="ac" fill="none" d="M497,320 H575"/>
+      <text class="lbl" x="514" y="316">ⓖ</text>
+
+      <rect class="bx" x="420" y="400" width="160" height="200"/>
+      <text class="lbl" x="426" y="434">읽기 레지스터 1</text>
+      <text class="lbl" x="426" y="474">읽기 레지스터 2</text>
+      <text class="lbl" x="426" y="524">쓰기 레지스터</text>
+      <text class="lbl" x="426" y="574">쓰기 데이터</text>
+      <text class="lbl" x="574" y="454" text-anchor="end">읽기 데이터 1</text>
+      <text class="lbl" x="574" y="544" text-anchor="end">읽기 데이터 2</text>
+      <text class="t" x="500" y="594" text-anchor="middle">⑤</text>
+      <path class="ac" fill="none" d="M500,375 V400" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="512" y="390">ⓖ</text>
+      <path class="ln" fill="none" d="M580,450 H700" marker-end="url(#n42b-arrow)"/>
+      <path class="ln" fill="none" d="M580,540 H640" marker-end="url(#n42b-arrow)"/>
+
+      <ellipse class="bx" cx="500" cy="650" rx="55" ry="28"/>
+      <text class="t" x="500" y="655" text-anchor="middle">⑥</text>
+      <path class="ln" fill="none" d="M555,650 H610 V225 H870" marker-end="url(#n42b-arrow)"/>
+      <path class="ln" fill="none" d="M610,580 H640" marker-end="url(#n42b-arrow)"/>
+
+      <rect class="mx" x="640" y="520" width="24" height="80" rx="12"/>
+      <text class="lbl" x="652" y="544" text-anchor="middle">0</text>
+      <text class="lbl" x="652" y="584" text-anchor="middle">1</text>
+      <path class="ac" fill="none" d="M652,495 V520" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="652" y="488" text-anchor="middle">ⓕ</text>
+      <text class="t" x="672" y="516">⑦</text>
+      <path class="ln" fill="none" d="M664,560 H700" marker-end="url(#n42b-arrow)"/>
+
+      <path class="ln" fill="none" d="M595,540 V615 H880" marker-end="url(#n42b-arrow)"/>
+
+      <polygon class="bx" points="700,430 780,470 780,570 700,610 700,540 715,520 700,500"/>
+      <text class="t" x="742" y="525" text-anchor="middle">⑧</text>
+      <text class="lbl" x="774" y="494" text-anchor="end">Zero</text>
+      <text class="lbl" x="774" y="554" text-anchor="end">결과</text>
+      <path class="ln" fill="none" d="M780,550 H880" marker-end="url(#n42b-arrow)"/>
+      <path class="ln" fill="none" d="M780,490 H800 V290 H960" marker-end="url(#n42b-arrow)"/>
+
+      <ellipse class="bx" cx="740" cy="700" rx="55" ry="22"/>
+      <text class="t" x="740" y="705" text-anchor="middle">⑨</text>
+      <path class="ln" fill="none" d="M740,678 V592" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="746" y="662">4비트</text>
+      <path class="ac" fill="none" d="M850,700 H795" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="856" y="704">ⓓ</text>
+
+      <rect class="bx" x="870" y="150" width="80" height="100"/>
+      <text class="t" x="896" y="205" text-anchor="middle">⑩</text>
+      <text class="lbl" x="944" y="204" text-anchor="end">Sum</text>
+      <path class="ln" fill="none" d="M950,200 H1020 V160 H1060" marker-end="url(#n42b-arrow)"/>
+      <path class="bx" d="M960,260 H980 A20,20 0 0 1 980,300 H960 Z"/>
+      <text class="t" x="977" y="285" text-anchor="middle">⑪</text>
+      <path class="ac" fill="none" d="M918,270 H960" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="912" y="274" text-anchor="end">ⓐ</text>
+      <path class="ac" fill="none" d="M1000,280 H1072 V190" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="1080" y="240">ⓗ</text>
+      <rect class="mx" x="1060" y="70" width="24" height="120" rx="12"/>
+      <text class="lbl" x="1072" y="104" text-anchor="middle">0</text>
+      <text class="lbl" x="1072" y="164" text-anchor="middle">1</text>
+      <text class="t" x="1092" y="82">⑫</text>
+      <path class="ln" fill="none" d="M1084,130 H1170 V770 H20 V440 H40" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="1100" y="122">다음 PC</text>
+
+      <rect class="bx" x="880" y="460" width="150" height="170"/>
+      <text class="t" x="955" y="492" text-anchor="middle">⑬</text>
+      <text class="lbl" x="886" y="554">주소</text>
+      <text class="lbl" x="886" y="619">쓰기 데이터</text>
+      <text class="lbl" x="1024" y="524" text-anchor="end">읽기 데이터</text>
+      <path class="ac" fill="none" d="M955,440 V460" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="955" y="432" text-anchor="middle">ⓔ</text>
+      <path class="ac" fill="none" d="M955,665 V630" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="955" y="681" text-anchor="middle">ⓑ</text>
+
+      <path class="ln" fill="none" d="M1030,520 H1080" marker-end="url(#n42b-arrow)"/>
+      <path class="ln" fill="none" d="M840,550 V645 H1060 V565 H1080" marker-end="url(#n42b-arrow)"/>
+      <rect class="mx" x="1080" y="490" width="24" height="100" rx="12"/>
+      <text class="lbl" x="1092" y="524" text-anchor="middle">1</text>
+      <text class="lbl" x="1092" y="569" text-anchor="middle">0</text>
+      <text class="t" x="1112" y="505">⑭</text>
+      <path class="ac" fill="none" d="M1092,468 V490" marker-end="url(#n42b-arrow)"/>
+      <text class="lbl" x="1092" y="460" text-anchor="middle">ⓒ</text>
+      <path class="ln" fill="none" d="M1104,540 H1140 V740 H395 V570 H420" marker-end="url(#n42b-arrow)"/>
+    </svg>
+    <figcaption>빈칸 데이터패스. ①~⑭ 부품 이름, ⓐ~ⓗ 제어 신호 이름을 쓰시오. 강조 선은 제어 신호다. MUX 안 숫자는 슬라이드와 같다(PCSrc 위 0·아래 1, ALUSrc 위 0·아래 1, MemtoReg 위 1·아래 0). 답은 아래 문제에 있다.</figcaption>
+  </figure>
+    </div>
+    <div class="check"><p class="label">그림 빈칸 연습 · 답을 쓴 뒤 펼치고 [맞음]/[틀림]</p><ol>
+      <li><p><span class="past">21-2 기출 유형</span> 빈칸 그림의 ①~⑭에 들어갈 부품 이름을 쓰시오.</p><details><summary>답 보기</summary><div class="ans">
+        <div class="tbl"><table>
+          <thead><tr><th>번호</th><th>이름</th><th>찾는 단서</th></tr></thead>
+          <tbody>
+            <tr><td>①</td><td>PC(프로그램 카운터)</td><td>맨 왼쪽, 출력이 명령어 메모리의 읽기 주소로 감</td></tr>
+            <tr><td>②</td><td>명령어 메모리</td><td>포트 "읽기 주소", "명령어"</td></tr>
+            <tr><td>③</td><td>가산기(PC + 4)</td><td>입력이 PC와 상수 4</td></tr>
+            <tr><td>④</td><td>제어 유닛(주 제어)</td><td>입력이 [6:0] opcode</td></tr>
+            <tr><td>⑤</td><td>레지스터 파일</td><td>포트 "읽기 레지스터 1·2", "쓰기 레지스터", "쓰기 데이터"</td></tr>
+            <tr><td>⑥</td><td>ImmGen(즉시값 생성기, 부호 확장)</td><td>입력이 명령어 전체 [31:0]</td></tr>
+            <tr><td>⑦</td><td>ALUSrc MUX</td><td>위 0 = 읽기 데이터 2, 아래 1 = ImmGen 출력</td></tr>
+            <tr><td>⑧</td><td>ALU</td><td>출력 "Zero", "결과"</td></tr>
+            <tr><td>⑨</td><td>ALU 제어</td><td>입력이 [30], [14:12]와 ALUOp, 출력 4비트</td></tr>
+            <tr><td>⑩</td><td>분기 가산기(분기 목표 주소 계산)</td><td>입력이 PC와 ImmGen 출력(이미 1비트 시프트한 오프셋), 출력 "Sum"</td></tr>
+            <tr><td>⑪</td><td>AND 게이트</td><td>입력이 Branch와 Zero, 출력이 PCSrc</td></tr>
+            <tr><td>⑫</td><td>PCSrc MUX</td><td>위 0 = PC + 4, 아래 1 = 분기 목표(Sum), 출력 = 다음 PC</td></tr>
+            <tr><td>⑬</td><td>데이터 메모리</td><td>포트 "주소", "쓰기 데이터", "읽기 데이터"</td></tr>
+            <tr><td>⑭</td><td>MemtoReg MUX</td><td>위 1 = 메모리 읽기 데이터, 아래 0 = ALU 결과, 출력이 레지스터 쓰기 데이터로</td></tr>
+          </tbody>
+        </table></div>
+        <p>타원 셋(④·⑥·⑨) 중 opcode를 받는 것이 제어 유닛, 명령어 전체를 받는 것이 ImmGen, funct 비트를 받고 ALU로 4비트를 보내는 것이 ALU 제어다. 가산기 둘(③·⑩)은 입력으로 가른다. 상수 4가 들어가면 PC + 4 가산기다. 슬라이드 그림에는 ImmGen과 분기 가산기 사이에 시프트 상자가 없다. 분기용 1비트 왼쪽 시프트는 ImmGen이 부호 확장과 함께 한다. <span class="ref">[Ch4 p.11–17]</span> 교재의 일부 그림에는 "Shift left 1" 상자가 따로 있으니, 시험 그림에 그 상자가 있으면 그 칸의 답은 "왼쪽 1비트 시프트"다. <span class="sup">PDF 외 보충</span></p>
+      </div></details></li>
+
+      <li><p>모양이 같은 가산기 ③과 ⑩은 무엇으로 구별하나?</p><details><summary>답 보기</summary><div class="ans"><p><b>들어오는 선. ③은 PC와 상수 4(→ PC + 4), ⑩은 PC와 ImmGen 출력(→ 분기 목표 주소)</b></p><p>모양이 같으면 들어오는 선으로 가른다. 상수 4가 들어오면 「다음 명령어」용, ImmGen이 들어오면 「분기」용이다.</p></div></details></li>
+      <li><p>타원 ④·⑥·⑨는 각각 무엇이고, 무엇으로 구별하나?</p><details><summary>답 보기</summary><div class="ans"><p><b>④ 제어 유닛([6:0] opcode를 받음), ⑥ ImmGen([31:0] 명령어 전체를 받음), ⑨ ALU 제어([30]·[14:12]와 ALUOp를 받아 ALU로 4비트를 보냄)</b></p><p>타원에 들어오는 명령어 비트 범위를 본다. 7비트 opcode → 제어 유닛, 32비트 전체 → ImmGen, funct 비트 → ALU 제어.</p></div></details></li>
+      <li><p>MUX ⑦·⑫·⑭는 각각 무엇이고, 무엇으로 구별하나?</p><details><summary>답 보기</summary><div class="ans"><p><b>⑦ ALUSrc MUX(출력이 ALU 둘째 입력), ⑫ PCSrc MUX(출력이 PC로), ⑭ MemtoReg MUX(출력이 레지스터 쓰기 데이터로)</b></p><p>MUX는 <b>나가는 선</b>으로 가른다. 무엇을 고르는지(ALU 입력, 다음 PC, 레지스터에 쓸 값)가 이름이 된다.</p></div></details></li>
+    </ol></div>
+
     <div class="check"><p class="label">떠올리기 카드 7장 · 답을 떠올린 뒤 펼치고 [맞음]/[틀림]</p><ol>
       <li><p>그림 빈칸: PC와 ImmGen 출력을 더하는 상자는?</p><details><summary>답 보기</summary><div class="ans"><p><b>분기 가산기(adder)</b></p><p>분기 목표 = PC + (오프셋 &lt;&lt; 1)은 ALU가 아닌 별도 가산기 [Ch4 p.15]</p></div></details></li>
       <li><p>그림 빈칸: 결과가 0이면 1을 내는 출력(Zero)을 가진 상자는?</p><details><summary>답 보기</summary><div class="ans"><p><b>ALU</b></p><p>왼쪽 변이 V자로 파인 도형. Zero는 ALU 출력 [Ch4 p.12]</p></div></details></li>
@@ -2965,6 +3283,11 @@ sw   x9, (나)(x22)</pre>
   </div>
   <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
     <div class="example"><p class="label">빈칸 풀이 · 노란 칸을 먼저 떠올리고 눌러 확인</p><p>lw x9, 44(x21) = 0x02CAA483. 읽기 레지스터 1·2, 쓰기 레지스터 선의 번호, x21 = 0x1000일 때 데이터 메모리 주소는?</p><ol><li>① <span class="cz" role="button" tabindex="0">0000 0010 1100 1010 1010 0100 1000 0011</span></li><li>② 오른쪽 7비트 0000011 → <span class="cz" role="button" tabindex="0">lw(I형)</span></li><li>③ [19:15] = 10101<sub>2</sub> = <span class="cz" role="button" tabindex="0">21</span> → 읽기 레지스터 1</li><li>④ [24:20] = 01100<sub>2</sub> = <span class="cz" role="button" tabindex="0">12</span> → 읽기 레지스터 2(imm 조각, 안 쓰임)</li><li>⑤ [11:7] = 01001<sub>2</sub> = <span class="cz" role="button" tabindex="0">9</span> → 쓰기 레지스터</li><li>⑥ <span class="cz" role="button" tabindex="0">ImmGen = 000000101100<sub>2</sub> = 44 = 0x2C, 주소 = 0x1000 + 0x2C = 0x102C</span></li></ol><details><summary>답 보기</summary><div class="ans"><p><b>21, 12, 9, 주소 0x102C</b></p></div></details></div>
+    <div class="check"><p class="label">그림 위 선 번호 · 26-1 기출 유형 (그림은 Ch4 · 2)</p><ol>
+      <li><p><code>add x5, x6, x7</code> = 0x007302B3을 실행하는 동안, 데이터패스의 다음 선에 실리는 값을 쓰시오. (가) 제어 유닛 입력 [6:0] (나) 읽기 레지스터 1 (다) 읽기 레지스터 2 (라) 쓰기 레지스터 (마) ALU 제어로 가는 [30]과 [14:12]</p><details><summary>답 보기</summary><div class="ans"><p><b>(가) 0110011 (나) 6 (다) 7 (라) 5 (마) [30] = 0, [14:12] = 000</b></p><p>① 2진으로: 0000 0000 0111 0011 0000 0010 1011 0011.</p><p>② 오른쪽 7비트 0110011 → R형. funct7 0000000 · rs2 00111 · rs1 00110 · funct3 000 · rd 00101로 끊는다.</p><p>③ 선에는 번호가 실린다: [19:15] = 6, [24:20] = 7, [11:7] = 5. [30]은 funct7의 왼쪽에서 둘째 비트라 0(sub면 1).</p></div></details></li>
+      <li><p><code>beq x10, x11, L</code>(L은 16바이트 뒤) = 0x00B50863을 실행하는 동안 (가) 읽기 레지스터 1 (나) 읽기 레지스터 2 (다) 쓰기 레지스터 선에 실리는 번호를 쓰고, (다)가 문제없는 이유를 쓰시오.</p><details><summary>답 보기</summary><div class="ans"><p><b>(가) 10 (나) 11 (다) 16. beq는 레지스터에 쓰지 않으므로([11:7]은 즉시값 조각) 실려도 상관없다</b></p><p>① 2진으로: 0000 0000 1011 0101 0000 1000 0110 0011. 오른쪽 7비트 1100011 → beq(SB형).</p><p>② [19:15] = 01010 = 10, [24:20] = 01011 = 11.</p><p>③ [11:7] = 10000 = 16. 전선은 고정이라 쓰기 레지스터 포트에도 이 비트가 그대로 실리지만, SB형의 [11:7]은 rd가 아니라 오프셋 조각이고 beq는 레지스터에 쓰지 않는다.</p></div></details></li>
+    </ol></div>
+
     <div class="check"><p class="label">떠올리기 카드 6장 · 답을 떠올린 뒤 펼치고 [맞음]/[틀림]</p><ol>
       <li><p>rs1, rs2, rd, opcode의 비트 범위는?</p><details><summary>답 보기</summary><div class="ans"><p><b>rs1 [19:15], rs2 [24:20], rd [11:7], opcode [6:0]</b></p><p>모든 형식에서 같은 자리라 해독 전에 포트에 바로 연결 [Ch2 p.24] [Ch4 p.21]</p></div></details></li>
       <li><p>ALU 제어 유닛으로 가는 명령어 비트는?</p><details><summary>답 보기</summary><div class="ans"><p><b>[30]과 [14:12]</b></p><p>funct3 전체 + funct7 중 add/sub를 가르는 30번 비트 하나 [Ch4 p.24]</p></div></details></li>
@@ -2993,6 +3316,150 @@ sw   x9, (나)(x22)</pre>
   <div class="key nkey"><p class="label">2 · 핵심 정리 <button type="button" class="czbtn" data-cz="hide">가리고 떠올리기</button><button type="button" class="czbtn" data-cz="show">다 보기</button></p><ul><li>RegWrite = 1 → <span class="cz on" role="button" tabindex="0">rd에 쓰기 데이터 기록</span> / MemRead·MemWrite = 1 → 데이터 메모리 <span class="cz on" role="button" tabindex="0">읽기·쓰기</span> [Ch4 p.24]</li><li>ALUSrc: 0 = 읽기 데이터 2, 1 = <span class="cz on" role="button" tabindex="0">부호 확장 즉시값</span> [Ch4 p.24]</li><li>MemtoReg: 0 = <span class="cz on" role="button" tabindex="0">ALU 결과</span>, 1 = <span class="cz on" role="button" tabindex="0">메모리 읽기 데이터</span> [Ch4 p.24]</li><li>Branch = 1 → 분기 명령어 / PCSrc: 0 = PC + 4, 1 = <span class="cz on" role="button" tabindex="0">분기 목표 주소</span> [Ch4 p.24–25]</li><li>ALUOp(2비트) = 주 제어 → <span class="cz on" role="button" tabindex="0">ALU 제어 유닛</span>에 주는 힌트 [Ch4 p.18]</li><li>주 제어 출력 순서(그림 위부터): Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite. <span class="cz on" role="button" tabindex="0">PCSrc</span>는 바깥 AND 게이트 [Ch4 p.26–28]</li></ul></div>
   <div class="exam"><p class="label">외우는 고리</p><p>7개 = 레지스터 쪽 2(RegWrite, ALUSrc) + 메모리 쪽 3(MemRead, MemWrite, MemtoReg) + 분기·ALU 2(Branch, ALUOp). PCSrc는 따로 AND 게이트가 만든다</p></div>
   <div class="nstep"><p class="nlab"><span>4</span> 떠올리기</p>
+    <div class="example"><p class="label">그림 빈칸 · 제어 선 이름 (26-1 기출 유형)</p>
+    <p>Ch4 · 2의 빈칸 그림을 다시 실었다. 제어 유닛에서 나오는 강조 선 ⓐ~ⓖ와 AND 게이트 출력 ⓗ의 이름을 위 「읽기」의 신호 7개로 채운다. 선이 <b>어디로 들어가는지</b>를 보면 이름이 나온다.</p>
+  <figure class="diagram">
+    <svg viewBox="0 0 1200 790" role="img" aria-label="부품 이름을 번호 ①~⑭, 제어 신호 이름을 ⓐ~ⓗ로 비운 단일 사이클 데이터패스">
+      <defs><marker id="n45-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
+
+      <rect class="bx" x="40" y="400" width="60" height="80"/>
+      <text class="t" x="70" y="445" text-anchor="middle">①</text>
+      <path class="ln" fill="none" d="M100,440 H140" marker-end="url(#n45-arrow)"/>
+      <rect class="bx" x="140" y="380" width="150" height="140"/>
+      <text class="t" x="215" y="412" text-anchor="middle">②</text>
+      <text class="lbl" x="146" y="444">읽기 주소</text>
+      <text class="lbl" x="284" y="484" text-anchor="end">명령어</text>
+
+      <path class="ln" fill="none" d="M120,440 V80 H180" marker-end="url(#n45-arrow)"/>
+      <path class="ln" fill="none" d="M140,120 H180" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="134" y="124" text-anchor="end">4</text>
+      <rect class="bx" x="180" y="60" width="60" height="80"/>
+      <text class="t" x="210" y="105" text-anchor="middle">③</text>
+      <path class="ln" fill="none" d="M240,100 H1060" marker-end="url(#n45-arrow)"/>
+
+      <path class="ln" fill="none" d="M120,150 H850 V175 H870" marker-end="url(#n45-arrow)"/>
+
+      <path class="ln" fill="none" d="M290,480 H320"/>
+      <path class="ln" fill="none" d="M320,260 V700"/>
+      <path class="ln" fill="none" d="M320,260 H390" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="326" y="254">[6:0]</text>
+      <path class="ln" fill="none" d="M320,430 H420" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="326" y="424">[19:15]</text>
+      <path class="ln" fill="none" d="M320,470 H420" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="326" y="464">[24:20]</text>
+      <path class="ln" fill="none" d="M320,520 H420" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="326" y="514">[11:7]</text>
+      <path class="ln" fill="none" d="M320,650 H445" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="330" y="644">[31:0]</text>
+      <path class="ln" fill="none" d="M320,700 H685" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="562" y="694">[30], [14:12]</text>
+
+      <ellipse class="hl" cx="450" cy="260" rx="60" ry="95"/>
+      <text class="t" x="450" y="265" text-anchor="middle">④</text>
+      <path class="ac" fill="none" d="M497,200 H575"/>
+      <text class="lbl" x="514" y="196">ⓐ</text>
+      <path class="ac" fill="none" d="M504,220 H575"/>
+      <text class="lbl" x="514" y="216">ⓑ</text>
+      <path class="ac" fill="none" d="M509,240 H575"/>
+      <text class="lbl" x="514" y="236">ⓒ</text>
+      <path class="ac" fill="none" d="M510,260 H575"/>
+      <text class="lbl" x="514" y="256">ⓓ</text>
+      <path class="ac" fill="none" d="M509,280 H575"/>
+      <text class="lbl" x="514" y="276">ⓔ</text>
+      <path class="ac" fill="none" d="M504,300 H575"/>
+      <text class="lbl" x="514" y="296">ⓕ</text>
+      <path class="ac" fill="none" d="M497,320 H575"/>
+      <text class="lbl" x="514" y="316">ⓖ</text>
+
+      <rect class="bx" x="420" y="400" width="160" height="200"/>
+      <text class="lbl" x="426" y="434">읽기 레지스터 1</text>
+      <text class="lbl" x="426" y="474">읽기 레지스터 2</text>
+      <text class="lbl" x="426" y="524">쓰기 레지스터</text>
+      <text class="lbl" x="426" y="574">쓰기 데이터</text>
+      <text class="lbl" x="574" y="454" text-anchor="end">읽기 데이터 1</text>
+      <text class="lbl" x="574" y="544" text-anchor="end">읽기 데이터 2</text>
+      <text class="t" x="500" y="594" text-anchor="middle">⑤</text>
+      <path class="ac" fill="none" d="M500,375 V400" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="512" y="390">ⓖ</text>
+      <path class="ln" fill="none" d="M580,450 H700" marker-end="url(#n45-arrow)"/>
+      <path class="ln" fill="none" d="M580,540 H640" marker-end="url(#n45-arrow)"/>
+
+      <ellipse class="bx" cx="500" cy="650" rx="55" ry="28"/>
+      <text class="t" x="500" y="655" text-anchor="middle">⑥</text>
+      <path class="ln" fill="none" d="M555,650 H610 V225 H870" marker-end="url(#n45-arrow)"/>
+      <path class="ln" fill="none" d="M610,580 H640" marker-end="url(#n45-arrow)"/>
+
+      <rect class="mx" x="640" y="520" width="24" height="80" rx="12"/>
+      <text class="lbl" x="652" y="544" text-anchor="middle">0</text>
+      <text class="lbl" x="652" y="584" text-anchor="middle">1</text>
+      <path class="ac" fill="none" d="M652,495 V520" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="652" y="488" text-anchor="middle">ⓕ</text>
+      <text class="t" x="672" y="516">⑦</text>
+      <path class="ln" fill="none" d="M664,560 H700" marker-end="url(#n45-arrow)"/>
+
+      <path class="ln" fill="none" d="M595,540 V615 H880" marker-end="url(#n45-arrow)"/>
+
+      <polygon class="bx" points="700,430 780,470 780,570 700,610 700,540 715,520 700,500"/>
+      <text class="t" x="742" y="525" text-anchor="middle">⑧</text>
+      <text class="lbl" x="774" y="494" text-anchor="end">Zero</text>
+      <text class="lbl" x="774" y="554" text-anchor="end">결과</text>
+      <path class="ln" fill="none" d="M780,550 H880" marker-end="url(#n45-arrow)"/>
+      <path class="ln" fill="none" d="M780,490 H800 V290 H960" marker-end="url(#n45-arrow)"/>
+
+      <ellipse class="bx" cx="740" cy="700" rx="55" ry="22"/>
+      <text class="t" x="740" y="705" text-anchor="middle">⑨</text>
+      <path class="ln" fill="none" d="M740,678 V592" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="746" y="662">4비트</text>
+      <path class="ac" fill="none" d="M850,700 H795" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="856" y="704">ⓓ</text>
+
+      <rect class="bx" x="870" y="150" width="80" height="100"/>
+      <text class="t" x="896" y="205" text-anchor="middle">⑩</text>
+      <text class="lbl" x="944" y="204" text-anchor="end">Sum</text>
+      <path class="ln" fill="none" d="M950,200 H1020 V160 H1060" marker-end="url(#n45-arrow)"/>
+      <path class="bx" d="M960,260 H980 A20,20 0 0 1 980,300 H960 Z"/>
+      <text class="t" x="977" y="285" text-anchor="middle">⑪</text>
+      <path class="ac" fill="none" d="M918,270 H960" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="912" y="274" text-anchor="end">ⓐ</text>
+      <path class="ac" fill="none" d="M1000,280 H1072 V190" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="1080" y="240">ⓗ</text>
+      <rect class="mx" x="1060" y="70" width="24" height="120" rx="12"/>
+      <text class="lbl" x="1072" y="104" text-anchor="middle">0</text>
+      <text class="lbl" x="1072" y="164" text-anchor="middle">1</text>
+      <text class="t" x="1092" y="82">⑫</text>
+      <path class="ln" fill="none" d="M1084,130 H1170 V770 H20 V440 H40" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="1100" y="122">다음 PC</text>
+
+      <rect class="bx" x="880" y="460" width="150" height="170"/>
+      <text class="t" x="955" y="492" text-anchor="middle">⑬</text>
+      <text class="lbl" x="886" y="554">주소</text>
+      <text class="lbl" x="886" y="619">쓰기 데이터</text>
+      <text class="lbl" x="1024" y="524" text-anchor="end">읽기 데이터</text>
+      <path class="ac" fill="none" d="M955,440 V460" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="955" y="432" text-anchor="middle">ⓔ</text>
+      <path class="ac" fill="none" d="M955,665 V630" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="955" y="681" text-anchor="middle">ⓑ</text>
+
+      <path class="ln" fill="none" d="M1030,520 H1080" marker-end="url(#n45-arrow)"/>
+      <path class="ln" fill="none" d="M840,550 V645 H1060 V565 H1080" marker-end="url(#n45-arrow)"/>
+      <rect class="mx" x="1080" y="490" width="24" height="100" rx="12"/>
+      <text class="lbl" x="1092" y="524" text-anchor="middle">1</text>
+      <text class="lbl" x="1092" y="569" text-anchor="middle">0</text>
+      <text class="t" x="1112" y="505">⑭</text>
+      <path class="ac" fill="none" d="M1092,468 V490" marker-end="url(#n45-arrow)"/>
+      <text class="lbl" x="1092" y="460" text-anchor="middle">ⓒ</text>
+      <path class="ln" fill="none" d="M1104,540 H1140 V740 H395 V570 H420" marker-end="url(#n45-arrow)"/>
+    </svg>
+    <figcaption>빈칸 데이터패스. ①~⑭ 부품 이름, ⓐ~ⓗ 제어 신호 이름을 쓰시오. 강조 선은 제어 신호다. MUX 안 숫자는 슬라이드와 같다(PCSrc 위 0·아래 1, ALUSrc 위 0·아래 1, MemtoReg 위 1·아래 0). 답은 아래 문제에 있다.</figcaption>
+  </figure>
+    </div>
+    <div class="check"><p class="label">제어 선 빈칸 · 답을 쓴 뒤 펼치고 [맞음]/[틀림]</p><ol>
+      <li><p><span class="past">26-1 기출 유형</span> 빈칸 그림의 제어 선 ⓐ~ⓗ의 이름을 쓰시오.</p><details><summary>답 보기</summary><div class="ans">
+        <p>ⓐ Branch, ⓑ MemRead, ⓒ MemtoReg, ⓓ ALUOp(2비트, ALU 제어로), ⓔ MemWrite, ⓕ ALUSrc, ⓖ RegWrite(레지스터 파일 쓰기 허가), ⓗ PCSrc. ⓐ~ⓖ는 슬라이드 p.26–28 제어 유닛 출력의 위에서부터 순서 그대로다.</p>
+        <p>ⓑ·ⓔ는 둘 다 데이터 메모리로 들어가서 헷갈린다. 위 그림은 슬라이드 p.17·p.24처럼 위를 MemWrite, 아래를 MemRead로 그렸다. 시험 그림에서는 위치가 다를 수 있으니 "쓰기 데이터 포트 쪽 = 쓰기"처럼 근거를 붙여 답한다. ⓗ는 제어 유닛이 직접 내는 신호가 아니라 AND 게이트 출력이다(Branch AND Zero, p.26–28 그림). p.17·p.24 그림에는 AND 게이트 없이 PCSrc 선만 그려져 있다. <span class="ref">[Ch4 p.24–28]</span></p>
+      </div></details></li>
+    </ol></div>
+
     <div class="check"><p class="label">떠올리기 카드 5장 · 답을 떠올린 뒤 펼치고 [맞음]/[틀림]</p><ol>
       <li><p>주 제어 유닛 출력 7개 중 빠진 것: RegWrite, ALUSrc, MemRead, MemWrite, Branch, ALUOp</p><details><summary>답 보기</summary><div class="ans"><p><b>MemtoReg</b></p><p>레지스터 쓰기 데이터를 ALU 결과/메모리 중에서 고르는 MUX 신호 [Ch4 p.24]</p></div></details></li>
       <li><p>ALUSrc = 1의 뜻은?</p><details><summary>답 보기</summary><div class="ans"><p><b>ALU 둘째 입력 = 부호 확장 즉시값</b></p><p>0이면 읽기 데이터 2(레지스터) [Ch4 p.24]</p></div></details></li>
